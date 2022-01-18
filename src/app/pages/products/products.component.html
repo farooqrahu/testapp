@@ -1,4 +1,4 @@
-<div class="header bg-gradient-success pb-8 pt-5 pt-md-8">
+<div class="header bg-gradient-danger pb-8 pt-5 pt-md-8">
   <div class="container-fluid">
     <div class="header-body">
       <!-- Card stats -->
@@ -65,8 +65,8 @@
               (keyup)="doFilter($event.target.value,'product')" placeholder="Search">
           </mat-form-field>
 
-          <button (click)="loadproductresults()" mat-flat-button >Search</button>
-          <button (click)="openDialog()" mat-raised-button color="primary">Add Product</button>
+          <button (click)="loadproductresults()" mat-button>Search</button>
+          <button (click)="openDialog()" mat-button>Add Product</button>
           <mat-paginator [length]="productslength" [pageSize]="10" [pageSizeOptions]="[10,20,30]">
           </mat-paginator>
         </div>
@@ -98,20 +98,20 @@
               <td mat-cell *matCellDef="let product">{{product.category.name}}</td>
             </ng-container>
             <ng-container matColumnDef="images">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>Barcode</th>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>images</th>
               <td mat-cell *matCellDef="let product">
-<!--                <div style="float:left" *ngFor='let in of counter(5) ;let i = index'>-->
-<!--                  <form enctype='multipart/form-data' novalidate>-->
-<!--                    <label>-->
-<!--                      <img height="50" width="50" #productimage-->
-<!--                        src="/assets/Productimages/{{product.id}}/{{i}}.jpg"-->
-<!--                        onerror="this.src='/assets/Productimages/default.jpg'">-->
-<!--                      <input type="file" (change)="onFileChanged($event,product.id,i)"-->
-<!--                        style="display: none;"-->
-<!--                        accept="image/png, image/jpeg" class="btn btn-sm btn-info mr-4">-->
-<!--                    </label>-->
-<!--                  </form>-->
-<!--                </div>-->
+                <div style="float:left" *ngFor='let in of counter(5) ;let i = index'>
+                  <form enctype='multipart/form-data' novalidate>
+                    <label>
+                      <img height="50" width="50" #productimage
+                        src="/assets/Productimages/{{product.id}}/{{i}}.jpg"
+                        onerror="this.src='/assets/Productimages/default.jpg'">
+                      <input type="file" (change)="onFileChanged($event,product.id,i)"
+                        style="display: none;"
+                        accept="image/png, image/jpeg" class="btn btn-sm btn-info mr-4">
+                    </label>
+                  </form>
+                </div>
               </td>
             </ng-container>
             <ng-container matColumnDef="action">
@@ -148,7 +148,7 @@
           <mat-form-field>
             <input matInput type="text" (keyup)="doFilter($event.target.value,'category')" placeholder="Filter">
           </mat-form-field>
-          <button (click)="opencategorydialog()" mat-raised-button color="primary">Add Category</button>
+          <button (click)="opencategorydialog()" mat-button>Add Category</button>
           <mat-paginator [pageSize]="4" [pageSizeOptions]="[2, 4, 6, 10, 20]">
           </mat-paginator>
         </div>
@@ -166,7 +166,7 @@
             <ng-container matColumnDef="action">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Actions</th>
               <td mat-cell *matCellDef="let category">
-                <button  mat-raised-button color="primary"  (click)="opencategorydialog(category)">Edit</button>
+                <button  mat-button  (click)="opencategorydialog(category)">Edit</button>
                 <button  mat-button (click)="deleteCategory(category,$event)">Delete</button>
 
               </td>

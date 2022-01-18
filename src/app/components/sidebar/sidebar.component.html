@@ -7,7 +7,7 @@
     </button>
     <!-- Brand -->
     <a class="navbar-brand pt-0" routerLinkActive="active" [routerLink]="['/dashboard']">
-<!--      <img src="./assets/img/brand/red.png" class="navbar-brand-img" alt="...">farooq -->
+      <img src="./assets/img/brand/red.png" class="navbar-brand-img" alt="...">
     </a>
     <!-- User -->
     <ul class="nav align-items-center d-md-none">
@@ -100,7 +100,7 @@
             <i class="ni ni-key-25 text-info"></i> Login
           </a>
         </li>
-        <li *ngIf="!islogged" class="nav-item">
+        <li *ngIf="islogged" class="nav-item">
           <a routerLinkActive="active" routerLink="/register" class="nav-link">
             <i class="ni-circle-08 text-pink"></i> Register
           </a>
