@@ -1,7 +1,6 @@
 package com.bezkoder.springjwt.payload.request;
 
 import com.bezkoder.springjwt.models.Category;
-
 import lombok.Data;
 
 @Data
@@ -18,4 +17,5 @@ public class ProductRequest {
   private String sortdirection = "asc";
   private int pagesize = 10;
   private int pagenumber = 0;
+  private Long quantity;
 }

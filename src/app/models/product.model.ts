@@ -7,6 +7,7 @@ export class Product {
     public price: number,
     public category: Category,
     public images: boolean,
+    public quantity: number
 
   ) { }
 
