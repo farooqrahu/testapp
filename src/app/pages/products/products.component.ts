@@ -17,7 +17,7 @@ import { Product } from './../../models/product.model';
   styleUrls: ['./products.component.scss']
 })
 export class ProductsComponent implements OnInit, AfterViewInit {
-  columnsToDisplay = ["id", 'name', "price", "description", "category", "images", "action"];
+  columnsToDisplay = ["id", 'name', "price","quantity", "description", "category", "action"];
   categorycolumnsToDisplay = ["id", 'name', "action"];
 
   dataSource: MatTableDataSource<Product> = null;
@@ -41,14 +41,14 @@ export class ProductsComponent implements OnInit, AfterViewInit {
     this.paginator.page.subscribe(() => {
       const productrequest = new ProductRequest(
         "mod", "123456", 0, this.productsearch.nativeElement.value,
-        this.productsearch.nativeElement.value, 0, null, false, 'name', 'asc', this.paginator.pageSize, this.paginator.getNumberOfPages())
+        this.productsearch.nativeElement.value, 0, 0,null, false, 'name', 'asc', this.paginator.pageSize, this.paginator.getNumberOfPages())
       this.productservice.findProduct(productrequest).subscribe(
         data => {
           this.products = data.list;
           (this.products);
           this.productslength = data.totalitems;
-          this.dataSource = new MatTableDataSource(this.products);
           setTimeout(() => {
+            this.dataSource = new MatTableDataSource(this.products);
             this.dataSource.sort = this.sort;
             this.dataSource.paginator = this.paginator;
           });
@@ -96,13 +96,13 @@ export class ProductsComponent implements OnInit, AfterViewInit {
   }
   openDialog(product?: Product): void {
     if (product === undefined)
-      product = new Product(0, "", "", 0, this.categories[0], false)
+      product = new Product(0, "", "", 0, this.categories[0], false,0)
     const dialogRef = this.dialog.open(ProductformComponent, {
       width: '350px',
       data: {
         id: product.id, name: product.name, description: product.description,
-        price: product.price, category: product.category
-        , images: product.images
+        price: product.price, category: product.category,quantity:product.quantity
+
       }
     });
     dialogRef.afterClosed().subscribe(res => {
@@ -167,7 +167,7 @@ export class ProductsComponent implements OnInit, AfterViewInit {
   }
   updateProductImage(event, id, i): void {
     const image: FormData = new FormData();
-    image.append('image', event.target.files[0]);
+    // image.append('image', event.target.files[0]);
     image.append('username', "mod");
     image.append('password', "123456");
     image.append('id', id);

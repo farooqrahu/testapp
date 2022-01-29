@@ -8,6 +8,7 @@ export class ProductRequest {
     public name: string,
     public description: string,
     public price: number,
+    public quantity: number,
     public category: Category,
     public images: boolean,
     private sort: string = "id",
@@ -26,6 +27,7 @@ export class ProductRequest {
     this.name = product.name
     this.description = product.description
     this.price = product.price
+    this.quantity = product.quantity
     this.category = product.category
     this.images = product.images
   }
