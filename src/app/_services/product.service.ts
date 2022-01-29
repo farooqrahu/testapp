@@ -28,7 +28,7 @@ export class ProductService {
     return this.http.get("/assets/Productimages/" + id + "/" + number + ".jpg").pipe(map(() => true),
       catchError(() => of(false)));
   }
-  productrequest: ProductRequest = new ProductRequest('', '', 0, '', '', 0, null, false);
+  productrequest: ProductRequest = new ProductRequest('', '', 0, '', '', 0,0, null, false);
 
   updateProduct(product: Product): Observable<any> {
 
@@ -41,10 +41,11 @@ export class ProductService {
     var category = this.productrequest.category;
     var name = this.productrequest.name;
     var price = this.productrequest.price;
+    var quantity = this.productrequest.quantity;
     var description = this.productrequest.description;
 
     return this.http.post(PRODUCT_API + 'updateProduct', {//productrequest
-      id, username, password, category, price, name, description
+      id, username, password, category, price, name, description,quantity
 
     }, httpOptions);
   }
@@ -55,11 +56,12 @@ export class ProductService {
     var category = form.get('Category').value;
     var name = form.get('name').value;
     var price = form.get('price').value;
+    var quantity = this.productrequest.quantity;
     var description = form.get('description').value;
     return this.http.post(PRODUCT_API + 'addProduct', {
       username, password, category, price,
       name
-      , description
+      , description,quantity
     }, httpOptions);
   }
 
@@ -75,12 +77,13 @@ export class ProductService {
     var category = productrequest.category;
     var name = productrequest.name;
     var price = productrequest.price;
+    var quantity = productrequest.quantity;
     var description = productrequest.description;
     console.log(productrequest)
 
     return this.http.post(PRODUCT_API + 'findProduct', {
 
-      id, username, password, category, price, name, description
+      id, username, password, category, price, name, description,quantity
     }, httpOptions);
   }
   deleteProduct(product: Product): Observable<any> {

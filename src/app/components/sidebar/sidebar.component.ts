@@ -16,7 +16,7 @@ export var adminROUTES: RouteInfo[] = [
   // { path: '/maps', title: 'Maps',  icon:'ni-pin-3 text-orange', class: '' },
   { path: '/products', title: 'Products', icon: 'ni-bullet-list-67 text-red', class: '' },
   { path: '/users', title: 'Users', icon: 'ni-bullet-list-67 text-red', class: '' },
-  { path: '/shopping-carts', title: 'Shopping Carts', icon: 'ni-bullet-list-67 text-red', class: '' },
+  // { path: '/shopping-carts', title: 'Shopping Carts', icon: 'ni-bullet-list-67 text-red', class: '' },
 
 ];
 export var ROUTES: RouteInfo[] = [
