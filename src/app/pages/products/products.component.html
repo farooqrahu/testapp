@@ -100,7 +100,7 @@
             <ng-container matColumnDef="images">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>images</th>
               <td mat-cell *matCellDef="let product">
-                <div style="float:left" *ngFor='let in of counter(5) ;let i = index'>
+                <div style="float:left" >
                   <form enctype='multipart/form-data' novalidate>
                     <label>
                       <img height="50" width="50" #productimage

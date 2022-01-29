@@ -1,12 +1,16 @@
-<h1 mat-dialog-title>modify product</h1>
+<h1 mat-dialog-title>Product</h1>
 <div mat-dialog-content>
+
   <mat-form-field>
+    <p>Product Name</p>
     <input matInput (change)="validate(data)" [(ngModel)]="data.name" cdkFocusInitial required>
   </mat-form-field>
   <mat-form-field>
+    <p>Product Price</p>
     <input matInput (change)="validate(data)" [(ngModel)]="data.price" required>
   </mat-form-field>
   <mat-form-field>
+    <p>Product Description</p>
     <textarea matInput (change)="validate(data)" [(ngModel)]="data.description" cdkTextareaAutosize
       #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="5" cdkAutosizeMaxRows="20"></textarea>
   </mat-form-field>
