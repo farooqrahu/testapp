@@ -27,16 +27,20 @@ public class Product {
   @Nullable
   @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
   private Category category;
+  @Nullable
+  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
+  private Company company;
 
   @Nullable
   private boolean images;
 
-  public Product(Long id, String name, String description, Float price, Category category, boolean images,Long quantity) {
+  public Product(Long id, String name, String description, Float price, Category category,Company company, boolean images,Long quantity) {
     this.id = id;
     this.name = name;
     this.description = description;
     this.price = price;
     this.category = category;
+    this.company = company;
     this.images = images;
     this.quantity = quantity;
   }
@@ -47,6 +51,7 @@ public class Product {
     this.description = productRequest.getDescription();
     this.price = productRequest.getPrice();
     this.category = productRequest.getCategory();
+    this.company = productRequest.getCompany();
     this.images = productRequest.isImages();
     this.quantity=productRequest.getQuantity();
   }
@@ -74,20 +79,22 @@ public class Product {
   public Product() {
   }
 
-  public Product(String name, String description, Category category, boolean images, Float price,Long quantity) {
+  public Product(String name, String description, Category category,Company company, boolean images, Float price,Long quantity) {
     this.name = name;
     this.description = description;
     this.category = category;
+    this.company = company;
     this.images = images;
     this.price = price;
     this.quantity = quantity;
 
   }
 
-  public Product(String name, String description, Category category, Float price,Long quantity) {
+  public Product(String name, String description, Category category,Company company, Float price,Long quantity) {
     this.name = name;
     this.description = description;
     this.category = category;
+    this.company = company;
     this.price = price;
     this.quantity = quantity;
   }

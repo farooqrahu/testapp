@@ -48,6 +48,8 @@ public class User {
   @Size(max = 50, message = "email must be shorter than {max} characters")
   @Email
   private String email;
+  private String jwtSign;
+
   @JsonIgnore
   @NotBlank(message = "password must not be blank")
   @Size(max = 60, min = 6, message = "password must be between {min} and {max} characters")

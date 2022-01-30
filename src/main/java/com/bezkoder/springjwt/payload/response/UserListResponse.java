@@ -13,8 +13,7 @@ public class UserListResponse {
   private String type = "Bearer";
   private List<User> users;
 
-  public UserListResponse(String jwt, List<User> users) {
-    this.token = jwt;
+  public UserListResponse( List<User> users) {
     this.users = users;
 
   }

@@ -12,25 +12,10 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
-import com.bezkoder.springjwt.models.CartItem;
-import com.bezkoder.springjwt.models.Category;
-import com.bezkoder.springjwt.models.Product;
-import com.bezkoder.springjwt.models.ShoppingCart;
-import com.bezkoder.springjwt.models.User;
-import com.bezkoder.springjwt.payload.request.CartItemRequest;
-import com.bezkoder.springjwt.payload.request.CartRequest;
-import com.bezkoder.springjwt.payload.request.CategoryRequest;
-import com.bezkoder.springjwt.payload.request.ProductRequest;
-import com.bezkoder.springjwt.payload.request.ShoppingCartRequest;
-import com.bezkoder.springjwt.payload.response.CategoryResponse;
-import com.bezkoder.springjwt.payload.response.MessageResponse;
-import com.bezkoder.springjwt.payload.response.ProductResponse;
-import com.bezkoder.springjwt.payload.response.ShoppingCartResponse;
-import com.bezkoder.springjwt.repository.CartItemRepository;
-import com.bezkoder.springjwt.repository.CategoryRepository;
-import com.bezkoder.springjwt.repository.ProductRepository;
-import com.bezkoder.springjwt.repository.ShoppingCartRepository;
-import com.bezkoder.springjwt.repository.UserRepository;
+import com.bezkoder.springjwt.models.*;
+import com.bezkoder.springjwt.payload.request.*;
+import com.bezkoder.springjwt.payload.response.*;
+import com.bezkoder.springjwt.repository.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -47,6 +32,8 @@ public class ProductService {
   ProductRepository productRepository;
   @Autowired
   CategoryRepository categoryRepository;
+  @Autowired
+  CompanyRepository companyRepository;
   @Autowired
   UserRepository userRepository;
   @Autowired
@@ -109,11 +96,13 @@ public class ProductService {
   }
 
   public ResponseEntity<?> addProduct(ProductRequest productRequest) {
-    userDetailsServiceImpl.checkAdmin(productRequest.getUsername(), productRequest.getPassword());
-
+    userDetailsServiceImpl.checkAdmin();
     Optional<Category> category = categoryRepository.findById(productRequest.getCategory().getId());
     if (category.isEmpty())
       return ResponseEntity.badRequest().body(new MessageResponse("Error: Category does not exist"));
+    Optional<Company> company = companyRepository.findById(productRequest.getCompany().getId());
+    if (company.isEmpty())
+      return ResponseEntity.badRequest().body(new MessageResponse("Error: Company does not exist"));
     if (productRequest.getName() == null || "".equals(productRequest.getName()))
       return ResponseEntity.badRequest().body(new MessageResponse("Error: name must not be empty"));
     if (productRequest.getPrice() == null || productRequest.getPrice() <= 0)
@@ -124,7 +113,7 @@ public class ProductService {
   }
 
   public ResponseEntity<?> updateProduct(ProductRequest productRequest) {
-    userDetailsServiceImpl.checkAdmin(productRequest.getUsername(), productRequest.getPassword());
+    userDetailsServiceImpl.checkAdmin();
 
     Optional<Category> category = categoryRepository.findById(productRequest.getCategory().getId());
     if (category.isEmpty())
@@ -139,7 +128,7 @@ public class ProductService {
   }
 
   public ResponseEntity<?> deleteProduct(ProductRequest productRequest) {
-    userDetailsServiceImpl.checkAdmin(productRequest.getUsername(), productRequest.getPassword());
+    userDetailsServiceImpl.checkAdmin();
 
     productRepository.deleteById(productRequest.getId());
     return ResponseEntity.ok(new MessageResponse("product deleted successfully"));
@@ -194,7 +183,7 @@ public class ProductService {
   }
 
   public ResponseEntity<?> updateCategory(@Valid CategoryRequest categoryRequest) {
-    userDetailsServiceImpl.checkAdmin(categoryRequest.getUsername(), categoryRequest.getPassword());
+    userDetailsServiceImpl.checkAdmin();
     Category category = categoryRepository.findById(categoryRequest.getId()).get();
     category.setName(categoryRequest.getName());
     categoryRepository.save(category);
@@ -202,28 +191,57 @@ public class ProductService {
   }
 
   public ResponseEntity<?> deleteCategory(@Valid CategoryRequest categoryRequest) {
-    userDetailsServiceImpl.checkAdmin(categoryRequest.getUsername(), categoryRequest.getPassword());
+    userDetailsServiceImpl.checkAdmin();
     categoryRepository.deleteById(categoryRequest.getId());
     return ResponseEntity.ok(new MessageResponse("Category deleted successfully!"));
   }
 
   public ResponseEntity<?> addCategory(@Valid CategoryRequest categoryRequest) {
-    userDetailsServiceImpl.checkAdmin(categoryRequest.getUsername(), categoryRequest.getPassword());
+    userDetailsServiceImpl.checkAdmin();
     Category category = new Category(categoryRequest.getName());
     categoryRepository.save(category);
     return ResponseEntity.ok(new MessageResponse("Category added successfully!"));
   }
 
   public ResponseEntity<?> getAllCategories(CategoryRequest categoryRequest) {
-    userDetailsServiceImpl.checkAdmin(categoryRequest.getUsername(), categoryRequest.getPassword());
+    userDetailsServiceImpl.checkAdmin();
 
     List<Category> categorylist = categoryRepository.findAll();
     return ResponseEntity.ok(new CategoryResponse(categorylist));
   }
 
+
+
+  public ResponseEntity<?> updateCompany(@Valid CompanyRequest companyRequest) {
+    userDetailsServiceImpl.checkAdmin();
+    Company category = companyRepository.findById(companyRequest.getId()).get();
+    category.setName(companyRequest.getName());
+    companyRepository.save(category);
+    return ResponseEntity.ok(new MessageResponse("Category updated successfully!"));
+  }
+
+  public ResponseEntity<?> deleteCompany(@Valid CompanyRequest companyRequest) {
+    userDetailsServiceImpl.checkAdmin();
+    companyRepository.deleteById(companyRequest.getId());
+    return ResponseEntity.ok(new MessageResponse("Category deleted successfully!"));
+  }
+
+  public ResponseEntity<?> addCompany(@Valid CompanyRequest companyRequest) {
+    userDetailsServiceImpl.checkAdmin();
+    Company category = new Company(companyRequest.getName());
+    companyRepository.save(category);
+    return ResponseEntity.ok(new MessageResponse("Category added successfully!"));
+  }
+
+  public ResponseEntity<?> getAllCompany(CompanyRequest companyRequest) {
+    userDetailsServiceImpl.checkAdmin();
+
+    List<Company> categorylist = companyRepository.findAll();
+    return ResponseEntity.ok(new CompanyResponse(categorylist));
+  }
+
   public ResponseEntity<?> addToCart(CartRequest cartRequest) {
-    userDetailsServiceImpl.checkAdminOrConcernedUser(cartRequest.getUsername(), cartRequest.getPassword(),
-        cartRequest.getUserid());
+    userDetailsServiceImpl.checkAdminOrConcernedUser(cartRequest.getUserid());
 
     // if (cartRequest.getQuantity() <= 0)
     // return ResponseEntity.badRequest().body(new MessageResponse("Error: quantity
@@ -266,7 +284,7 @@ public class ProductService {
   }
 
   public ResponseEntity<?> removeCartItem(@Valid CartRequest cartRequest) {
-    userDetailsServiceImpl.checkAdminOrConcernedUser(cartRequest.getUsername(), cartRequest.getPassword(),
+    userDetailsServiceImpl.checkAdminOrConcernedUser(
         cartRequest.getUserid());
     User user = userRepository.findByUsernameIgnoreCase(cartRequest.getUsername()).get();
     ShoppingCart shoppingCart = user.getShoppingcart();
@@ -281,7 +299,7 @@ public class ProductService {
   }
 
   public ResponseEntity<?> getShoppingcart(CartRequest cartRequest) {
-    userDetailsServiceImpl.checkAdminOrConcernedUser(cartRequest.getUsername(), cartRequest.getPassword(),
+    userDetailsServiceImpl.checkAdminOrConcernedUser(
         cartRequest.getUserid());
     if (cartRequest.getUserid() == null)
       return ResponseEntity.badRequest().body(new MessageResponse("Error: cart's user is not valid"));
@@ -297,7 +315,7 @@ public class ProductService {
   }
 
   public ResponseEntity<?> getAllShoppingCarts(CartRequest cartRequest) {
-    userDetailsServiceImpl.checkAdmin(cartRequest.getUsername(), cartRequest.getPassword());
+    userDetailsServiceImpl.checkAdmin();
     List<ShoppingCart> shoppingcart = shoppingcartRepository.findByCartItemsIsNotEmpty();
     if (shoppingcart == null)
       return ResponseEntity.badRequest().body(new MessageResponse("Error: no carts"));
@@ -305,7 +323,7 @@ public class ProductService {
   }
 
   public ResponseEntity<?> setShippingDate(@Valid ShoppingCartRequest shoppingcartRequest) {
-    userDetailsServiceImpl.checkAdmin(shoppingcartRequest.getUsername(), shoppingcartRequest.getPassword());
+    userDetailsServiceImpl.checkAdmin();
     if (shoppingcartRequest.getUserid() == null)
       return ResponseEntity.badRequest().body(new MessageResponse("Error: cart's user is not valid"));
     User user = userRepository.findById(shoppingcartRequest.getUserid()).get();
@@ -334,7 +352,7 @@ public class ProductService {
   }
 
   public ResponseEntity<?> setCompletedDate(@Valid ShoppingCartRequest shoppingcartRequest) {
-    userDetailsServiceImpl.checkAdmin(shoppingcartRequest.getUsername(), shoppingcartRequest.getPassword());
+    userDetailsServiceImpl.checkAdmin();
     if (shoppingcartRequest.getUserid() == null)
       return ResponseEntity.badRequest().body(new MessageResponse("Error: cart's user is not valid"));
     User user = userRepository.findById(shoppingcartRequest.getUserid()).get();
@@ -363,8 +381,7 @@ public class ProductService {
   }
 
   public ResponseEntity<?> updateShoppingCartItems(@Valid CartItemRequest cartItemRequest) {
-    userDetailsServiceImpl.checkAdminOrConcernedUser(cartItemRequest.getUsername(), cartItemRequest.getPassword(),
-        cartItemRequest.getUserid());
+    userDetailsServiceImpl.checkAdminOrConcernedUser(cartItemRequest.getUserid());
 
     if (cartItemRequest.getCartItems().isEmpty())
       return ResponseEntity.badRequest().body(new MessageResponse("Error: empty cart"));

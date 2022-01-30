@@ -39,8 +39,7 @@ export class ProductsComponent implements OnInit, AfterViewInit {
   }
   loadproductresults(): void {
     this.paginator.page.subscribe(() => {
-      const productrequest = new ProductRequest(
-        "mod", "123456", 0, this.productsearch.nativeElement.value,
+      const productrequest = new ProductRequest( 0, this.productsearch.nativeElement.value,
         this.productsearch.nativeElement.value, 0, 0,null, false, 'name', 'asc', this.paginator.pageSize, this.paginator.getNumberOfPages())
       this.productservice.findProduct(productrequest).subscribe(
         data => {
@@ -168,8 +167,8 @@ export class ProductsComponent implements OnInit, AfterViewInit {
   updateProductImage(event, id, i): void {
     const image: FormData = new FormData();
     // image.append('image', event.target.files[0]);
-    image.append('username', "mod");
-    image.append('password', "123456");
+    // image.append('username', "mod");
+    // image.append('password', "123456");
     image.append('id', id);
     image.append('number', i);
     this.productservice.updateProductImage(image).subscribe(

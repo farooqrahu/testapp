@@ -10,15 +10,7 @@ import com.bezkoder.springjwt.security.services.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -41,7 +33,7 @@ public class AuthController {
   }
 
   @PostMapping("/login")
-  public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+  public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) throws Exception {
 
     return userDetailsServiceImpl.authenticateUser(loginRequest);
   }
@@ -57,7 +49,12 @@ public class AuthController {
     return userDetailsServiceImpl.getUserInfo(updateRequest);
   }
 
-  @RequestMapping("/updateProfileImage")
+  @GetMapping("/user-profile{test}")
+  public ResponseEntity<?> getTest(@PathVariable String test) {
+  System.out.println(test);
+    return null;
+  }
+    @RequestMapping("/updateProfileImage")
   @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   @ResponseBody
   public ResponseEntity<?> updateUserProfilePicture(@RequestPart("image") MultipartFile image,

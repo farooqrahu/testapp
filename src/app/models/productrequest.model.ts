@@ -2,8 +2,6 @@ import { Category } from './category.model';
 import { Product } from './product.model';
 export class ProductRequest {
   constructor(
-    public username: string,
-    public password: string,
     public id: number,
     public name: string,
     public description: string,
@@ -17,12 +15,8 @@ export class ProductRequest {
     private pagenumber: number = 0
   ) { }
   convert(
-    username: string,
-    password: string,
     product: Product,
   ) {
-    this.username = username;
-    this.password = password;
     this.id = product.id
     this.name = product.name
     this.description = product.description

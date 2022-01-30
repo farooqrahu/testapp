@@ -30,7 +30,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   UserDetailsServiceImpl userDetailsService;
 
   @Autowired
-  private AuthEntryPointJwt unauthorizedHandler;
+  private AuthEntryPointJwt authEntryPointJwt;
 
   @Bean
   public AuthTokenFilter authenticationJwtTokenFilter() {
@@ -54,15 +54,26 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   }
 
   @Override
-  protected void configure(HttpSecurity http) throws Exception {
-    http.cors().and().csrf().disable().exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
-        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
-        .antMatchers("**").permitAll().antMatchers("**").permitAll().anyRequest().authenticated();
-    http.authorizeRequests().antMatchers("/").permitAll().antMatchers("/h2-console/**").permitAll();
+  protected void configure(HttpSecurity httpSecurity) throws Exception {
+//    http.cors().and().csrf().disable().exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
+//        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
+//        .antMatchers("**").permitAll().antMatchers("**").permitAll().anyRequest().authenticated();
+//    http.authorizeRequests().antMatchers("/").permitAll().antMatchers("/h2-console/**").permitAll();
+//
+//    http.csrf().disable();
+//    http.headers().frameOptions().disable();
+//    http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
-    http.csrf().disable();
-    http.headers().frameOptions().disable();
-    http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+    httpSecurity.csrf().disable()
+      // only allow the login api to work without the token
+      .authorizeRequests()
+      .antMatchers("/", "/api/auth/login", "/v2/api-docs", "/configuration/ui", "/swagger-resources/**","/configuration/security", "/swagger-ui.html", "/webjars/**")
+      .permitAll().anyRequest().authenticated().and().exceptionHandling()
+      .authenticationEntryPoint(authEntryPointJwt).and().sessionManagement()
+      .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+    httpSecurity.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+    httpSecurity.cors();     //  This enables cors
+
   }
 
   @Override

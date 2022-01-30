@@ -12,9 +12,9 @@ public class UserResponse {
   private String type = "Bearer";
   private User user;
 
-  public UserResponse(String jwt, User user) {
-    this.token = jwt;
+  public UserResponse(User user,String token) {
     this.user = user;
+    this.token=token;
 
   }
 }

@@ -54,6 +54,8 @@ public class UserDetailsImpl implements UserDetails {
   @Nullable
   @Column(nullable = true)
   private boolean image;
+  private String jwtSign;
+  private boolean active;
 
   public void setId(Long id) {
     this.id = id;
@@ -61,12 +63,14 @@ public class UserDetailsImpl implements UserDetails {
 
   private Collection<? extends GrantedAuthority> authorities;
 
-  public UserDetailsImpl(Long id, String username, String email, String password,
+  public UserDetailsImpl(Long id, String username, String email,String jwtoken,boolean active, String password,
       Collection<? extends GrantedAuthority> authorities) {
     this.id = id;
     this.username = username;
     this.email = email;
     this.password = password;
+    this.jwtSign=jwtoken;
+    this.active=active;
     this.authorities = authorities;
   }
 
@@ -74,7 +78,7 @@ public class UserDetailsImpl implements UserDetails {
     List<GrantedAuthority> authorities = user.getRoles().stream()
         .map(role -> new SimpleGrantedAuthority(role.getName().name())).collect(Collectors.toList());
 
-    return new UserDetailsImpl(user.getId(), user.getUsername(), user.getEmail(), user.getPassword(), authorities);
+    return new UserDetailsImpl(user.getId(), user.getUsername(), user.getEmail(),user.getJwtSign(),user.getStatus().equals("Activated"), user.getPassword(), authorities);
   }
 
   public UserDetailsImpl(Long id, String username, String email, String password, int age, String name, String surname,
