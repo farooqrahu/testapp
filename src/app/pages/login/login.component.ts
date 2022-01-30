@@ -55,7 +55,7 @@ if(this.tokenStorage.getUser()!=null)
     this.tokenmessage = "";
     this.authService.login(username, password).subscribe(
       data => {
-        this.tokenStorage.saveToken(data.accessToken);
+        this.tokenStorage.saveToken(data.token);
         this.user = data.user;
         this.user.password = password;
         this.tokenStorage.saveUser(this.user);

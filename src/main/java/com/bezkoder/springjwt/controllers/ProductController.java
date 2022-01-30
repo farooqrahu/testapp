@@ -47,14 +47,14 @@ public class ProductController {
   @Autowired
   ProductService productService;
 
-  @RequestMapping(value = "/updateProductimage", consumes = { "multipart/mixed", "multipart/form-data" })
+  @RequestMapping(value = "/updateProductimage", consumes = {"multipart/mixed", "multipart/form-data"})
   @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   @ResponseBody
   public ResponseEntity<?> saveProductImage(@Valid @RequestPart("image") MultipartFile image,
-      @Valid @RequestParam("number") int number, @Valid @RequestParam("id") long id,
-      @Valid @RequestPart("username") String username, @Valid @RequestPart("password") String password) {
+                                            @Valid @RequestParam("number") int number, @Valid @RequestParam("id") long id,
+                                            @Valid @RequestPart("username") String username, @Valid @RequestPart("password") String password) {
     Authentication authentication = authenticationManager
-        .authenticate(new UsernamePasswordAuthenticationToken(username, password));
+      .authenticate(new UsernamePasswordAuthenticationToken(username, password));
     SecurityContextHolder.getContext().setAuthentication(authentication);
     return productService.saveProductImage(id, image, number);
   }
@@ -66,39 +66,25 @@ public class ProductController {
 
   @PostMapping("/addProduct")
   public ResponseEntity<?> addProduct(@Valid @RequestBody ProductRequest productRequest) {
-
-    Authentication authentication = authenticationManager.authenticate(
-        new UsernamePasswordAuthenticationToken(productRequest.getUsername(), productRequest.getPassword()));
-    SecurityContextHolder.getContext().setAuthentication(authentication);
     return productService.addProduct(productRequest);
 
   }
 
   @PostMapping("/updateProduct")
   public ResponseEntity<?> updateProduct(@Valid @RequestBody ProductRequest productRequest) {
-
-    Authentication authentication = authenticationManager.authenticate(
-        new UsernamePasswordAuthenticationToken(productRequest.getUsername(), productRequest.getPassword()));
-    SecurityContextHolder.getContext().setAuthentication(authentication);
     return productService.updateProduct(productRequest);
 
   }
 
   @PostMapping("/deleteProduct")
   public ResponseEntity<?> deleteProduct(@Valid @RequestBody ProductRequest productRequest) {
-
-    Authentication authentication = authenticationManager.authenticate(
-        new UsernamePasswordAuthenticationToken(productRequest.getUsername(), productRequest.getPassword()));
-    SecurityContextHolder.getContext().setAuthentication(authentication);
     return productService.deleteProduct(productRequest);
 
   }
 
   @PostMapping("/addCategory")
   public ResponseEntity<?> addCategory(@Valid @RequestBody CategoryRequest categoryRequest) {
-    Authentication authentication = authenticationManager.authenticate(
-        new UsernamePasswordAuthenticationToken(categoryRequest.getUsername(), categoryRequest.getPassword()));
-    SecurityContextHolder.getContext().setAuthentication(authentication);
+
     return productService.addCategory(categoryRequest);
   }
 

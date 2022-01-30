@@ -81,8 +81,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
       // the following validates the tokens,
       // compares the jwt_sign from the claim and the one from DB
       // also makes sure the user is logged in
-      if (jwtUtils.validateToken(jwtToken, userLoginDetails)
-        && userLoginDetails.getJwtSign().equals(claims.get("jwt_sign")) && userLoginDetails.isActive()) {
+      if ((jwtUtils.validateToken(jwtToken, userLoginDetails) && userLoginDetails.getJwtSign()!=null ) && userLoginDetails.getJwtSign().equals(claims.get("jwt_sign")) && userLoginDetails.isActive()) {
 
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
           userLoginDetails, null, userLoginDetails.getAuthorities());

@@ -81,8 +81,8 @@ public class JwtResponse {
   @Column(nullable = true)
   private boolean image;
 
-  public JwtResponse(String accessToken, Long id, String username, String email, List<String> roles) {
-    this.token = accessToken;
+  public JwtResponse(String token, Long id, String username, String email, List<String> roles) {
+    this.token = token;
     this.id = id;
     this.username = username;
     this.email = email;

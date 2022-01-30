@@ -81,7 +81,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 
 
-  public ResponseEntity<?> getAllUsers(LoginRequest loginRequest) {
+  public ResponseEntity<?> getAllUsers() {
     checkAdmin();
     List<String> roles = getRoles();
     if (roles.contains("ROLE_ADMIN")) {

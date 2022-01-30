@@ -33,9 +33,7 @@ export class AuthService {
 
   }
   getAllUsers(): Observable<any> {
-    var username = this.token.getUsername();
-    var password = this.token.getPassword();
-    return this.http.post(AUTH_API + 'getAllUsers', { username, password });
+    return this.http.post(AUTH_API + 'getAllUsers', {});
   }
 
   updateProfile(id: any, username: string, form: FormGroup): Observable<any> {

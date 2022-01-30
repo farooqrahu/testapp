@@ -6,8 +6,6 @@ import lombok.Data;
 
 @Data
 public class ProductRequest {
-  private String username;
-  private String password;
   private Long id;
   private Category category;
   private Company company;

@@ -1,7 +1,7 @@
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
@@ -29,6 +29,7 @@ import { UsersComponent } from './pages/users/users.component';
 import { ShoppingCartsComponent } from './pages/shopping-carts/shopping-carts.component';
 import { InvoiceComponent } from './modal/invoice/invoice.component';
 import { EditshoppingcartComponent } from './modal/editshoppingcart/editshoppingcart.component';
+import {AuthInterceptor} from "./_helpers/auth.interceptor";
 
 @NgModule({
   imports: [
@@ -64,7 +65,11 @@ import { EditshoppingcartComponent } from './modal/editshoppingcart/editshopping
     InvoiceComponent,
     EditshoppingcartComponent
   ],
-  providers: [],
+  providers: [{
+    provide: HTTP_INTERCEPTORS,
+    useClass: AuthInterceptor,
+    multi: true
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

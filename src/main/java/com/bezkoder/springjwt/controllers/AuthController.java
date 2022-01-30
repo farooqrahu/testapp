@@ -21,9 +21,8 @@ public class AuthController {
   UserDetailsServiceImpl userDetailsServiceImpl;
 
   @PostMapping("/getAllUsers")
-  public ResponseEntity<?> getAllUsers(@Valid @RequestBody LoginRequest loginRequest) {
-    return userDetailsServiceImpl.getAllUsers(loginRequest);
-
+  public ResponseEntity<?> getAllUsers() {
+    return userDetailsServiceImpl.getAllUsers();
   }
 
   @PostMapping("/deleteUser")
@@ -49,11 +48,6 @@ public class AuthController {
     return userDetailsServiceImpl.getUserInfo(updateRequest);
   }
 
-  @GetMapping("/user-profile{test}")
-  public ResponseEntity<?> getTest(@PathVariable String test) {
-  System.out.println(test);
-    return null;
-  }
     @RequestMapping("/updateProfileImage")
   @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   @ResponseBody
