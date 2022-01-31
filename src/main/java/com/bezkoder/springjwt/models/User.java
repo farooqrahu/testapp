@@ -25,6 +25,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
+import lombok.NoArgsConstructor;
 import org.springframework.lang.Nullable;
 
 import lombok.Getter;
@@ -33,6 +34,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @Entity
+@NoArgsConstructor
 @Table(name = "users", uniqueConstraints = { @UniqueConstraint(columnNames = "username"),
     @UniqueConstraint(columnNames = "email") })
 public class User {
@@ -88,9 +90,6 @@ public class User {
   @JoinColumn(name = "shoppingcart_id", referencedColumnName = "id")
   private ShoppingCart shoppingcart;
 
-  public User() {
-  }
-
   public User(String username, String email, String password) {
     this.username = username;
     this.email = email;
@@ -102,14 +101,6 @@ public class User {
     this.email = email;
     this.password = password;
     this.roles = roles;
-  }
-
-  public String getPassword() {
-    return password;
-  }
-
-  public void setPassword(String password) {
-    this.password = password;
   }
 
 }

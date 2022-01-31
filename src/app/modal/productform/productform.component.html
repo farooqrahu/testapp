@@ -10,6 +10,10 @@
     <input matInput (change)="validate(data)" [(ngModel)]="data.price" required>
   </mat-form-field>
   <mat-form-field>
+    <p>Product Quantity</p>
+    <input matInput (change)="validate(data)" [(ngModel)]="data.quantity" required>
+  </mat-form-field>
+  <mat-form-field>
     <p>Product Description</p>
     <textarea matInput (change)="validate(data)" [(ngModel)]="data.description" cdkTextareaAutosize
       #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="5" cdkAutosizeMaxRows="20"></textarea>

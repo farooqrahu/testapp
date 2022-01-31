@@ -1,5 +1,6 @@
 package com.bezkoder.springjwt.models;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -13,6 +14,7 @@ import javax.validation.constraints.Size;
 @Setter
 @Entity
 @Table(name = "Company")
+@Builder
 public class Company {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

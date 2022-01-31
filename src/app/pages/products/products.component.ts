@@ -11,6 +11,7 @@ import { ProductService } from 'src/app/_services/product.service';
 import { TokenStorageService } from 'src/app/_services/token-storage.service';
 import { Category } from './../../models/category.model';
 import { Product } from './../../models/product.model';
+import Swal from 'sweetalert2'
 @Component({
   selector: 'app-products',
   templateUrl: './products.component.html',
@@ -97,7 +98,7 @@ export class ProductsComponent implements OnInit, AfterViewInit {
     if (product === undefined)
       product = new Product(0, "", "", 0, this.categories[0], false,0)
     const dialogRef = this.dialog.open(ProductformComponent, {
-      width: '350px',
+      width: '400px',
       data: {
         id: product.id, name: product.name, description: product.description,
         price: product.price, category: product.category,quantity:product.quantity
@@ -199,26 +200,66 @@ export class ProductsComponent implements OnInit, AfterViewInit {
   }
 
   deleteProduct(product: Product): any {
-    this.productservice.deleteProduct(product).subscribe(
-      data => {
-        this.messagebox(data.message);
-        this.refreshproduct()
-      },
-      err => {
-        this.messagebox("Error deleting product");
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.productservice.deleteProduct(product).subscribe(
+          data => {
+            Swal.fire(
+              'Deleted!',
+              'Your Product has been deleted.',
+              'success'
+            )
+            this.refreshproduct()
+          },
+          err => {
+            this.messagebox("Error deleting product");
+          }
+        );
       }
-    );
+    })
+
+
+
   }
   deleteCategory(category: Category): any {
-    this.productservice.deleteCategory(category).subscribe(
-      data => {
-        this.messagebox(data.message);
-        this.getAllCategories()
-      },
-      err => {
-        this.messagebox("Error deleting category, please make sure no products are in this category.");
+
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.productservice.deleteCategory(category).subscribe(
+          data => {
+            this.getAllCategories()
+            Swal.fire(
+              'Deleted!',
+              'Your Product has been deleted.',
+              'success'
+            )
+          },
+          err => {
+            this.messagebox("Error deleting category, please make sure no products are in this category.");
+          }
+        );
       }
-    );
+    })
+
+
+
+
   }
   addCategory(category: Category): any {
     this.productservice.addCategory(category).subscribe(

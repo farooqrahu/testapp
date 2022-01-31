@@ -9,6 +9,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -18,6 +19,7 @@ import lombok.ToString;
 @Setter
 @Entity
 @Table(name = "Category")
+@Builder
 public class Category {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
