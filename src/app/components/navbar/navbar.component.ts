@@ -31,7 +31,6 @@ this.loadImage();
   public loadImage(): void {
     this.authService.getProfileImage().subscribe(
       data => {
-        console.log(data);
         this.profileimg =data.user.file;
       },
       err => {

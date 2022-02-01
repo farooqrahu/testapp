@@ -87,7 +87,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     checkAdmin();
     List<String> roles = getRoles();
     if (roles.contains("ROLE_ADMIN")) {
-      return ResponseEntity.ok(new UserListResponse(userRepository.findAll()));
+      return ResponseEntity.ok(UserListResponse.userResponseFactory(userRepository.findAll()));
     } else {
       return ResponseEntity.badRequest().body(new MessageResponse("Error: Unauthorized access"));
     }
