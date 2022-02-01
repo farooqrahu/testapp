@@ -60,9 +60,11 @@ export class AuthService {
   }
 
   updateProfileImage(form: FormData): Observable<any> {
-
-
     return this.http.post(AUTH_API + 'updateProfileImage', form);
+  }
+
+  getProfileImage(): Observable<any> {
+    return this.http.get(AUTH_API + 'user-profile',{});
   }
 
   login(username: string, password: string): Observable<any> {

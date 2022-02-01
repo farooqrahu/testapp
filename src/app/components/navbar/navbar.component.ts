@@ -23,11 +23,23 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit() {
     this.listTitles = ROUTES.filter(listTitle => listTitle);
-    if (this.currentUser != null)
-      this.profileimg = '/assets/userimages/' + this.currentUser.id + '/profile.jpg';
-
+    // if (this.currentUser != null)
+    //   this.profileimg = '/assets/userimages/' + this.currentUser.id + '/profile.jpg';
+this.loadImage();
 
   }
+  public loadImage(): void {
+    this.authService.getProfileImage().subscribe(
+      data => {
+        console.log(data);
+        this.profileimg =data.user.file;
+      },
+      err => {
+        (err);
+      }
+    );
+  }
+
   getTitle() {
     var titlee = this.location.prepareExternalUrl(this.location.path());
     if (titlee.charAt(0) === '#') {

@@ -24,6 +24,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
@@ -44,6 +45,9 @@ public class ProductService {
   UserDetailsServiceImpl userDetailsServiceImpl;
   @Autowired
   EmailSenderService emailSenderService;
+  @Autowired
+  private FileDBRepository fileDBRepository;
+
   public ResponseEntity<?> findProduct(ProductRequest productRequest) {
     if (productRequest.getCategory() != null && productRequest.getName() != null) {
       return findByNameContainingAndCategory(productRequest);
@@ -135,34 +139,21 @@ public class ProductService {
   }
 
   public ResponseEntity<?> saveProductImage(long id, MultipartFile image, int number) {
-
-    boolean exists = true;
     if (number < 0 || number > 4)
       return ResponseEntity.badRequest().body(new MessageResponse("Error: product can only have 5 images"));
-    Product Product = getProduct(id);
-    OutputStream out = null;
+    Product product = getProduct(id);
     try {
-      Files.createDirectories(Paths.get("src/assets/productimages/" + id + "/"));
-      File tempFile = new File("src/assets/productimages/" + id + "/" + number + ".jpg");
-      exists = tempFile.exists();
-      out = new FileOutputStream("src/assets/productimages/" + id + "/" + number + ".jpg");
-      out.write(image.getBytes());
-      Product.setImages(true);
-      productRepository.save(Product);
-      if (exists)
+      String fileName = StringUtils.cleanPath(Objects.requireNonNull(image.getOriginalFilename()));
+      FileDB fileDB = new FileDB(fileName, image.getContentType(), image.getBytes());
+      product.setImages(true);
+      product.setFiles(fileDB);
+      fileDBRepository.save(fileDB);
+      productRepository.save(product);
+
         return ResponseEntity.ok(new MessageResponse("product image updated successfully"));
-      else
-        return ResponseEntity.ok(new MessageResponse("product image added successfully"));
     } catch (IOException e) {
       e.printStackTrace();
       return ResponseEntity.badRequest().body(new MessageResponse("Error: image could not be saved"));
-    } finally {
-      try {
-        out.flush();
-        out.close();
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
     }
   }
 

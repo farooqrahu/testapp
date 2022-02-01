@@ -1,5 +1,6 @@
 package com.bezkoder.springjwt.security.services;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -8,10 +9,7 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import com.bezkoder.springjwt.models.ConfirmationToken;
-import com.bezkoder.springjwt.models.ERole;
-import com.bezkoder.springjwt.models.Role;
-import com.bezkoder.springjwt.models.User;
+import com.bezkoder.springjwt.models.*;
 import com.bezkoder.springjwt.payload.request.LoginRequest;
 import com.bezkoder.springjwt.payload.request.SignupRequest;
 import com.bezkoder.springjwt.payload.request.UpdateRequest;
@@ -19,6 +17,7 @@ import com.bezkoder.springjwt.payload.response.MessageResponse;
 import com.bezkoder.springjwt.payload.response.UserListResponse;
 import com.bezkoder.springjwt.payload.response.UserResponse;
 import com.bezkoder.springjwt.repository.ConfirmationTokenRepository;
+import com.bezkoder.springjwt.repository.FileDBRepository;
 import com.bezkoder.springjwt.repository.RoleRepository;
 import com.bezkoder.springjwt.repository.UserRepository;
 import com.bezkoder.springjwt.security.CustomAuthenticationProvider;
@@ -41,6 +40,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
@@ -56,6 +56,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
   PasswordEncoder encoder;
   @Autowired
   UserRepository userRepository;
+  @Autowired
+  private FileDBRepository fileDBRepository;
   @Autowired
   RoleRepository roleRepository;
   @Autowired
@@ -128,7 +130,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     if (!user.get().getStatus().equals("Activated"))
       return ResponseEntity.badRequest().body(new MessageResponse("Error: please verify your account"));
-    return ResponseEntity.ok(new UserResponse(user.get(),token));
+    return ResponseEntity.ok(UserResponse.userResponseFactory(user.get(),token));
   }
   /**
    * the following method is used to authenticate the given user
@@ -211,12 +213,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     return ResponseEntity.badRequest().body(new MessageResponse("Error Activating Account"));
   }
 
-  public ResponseEntity<?> getUserInfo(UpdateRequest updateRequest) {
-    checkAdminOrConcernedUser(updateRequest.getId());
+  public ResponseEntity<?> getUserInfo() {
     UserDetailsImpl userDetails = getUserDetails();
     User user = userRepository.findById(userDetails.getId()).get();
-
-    return ResponseEntity.ok(new UserResponse(user,null));
+    return ResponseEntity.ok(UserResponse.userResponseFactory(user,null));
 
   }
 
@@ -224,7 +224,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     checkAdminOrConcernedUser(updateRequest.getId());
     UserDetailsImpl userDetails = getUserDetails();
     User user = userDetailsServiceImpl.saveUser(userDetails.getId(), updateRequest);
-    return ResponseEntity.ok(new UserResponse(user,null));
+    return ResponseEntity.ok(UserResponse.userResponseFactory(user,null));
 
   }
 
@@ -251,20 +251,18 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     User user = userRepository.findById(id).get();
     try {
-      Files.createDirectories(Paths.get("src/assets/userimages/" + id + "/"));
-      OutputStream out = new FileOutputStream("src/assets/userimages/" + id + "/" + "profile" + ".jpg");
-      out.write(image.getBytes());
-      out.flush();
-      out.close();
+      String fileName = StringUtils.cleanPath(Objects.requireNonNull(image.getOriginalFilename()));
+      FileDB fileDB = new FileDB(fileName, image.getContentType(), image.getBytes());
       user.setImage(true);
+      user.setFiles(fileDB);
+      fileDBRepository.save(fileDB);
     } catch (IOException e) {
       e.printStackTrace();
     }
     userRepository.save(user);
   }
 
-  public ResponseEntity<?> updateUserProfilePicture(MultipartFile image, String username, String password) {
-
+  public ResponseEntity<?> updateUserProfilePicture(MultipartFile image) {
     UserDetailsImpl userDetails = getUserDetails();
     this.saveUserProfileImage(userDetails.getId(), image);
     return ResponseEntity.ok(new MessageResponse("User updated successfully!"));

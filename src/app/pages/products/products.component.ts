@@ -188,8 +188,8 @@ export class ProductsComponent implements OnInit, AfterViewInit {
         var objIndex = this.products.findIndex((obj => obj.id == product.id));
         this.products[objIndex] = product
         this.dataSource = new MatTableDataSource(this.products)
+        this.refreshproduct()
         this.messagebox(data.message);
-
 
       },
       err => {

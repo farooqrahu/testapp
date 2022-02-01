@@ -90,6 +90,11 @@ public class User {
   @JoinColumn(name = "shoppingcart_id", referencedColumnName = "id")
   private ShoppingCart shoppingcart;
 
+  @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+  @JoinColumn(name = "files_id", referencedColumnName = "id")
+  private FileDB files;
+
+
   public User(String username, String email, String password) {
     this.username = username;
     this.email = email;

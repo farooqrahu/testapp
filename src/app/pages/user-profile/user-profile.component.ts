@@ -47,8 +47,18 @@ export class UserProfileComponent implements OnInit {
   }
   ngOnInit(): void {
     this.fillUserForm();
-    this.profileimg = '/assets/userimages/' + this.currentUser.id + '/profile.jpg';
-
+    this.loadImage();
+  }
+  public loadImage(): void {
+    this.authService.getProfileImage().subscribe(
+      data => {
+        console.log(data);
+        this.profileimg =data.user.file;
+      },
+      err => {
+        (err);
+      }
+    );
   }
   public fillUserForm(): void {
     this.profileForm.patchValue({
@@ -68,7 +78,7 @@ export class UserProfileComponent implements OnInit {
   public onFileChanged(event) {
     //Select File
     this.imageForm.patchValue({ image: event.target.files[0] });
-    if (this.imageForm.get('image').value != null && this.profileForm.get('password').value?.length > 5)
+    if (this.imageForm.get('image').value != null )
       this.update();
   }
 
@@ -77,11 +87,10 @@ export class UserProfileComponent implements OnInit {
     const image: FormData = new FormData();
 
     image.append('image', this.imageForm.get('image').value);
-    image.append('username', this.currentUser.username);
-    image.append('password', this.profileForm.get('password').value);
     this.authService.updateProfileImage(image).subscribe(
       data => {
         this.isSuccessful = true;
+        this.loadImage();
         window.location.reload();
       },
       err => {

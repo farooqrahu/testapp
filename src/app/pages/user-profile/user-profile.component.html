@@ -24,7 +24,7 @@
                             <form *ngIf="!isSuccessful" [formGroup]="imageForm" enctype='multipart/form-data'
                                 (ngSubmit)=" update()" novalidate>
                                 <label>
-                                    <img [src]=profileimg class="rounded-circle">
+                                    <img src="{{profileimg}}" class="rounded-circle">
                                     <input type="file" (change)="onFileChanged($event)" style="display: none;"
                                         accept="image/png, image/jpeg" class="btn btn-sm btn-info mr-4">
                                 </label>

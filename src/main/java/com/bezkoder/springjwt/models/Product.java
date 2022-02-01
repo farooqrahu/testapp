@@ -31,6 +31,10 @@ public class Product {
   @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
   private Company company;
 
+  @OneToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "files_id", referencedColumnName = "id")
+  private FileDB files;
+
   @Nullable
   private boolean images;
 

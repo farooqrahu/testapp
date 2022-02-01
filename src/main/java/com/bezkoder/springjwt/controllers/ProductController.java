@@ -51,11 +51,7 @@ public class ProductController {
   @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   @ResponseBody
   public ResponseEntity<?> saveProductImage(@Valid @RequestPart("image") MultipartFile image,
-                                            @Valid @RequestParam("number") int number, @Valid @RequestParam("id") long id,
-                                            @Valid @RequestPart("username") String username, @Valid @RequestPart("password") String password) {
-    Authentication authentication = authenticationManager
-      .authenticate(new UsernamePasswordAuthenticationToken(username, password));
-    SecurityContextHolder.getContext().setAuthentication(authentication);
+                                            @Valid @RequestParam("number") int number, @Valid @RequestParam("id") long id) {
     return productService.saveProductImage(id, image, number);
   }
 

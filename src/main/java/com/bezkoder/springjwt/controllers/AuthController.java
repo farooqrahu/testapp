@@ -1,17 +1,21 @@
 package com.bezkoder.springjwt.controllers;
 
-import javax.validation.Valid;
-
 import com.bezkoder.springjwt.payload.request.LoginRequest;
 import com.bezkoder.springjwt.payload.request.SignupRequest;
 import com.bezkoder.springjwt.payload.request.UpdateRequest;
 import com.bezkoder.springjwt.security.services.UserDetailsServiceImpl;
-
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.Barcode128;
+import com.itextpdf.text.pdf.PdfWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.validation.Valid;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -44,18 +48,15 @@ public class AuthController {
   }
 
   @GetMapping("/user-profile")
-  public ResponseEntity<?> getUserInfo(@Valid @RequestBody UpdateRequest updateRequest) {
-    return userDetailsServiceImpl.getUserInfo(updateRequest);
+  public ResponseEntity<?> getUserInfo() {
+    return userDetailsServiceImpl.getUserInfo();
   }
 
     @RequestMapping("/updateProfileImage")
   @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   @ResponseBody
-  public ResponseEntity<?> updateUserProfilePicture(@RequestPart("image") MultipartFile image,
-      @RequestPart("username") String username, @RequestPart("password") String password) {
-
-    return userDetailsServiceImpl.updateUserProfilePicture(image, username, password);
-
+  public ResponseEntity<?> updateUserProfilePicture(@RequestPart("image") MultipartFile image) {
+    return userDetailsServiceImpl.updateUserProfilePicture(image);
   }
 
   @PostMapping("/register")
@@ -67,4 +68,25 @@ public class AuthController {
   public ResponseEntity<?> confirmUserAccount(@RequestParam("token") String confirmationToken) {
     return userDetailsServiceImpl.confirmUserAccount(confirmationToken);
   }
+
+
+//  public static void main(String[] args) throws FileNotFoundException, DocumentException {
+//
+//    Document document = new Document(new Rectangle(PageSize.A4));
+//    PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream("d:/Java4s_BarCode_128.pdf"));
+//
+//    document.open();
+//    document.add(new Paragraph("Khalil Cloth Shop"));
+//
+//    Barcode128 code128 = new Barcode128();
+//    code128.setGenerateChecksum(true);
+//    code128.setCode("RS: 140.00");
+//    code128.setBarHeight(20);
+//    code128.setBaseline(10);
+//    document.add(code128.createImageWithBarcode(writer.getDirectContent(), null, null));
+//    document.close();
+//    System.out.println("Document Generated...!!!!!!");
+//  }
+
+
 }
