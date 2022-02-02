@@ -12,6 +12,7 @@ import { TokenStorageService } from 'src/app/_services/token-storage.service';
 import { Category } from './../../models/category.model';
 import { Product } from './../../models/product.model';
 import Swal from 'sweetalert2'
+import {BarcodeComponent} from "../../modal/barcode/barcode.component";
 @Component({
   selector: 'app-products',
   templateUrl: './products.component.html',
@@ -32,9 +33,9 @@ export class ProductsComponent implements OnInit, AfterViewInit {
   ) { }
   ngAfterViewInit(): void {
   }
-  @ViewChild(MatSort) sort: MatSort;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild('productsearch') productsearch: ElementRef;
+  @ViewChild(MatSort) sort: MatSort | any;
+  @ViewChild(MatPaginator) paginator: MatPaginator | any;
+  @ViewChild('productsearch') productsearch: ElementRef  | any;
   counter(i: number) {
     return new Array(i);
   }
@@ -63,16 +64,19 @@ export class ProductsComponent implements OnInit, AfterViewInit {
     )
   }
   ngOnInit() {
-    //  this.productsearch.nativeElement=""
+     // this.productsearch.nativeElement=""
     this.refreshproduct()
     this.getAllCategories()
   }
 
   refreshproduct() {
+
     this.productservice.getAllProducts().subscribe(
       data => {
+        console.log("refres");
         this.products = data.list;
-        (this.products);
+        // console.log(this.products);
+        (this.products.length);
         this.productslength = data.totalitems;
         this.dataSource = new MatTableDataSource(this.products);
         setTimeout(() => {
@@ -96,7 +100,7 @@ export class ProductsComponent implements OnInit, AfterViewInit {
   }
   openDialog(product?: Product): void {
     if (product === undefined)
-      product = new Product(0, "", "", 0, this.categories[0], false,0)
+      product = new Product(0, "", "", 0, this.categories[0], false,0,"")
     const dialogRef = this.dialog.open(ProductformComponent, {
       width: '400px',
       data: {
@@ -119,6 +123,17 @@ export class ProductsComponent implements OnInit, AfterViewInit {
 
     });
   }
+  viewDialog(product?: Product): void {
+    const dialogRef = this.dialog.open(BarcodeComponent, {
+      width: '600px',
+      data: {
+        id: product.id, file: product.file
+      }
+    });
+    dialogRef.afterClosed().subscribe(res => {
+    });
+  }
+
   opencategorydialog(category?: Category): void {
     if (category === undefined || category.name == null)
       category = new Category(0, "");
@@ -167,7 +182,7 @@ export class ProductsComponent implements OnInit, AfterViewInit {
   }
   updateProductImage(event, id, i): void {
     const image: FormData = new FormData();
-    // image.append('image', event.target.files[0]);
+    image.append('image', event.target.files[0]);
     // image.append('username', "mod");
     // image.append('password', "123456");
     image.append('id', id);

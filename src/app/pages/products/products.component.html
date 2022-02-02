@@ -121,6 +121,7 @@
             <ng-container matColumnDef="action">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Actions</th>
               <td mat-cell *matCellDef="let product">
+                <button  mat-button (click)="viewDialog(product)">View</button>
                 <button  mat-button (click)="openDialog(product)">Edit</button>
                 <button  mat-button (click)="deleteProduct(product,$event)">Delete</button>
 

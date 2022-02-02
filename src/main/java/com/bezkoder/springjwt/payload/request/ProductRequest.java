@@ -15,7 +15,7 @@ public class ProductRequest {
   private boolean images;
   private String sort = "id";
   private String sortdirection = "asc";
-  private int pagesize = 10;
+  private int pagesize = 0;
   private int pagenumber = 0;
   private Long quantity;
 }

@@ -1,23 +1,37 @@
 package com.bezkoder.springjwt.security.services;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.DecimalFormat;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import javax.imageio.ImageIO;
 import javax.validation.Valid;
 
+import com.aspose.barcode.EncodeTypes;
+import com.aspose.barcode.generation.BarcodeGenerator;
+import com.bezkoder.springjwt.dto.ProductDto;
 import com.bezkoder.springjwt.models.*;
 import com.bezkoder.springjwt.payload.request.*;
 import com.bezkoder.springjwt.payload.response.*;
 import com.bezkoder.springjwt.repository.*;
 
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.Barcode128;
+import com.itextpdf.text.pdf.PdfWriter;
+import org.krysalis.barcode4j.impl.code128.Code128;
+import org.krysalis.barcode4j.impl.code128.Code128Bean;
+import org.krysalis.barcode4j.impl.upcean.EAN13Bean;
+import org.krysalis.barcode4j.output.CanvasProvider;
+import org.krysalis.barcode4j.output.bitmap.BitmapCanvasProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -47,6 +61,8 @@ public class ProductService {
   EmailSenderService emailSenderService;
   @Autowired
   private FileDBRepository fileDBRepository;
+  @Value("${barcode.label}")
+  private String barcodeLabel;
 
   public ResponseEntity<?> findProduct(ProductRequest productRequest) {
     if (productRequest.getCategory() != null && productRequest.getName() != null) {
@@ -64,10 +80,10 @@ public class ProductService {
     if (productRequest.getPagesize() > 0 && productRequest.getPagenumber() >= 0) {
       if (productRequest.getSortdirection() == "desc") {
         return PageRequest.of(productRequest.getPagenumber(), productRequest.getPagesize(),
-            Sort.by(productRequest.getSort()).descending());
+          Sort.by(productRequest.getSort()).descending());
       } else {
         return PageRequest.of(productRequest.getPagenumber(), productRequest.getPagesize(),
-            Sort.by(productRequest.getSort()).ascending());
+          Sort.by(productRequest.getSort()).ascending());
       }
     }
     return null;
@@ -76,30 +92,30 @@ public class ProductService {
   public ResponseEntity<?> findAllProducts(ProductRequest productRequest) {
     Pageable paging = checkPaging(productRequest);
     if (paging == null)
-      return ResponseEntity.ok(new ProductResponse(productRepository.findAll()));
-    return ResponseEntity.ok(new ProductResponse(productRepository.findAll(paging)));
+      return ResponseEntity.ok(new ProductResponse(productRepository.findAll().stream().map(ProductDto::factoryProduct).collect(Collectors.toList())));
+    return ResponseEntity.ok(new ProductResponse(productRepository.findAll(paging).stream().map(ProductDto::factoryProduct).collect(Collectors.toList())));
   }
 
   public ResponseEntity<?> findByNameContaining(ProductRequest productRequest) {
     Pageable paging = checkPaging(productRequest);
     if (paging == null)
-      return ResponseEntity.ok(new ProductResponse(productRepository.findByNameContaining(productRequest.getName())));
+      return ResponseEntity.ok(new ProductResponse(productRepository.findByNameContaining(productRequest.getName()).stream().map(ProductDto::factoryProduct).collect(Collectors.toList())));
     else
       return ResponseEntity
-          .ok(new ProductResponse(productRepository.findByNameContaining(productRequest.getName(), paging)));
+        .ok(new ProductResponse(productRepository.findByNameContaining(productRequest.getName(), paging).stream().map(ProductDto::factoryProduct).collect(Collectors.toList())));
   }
 
   public ResponseEntity<?> findByNameContainingAndCategory(ProductRequest productRequest) {
     Pageable paging = checkPaging(productRequest);
     if (paging == null)
       return ResponseEntity.ok(new ProductResponse(
-          productRepository.findByNameContainingAndCategory(productRequest.getName(), productRequest.getCategory())));
+        productRepository.findByNameContainingAndCategory(productRequest.getName(), productRequest.getCategory()).stream().map(ProductDto::factoryProduct).collect(Collectors.toList())));
     else
       return ResponseEntity.ok(new ProductResponse(productRepository
-          .findByNameContainingAndCategory(productRequest.getName(), productRequest.getCategory(), paging)));
+        .findByNameContainingAndCategory(productRequest.getName(), productRequest.getCategory(), paging).stream().map(ProductDto::factoryProduct).collect(Collectors.toList())));
   }
 
-  public ResponseEntity<?> addProduct(ProductRequest productRequest) {
+  public ResponseEntity<?> addProduct(ProductRequest productRequest) throws IOException, DocumentException {
     userDetailsServiceImpl.checkAdmin();
     Optional<Category> category = categoryRepository.findById(productRequest.getCategory().getId());
     if (category.isEmpty())
@@ -112,11 +128,43 @@ public class ProductService {
     if (productRequest.getPrice() == null || productRequest.getPrice() <= 0)
       return ResponseEntity.badRequest().body(new MessageResponse("Error: price must not be empty, zero or negative"));
     Product product = new Product(productRequest);
+
+//    Document document = new Document(new Rectangle(PageSize.A4));
+    String fileName = product.getName().toLowerCase(Locale.ROOT).trim() + ".png";
+//    String fileLocation = new File("static\\images").getAbsolutePath() + "\\" + fileName;
+//    FileOutputStream fos = new FileOutputStream(fileLocation);
+//    PdfWriter writer = PdfWriter.getInstance(document, fos);
+//    document.open();
+//    document.add(new Paragraph("Khalil Cloth Shop"));
+//
+//    Barcode128 code128 = new Barcode128();
+//    code128.setGenerateChecksum(true);
+//    code128.setCode("RS: 140.00");
+//    code128.setBarHeight(20);
+//    code128.setBaseline(10);
+//    document.add(code128.createImageWithBarcode(writer.getDirectContent(), null, null));
+//    document.close();
+//
+//
+//    BarcodeGenerator generator = new BarcodeGenerator(EncodeTypes.CODE_128, "Aspose.BarCode");
+//// set barcode's caption
+//    generator.getParameters().getCaptionAbove().setText("The caption above.");
+//    generator.getParameters().getCaptionAbove().setVisible(true);
+//    generator.getParameters().getCaptionBelow().setText("The caption below.");
+//    generator.getParameters().getCaptionBelow().setVisible(true);
+//// set image resolution
+//    generator.getParameters().setResolution(200);
+//// generate barcode
+//    generator.save(fileName);
+
+
+//    FileDB fileDB = new FileDB(fileName,"pdf",);
+
     productRepository.save(product);
     return ResponseEntity.ok(new MessageResponse("product added successfully!"));
   }
 
-  public ResponseEntity<?> updateProduct(ProductRequest productRequest) {
+  public ResponseEntity<?> updateProduct(ProductRequest productRequest) throws IOException, DocumentException {
     userDetailsServiceImpl.checkAdmin();
 
     Optional<Category> category = categoryRepository.findById(productRequest.getCategory().getId());
@@ -127,6 +175,83 @@ public class ProductService {
     if (productRequest.getPrice() == null || productRequest.getPrice() <= 0)
       return ResponseEntity.badRequest().body(new MessageResponse("Error: price must not be empty, zero or negative"));
     Product product = new Product(productRequest);
+// ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+//    Document document = new Document(new Rectangle(new RectangleReadOnly(400.0F, 240.0F)));
+    String fileName = product.getName().toLowerCase(Locale.ROOT).trim() + ".png";
+    String fileLocation = new File(".").getAbsolutePath() + "\\" + fileName;
+//    FileOutputStream fos = new FileOutputStream(fileLocation);
+//    PdfWriter writer = PdfWriter.getInstance(document, fos);
+//    PdfWriter.getInstance(document, byteArrayOutputStream);
+//    document.open();
+//    document.add(new Paragraph(barcodeLabel));
+//    Barcode128 code128 = new Barcode128();
+//    code128.setGenerateChecksum(true);
+//    code128.setCode("RS: "+ new  DecimalFormat("#.##").format(product.getPrice()));
+//    code128.setBarHeight(20);
+//    code128.setBaseline(20);
+//    code128.setGuardBars(true);
+//    code128.setBarHeight(80f); // great! but what about width???
+//    code128.setX(2f);
+//
+//    document.add(code128.createImageWithBarcode(writer.getDirectContent(), null, null));
+//    document.close();
+
+//
+//    Code128 code1281=new Code128();
+//    EAN13Bean barcodeGenerator = new EAN13Bean();
+//    BitmapCanvasProvider canvas =
+//      new BitmapCanvasProvider(160, BufferedImage.TYPE_BYTE_BINARY, false, 0);
+//    barcodeGenerator.generateBarcode(canvas, "125555555322");
+//    CanvasProvider canvas128 =new CanvasProvider();
+//    barcodeGenerator.generateBarcode(canvas, "125555555322");
+//
+//    code1281.generateBarcode(canvas128);
+//
+//    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//    ImageIO.write(canvas.getBufferedImage(), "jpg", baos);
+//    byte[] bytes = baos.toByteArray();
+
+    Code128Bean code128 = new Code128Bean();
+    code128.setHeight(15f);
+    code128.setModuleWidth(0.4);
+    code128.setQuietZone(10);
+    code128.doQuietZone(true);
+
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    BitmapCanvasProvider canvas = new BitmapCanvasProvider(baos, "image/x-png", 300, BufferedImage.TYPE_BYTE_BINARY, false, 0);
+    code128.generateBarcode(canvas, "RS: "+ new  DecimalFormat("#.##").format(product.getPrice()));
+    canvas.finish();
+
+//write to png file
+    FileOutputStream fos = new FileOutputStream(fileLocation);
+    fos.write(baos.toByteArray());
+    fos.flush();
+    fos.close();
+
+//write to pdf
+    Image png = Image.getInstance(baos.toByteArray());
+    png.setAbsolutePosition(400, 685);
+    png.scalePercent(25);
+
+//    Document document = new Document(new Rectangle(595, 842));
+//    PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream("barcodes.pdf"));
+//    document.open();
+//    document.add(png);
+//    document.close();
+//
+//    writer.close();
+
+    FileDB fileDB = new FileDB(fileName,"image",baos.toByteArray());
+
+//    BarcodeGenerator generator = new BarcodeGenerator(EncodeTypes.CODE_128, "Khalil Cloth House");
+//// set barcode's caption
+//    generator.getParameters().getCaptionAbove().setText("Rs: 140.00");
+//    generator.getParameters().getCaptionAbove().setVisible(true);
+//// set image resolution
+//    generator.getParameters().setResolution(200);
+//// generate barcode
+//    generator.save(fileName);
+    product.setFiles(fileDB);
     productRepository.save(product);
     return ResponseEntity.ok(new MessageResponse("product updated successfully!"));
   }
@@ -150,7 +275,7 @@ public class ProductService {
       fileDBRepository.save(fileDB);
       productRepository.save(product);
 
-        return ResponseEntity.ok(new MessageResponse("product image updated successfully"));
+      return ResponseEntity.ok(new MessageResponse("product image updated successfully"));
     } catch (IOException e) {
       e.printStackTrace();
       return ResponseEntity.badRequest().body(new MessageResponse("Error: image could not be saved"));
@@ -200,7 +325,6 @@ public class ProductService {
     List<Category> categorylist = categoryRepository.findAll();
     return ResponseEntity.ok(new CategoryResponse(categorylist));
   }
-
 
 
   public ResponseEntity<?> updateCompany(@Valid CompanyRequest companyRequest) {
@@ -276,7 +400,7 @@ public class ProductService {
 
   public ResponseEntity<?> removeCartItem(@Valid CartRequest cartRequest) {
     userDetailsServiceImpl.checkAdminOrConcernedUser(
-        cartRequest.getUserid());
+      cartRequest.getUserid());
     User user = userRepository.findByUsernameIgnoreCase(cartRequest.getUsername()).get();
     ShoppingCart shoppingCart = user.getShoppingcart();
     Product product = getProduct(cartRequest.getProductid());
@@ -291,7 +415,7 @@ public class ProductService {
 
   public ResponseEntity<?> getShoppingcart(CartRequest cartRequest) {
     userDetailsServiceImpl.checkAdminOrConcernedUser(
-        cartRequest.getUserid());
+      cartRequest.getUserid());
     if (cartRequest.getUserid() == null)
       return ResponseEntity.badRequest().body(new MessageResponse("Error: cart's user is not valid"));
     User user = userRepository.findById(cartRequest.getUserid()).get();
@@ -337,7 +461,7 @@ public class ProductService {
     mailMessage.setTo(user.getEmail());
     mailMessage.setSubject("Your order has been shipped!");
     mailMessage.setFrom("mrissaoussama@gmail.com");
-    mailMessage.setText("hello "+user.getUsername()+", your order has been shipped");
+    mailMessage.setText("hello " + user.getUsername() + ", your order has been shipped");
     emailSenderService.sendEmail(mailMessage);
     return ResponseEntity.ok(new ShoppingCartResponse(shoppingcart));
   }
@@ -361,13 +485,13 @@ public class ProductService {
       return ResponseEntity.badRequest().body(new MessageResponse("Error: invalid date"));
     shoppingcart.setCompleteddate(shoppingcartRequest.getCompleteddate());
     shoppingcartRepository.save(shoppingcart);
-     //send email
-     SimpleMailMessage mailMessage = new SimpleMailMessage();
-     mailMessage.setTo(user.getEmail());
-     mailMessage.setSubject("Your order has been completed!");
-     mailMessage.setFrom("mrissaoussama@gmail.com");
-     mailMessage.setText("hello "+user.getUsername()+", your order has been completed");
-     emailSenderService.sendEmail(mailMessage);
+    //send email
+    SimpleMailMessage mailMessage = new SimpleMailMessage();
+    mailMessage.setTo(user.getEmail());
+    mailMessage.setSubject("Your order has been completed!");
+    mailMessage.setFrom("mrissaoussama@gmail.com");
+    mailMessage.setText("hello " + user.getUsername() + ", your order has been completed");
+    emailSenderService.sendEmail(mailMessage);
     return ResponseEntity.ok(new ShoppingCartResponse(shoppingcart));
   }
 

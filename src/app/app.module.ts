@@ -30,6 +30,7 @@ import { ShoppingCartsComponent } from './pages/shopping-carts/shopping-carts.co
 import { InvoiceComponent } from './modal/invoice/invoice.component';
 import { EditshoppingcartComponent } from './modal/editshoppingcart/editshoppingcart.component';
 import {AuthInterceptor} from "./_helpers/auth.interceptor";
+import {BarcodeComponent} from "./modal/barcode/barcode.component";
 
 @NgModule({
   imports: [
@@ -59,6 +60,7 @@ import {AuthInterceptor} from "./_helpers/auth.interceptor";
     AuthLayoutComponent,
     ProductformComponent,
     CategoryformComponent,
+    BarcodeComponent,
     MessageboxComponent,
     UsersComponent,
     ShoppingCartsComponent,

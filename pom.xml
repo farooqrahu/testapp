@@ -19,6 +19,8 @@
 		<java.version>11</java.version>
 	</properties>
 
+
+
 	<dependencies>
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -108,6 +110,14 @@
       <artifactId>barcode4j</artifactId>
       <version>2.1</version>
     </dependency>
+
+    <dependency>
+      <groupId>com.aspose</groupId>
+      <artifactId>aspose-barcode</artifactId>
+      <version>20.3</version>
+      <classifier>jdk17</classifier>
+    </dependency>
+
  </dependencies>
 
 	<build>
@@ -134,5 +144,12 @@
       </plugin>
     </plugins>
 	</build>
+  <repositories>
 
+    <repository>
+      <id>AsposeJavaAPI</id>
+      <name>Aspose Java API</name>
+      <url>https://repository.aspose.com/repo/</url>
+    </repository>
+  </repositories>
 </project>

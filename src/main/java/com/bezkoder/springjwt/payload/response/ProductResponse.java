@@ -2,6 +2,7 @@ package com.bezkoder.springjwt.payload.response;
 
 import java.util.List;
 
+import com.bezkoder.springjwt.dto.ProductDto;
 import com.bezkoder.springjwt.models.Category;
 import com.bezkoder.springjwt.models.Product;
 
@@ -19,7 +20,7 @@ public class ProductResponse {
   private String description;
   private Float price;
   private boolean images;
-  private List<Product> list;
+  private List<ProductDto> list;
   private int currentpage;
   private long totalitems;
   private int totalpages;
@@ -35,16 +36,16 @@ public class ProductResponse {
     this.images = images;
   }
 
-  public ProductResponse(String token, List<Product> list) {
+  public ProductResponse(String token, List<ProductDto> list) {
     this.token = token;
     this.list = list;
   }
 
-  public ProductResponse(List<Product> list) {
+  public ProductResponse(List<ProductDto> list) {
     this.list = list;
   }
 
-  public ProductResponse(Page<Product> list) {
+  public ProductResponse(Page<ProductDto> list) {
     this.list = list.getContent();
     this.currentpage = list.getNumber();
     this.totalitems = list.getTotalElements();
