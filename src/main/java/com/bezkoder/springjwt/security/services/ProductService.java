@@ -178,8 +178,12 @@ public class ProductService {
 // ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 //    Document document = new Document(new Rectangle(new RectangleReadOnly(400.0F, 240.0F)));
     String fileName = product.getName().toLowerCase(Locale.ROOT).trim() + ".png";
-    String fileLocation = new File(".").getAbsolutePath() + "\\" + fileName;
-//    FileOutputStream fos = new FileOutputStream(fileLocation);
+    File file = new File(".\\barcode");
+    if(!file.isDirectory()){
+      file.mkdir();
+    }
+    String fileLocation=file.getAbsolutePath() + "\\" + fileName; ;
+    //    FileOutputStream fos = new FileOutputStream(fileLocation);
 //    PdfWriter writer = PdfWriter.getInstance(document, fos);
 //    PdfWriter.getInstance(document, byteArrayOutputStream);
 //    document.open();
@@ -324,6 +328,11 @@ public class ProductService {
 
     List<Category> categorylist = categoryRepository.findAll();
     return ResponseEntity.ok(new CategoryResponse(categorylist));
+  }
+  public ResponseEntity<?> getAllCompanies(CategoryRequest compCategoryRequest) {
+    userDetailsServiceImpl.checkAdmin();
+    List<Company> companyList = companyRepository.findAll();
+    return ResponseEntity.ok(new CompanyResponse(companyList));
   }
 
 

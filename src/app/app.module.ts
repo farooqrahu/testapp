@@ -24,6 +24,7 @@ import { ComponentsModule } from './components/components.module';
 import { ProductformComponent } from './modal/productform/productform.component';
 import { MatSelectModule } from '@angular/material/select';
 import { CategoryformComponent } from './modal/categoryform/categoryform.component';
+import { CompanyformComponent } from './modal/companyform/companyform.component';
 import { MessageboxComponent } from './modal/messagebox/messagebox.component';
 import { UsersComponent } from './pages/users/users.component';
 import { ShoppingCartsComponent } from './pages/shopping-carts/shopping-carts.component';
@@ -60,6 +61,7 @@ import {BarcodeComponent} from "./modal/barcode/barcode.component";
     AuthLayoutComponent,
     ProductformComponent,
     CategoryformComponent,
+    CompanyformComponent,
     BarcodeComponent,
     MessageboxComponent,
     UsersComponent,

@@ -13,7 +13,6 @@ import lombok.Data;
 public class UpdateRequest {
   @Id
   private Long id;
-  @Size(min = 3, max = 20)
   private String username;
 
   @Size(max = 50)
@@ -36,9 +35,6 @@ public class UpdateRequest {
   @Nullable
   @Size(max = 600)
   private String description;
-
-  @NotBlank
-  @Size(min = 6, max = 40)
   private String password;
 
   @Override

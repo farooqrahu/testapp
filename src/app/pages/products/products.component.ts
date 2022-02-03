@@ -13,6 +13,8 @@ import { Category } from './../../models/category.model';
 import { Product } from './../../models/product.model';
 import Swal from 'sweetalert2'
 import {BarcodeComponent} from "../../modal/barcode/barcode.component";
+import {Company} from "../../models/compnay.model";
+import {CompanyformComponent} from "../../modal/companyform/companyform.component";
 @Component({
   selector: 'app-products',
   templateUrl: './products.component.html',
@@ -21,11 +23,14 @@ import {BarcodeComponent} from "../../modal/barcode/barcode.component";
 export class ProductsComponent implements OnInit, AfterViewInit {
   columnsToDisplay = ["id", 'name', "price","quantity", "description", "category", "action"];
   categorycolumnsToDisplay = ["id", 'name', "action"];
+  companycolumnsToDisplay = ["id", 'name', "action"];
 
   dataSource: MatTableDataSource<Product> = null;
   categoriesdatasource: MatTableDataSource<Category> = null;
+  companiesdatasource: MatTableDataSource<Company> = null;
   products: Product[] = [];
   categories: Category[] = [];
+  companies: Company[] = [];
   productslength = 0;
   constructor(public productservice: ProductService, private token: TokenStorageService
     , public dialog: MatDialog
@@ -125,7 +130,7 @@ export class ProductsComponent implements OnInit, AfterViewInit {
   }
   viewDialog(product?: Product): void {
     const dialogRef = this.dialog.open(BarcodeComponent, {
-      width: '600px',
+      width: '820px',
       data: {
         id: product.id, file: product.file
       }
@@ -271,11 +276,8 @@ export class ProductsComponent implements OnInit, AfterViewInit {
         );
       }
     })
-
-
-
-
   }
+
   addCategory(category: Category): any {
     this.productservice.addCategory(category).subscribe(
       data => {
@@ -328,6 +330,111 @@ export class ProductsComponent implements OnInit, AfterViewInit {
       }
     });
   }
+
+
+
+  opencompanydialog(company?: Company): void {
+    if (company === undefined || company.name == null)
+      company = new Category(0, "");
+    const dialogRef = this.dialog.open(CompanyformComponent, {
+      width: '350px',
+      data: {
+        id: company.id, name: company.name
+      }
+    });
+    dialogRef.afterClosed().subscribe(res => {
+      if (res === undefined)
+        return;
+      if (JSON.stringify(company) == JSON.stringify(res))
+        return;
+      else {
+        if (company.id != res.id)
+          return;
+        else {
+          if (company.id == 0)
+            this.addCompany(res);
+          else
+            this.updateCompany(res);
+          this.getAllCompanies();
+        }
+      }
+    });
+  }
+
+  addCompany(company: Company): any {
+    this.productservice.addCompany(company).subscribe(
+      data => {
+        this.messagebox(data.message);
+        this.getAllCategories()
+      },
+      err => {
+        this.messagebox("Error adding category. make sure it does not already exist");
+      }
+    );
+  }
+  updateCompany(company: Company): any {
+    this.productservice.updateCompany(company).subscribe(
+      data => {
+        var objIndex = this.companies.findIndex((obj => obj.id == company.id));
+        this.companies[objIndex] = company
+        this.companiesdatasource = new MatTableDataSource(this.companies)
+
+        this.messagebox(data.message);
+      },
+      err => {
+        this.messagebox(err.message);
+
+      }
+    );
+  }
+
+  getAllCompanies(): any {
+    this.productservice.getAllCompanies().subscribe(
+      data => {
+        this.companies = data.companies;
+        this.companiesdatasource = new MatTableDataSource(this.companies);
+        setTimeout(() => {
+          this.companiesdatasource.sort = this.sort;
+          this.companiesdatasource.paginator = this.paginator;
+        });
+
+      },
+      err => {
+        this.messagebox("error getting companies");
+      }
+    );
+  }
+
+
+  deleteCompany(company: Company): any {
+
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.productservice.deleteCompany(company).subscribe(
+          data => {
+            this.getAllCompanies()
+            Swal.fire(
+              'Deleted!',
+              'Your Company has been deleted.',
+              'success'
+            )
+          },
+          err => {
+            this.messagebox("Error deleting company, please make sure no products are in this company.");
+          }
+        );
+      }
+    })
+  }
+
 
 }
 

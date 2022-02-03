@@ -9,5 +9,6 @@
 </div>
 <div mat-dialog-actions align="center">
   <button mat-button (click)="onNoClick()">Cancel</button>
-  <button *ngIf="validate(data)" mat-button [mat-dialog-close]="data">Print</button>
+<!--  <button *ngIf="validate(data)" mat-button [mat-dialog-close]="data">Print</button>-->
+  <button mat-button (click)="onClick()">Print this page</button>
 </div>

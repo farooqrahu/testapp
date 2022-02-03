@@ -8,6 +8,7 @@ import {Category} from './../models/category.model';
 import {Product} from './../models/product.model';
 import {ProductRequest} from './../models/productrequest.model';
 import {NumberSymbol} from '@angular/common';
+import {Company} from "../models/compnay.model";
 
 const PRODUCT_API = 'http://localhost:8080/api/product/';
 
@@ -95,6 +96,10 @@ export class ProductService {
     return this.http.post(PRODUCT_API + 'getAllCategories', {}, httpOptions);
   }
 
+  getAllCompanies(): Observable<any> {
+    return this.http.post(PRODUCT_API + 'getAllCompanies', {}, httpOptions);
+  }
+
   updateCategory(category: Category): Observable<any> {
     var id = category.id;
     var name = category.name
@@ -110,6 +115,26 @@ export class ProductService {
     return this.http.post(PRODUCT_API + 'addCategory', {name}, httpOptions);
   }
 
+  updateCompany(company: Company): Observable<any> {
+    var id = company.id;
+    var name = company.name
+    // var price=form.get('price').value;
+    // var description=form.get('description').value;
+    return this.http.post(PRODUCT_API + 'updateCompany', {id, name}, httpOptions);
+  }
+
+  addCompany(company: Company): Observable<any> {
+    var name = company.name
+    // var price=form.get('price').value;
+    // var description=form.get('description').value;
+    return this.http.post(PRODUCT_API + 'addCompany', {name}, httpOptions);
+  }
+
+  deleteCompany(company: Company): Observable<any> {
+    var id = company.id
+    var name = company.name;
+    return this.http.post(PRODUCT_API + 'deleteCompany', {id, name,}, httpOptions);
+  }
   deleteCategory(category: Category): Observable<any> {
     var id = category.id
     var name = category.name;

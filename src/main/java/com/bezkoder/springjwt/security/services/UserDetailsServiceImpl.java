@@ -100,6 +100,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     List<String> roles = getRoles();
 
     if (roles.contains("ROLE_ADMIN") || updateRequest.getId() == userDetails.getId()) {
+      confirmationTokenRepository.deleteByUserId(updateRequest.getId());
       userRepository.deleteById(updateRequest.getId());
       return ResponseEntity.ok(new MessageResponse("User deleted"));
     } else {

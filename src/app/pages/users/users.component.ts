@@ -1,11 +1,13 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
-import { Router } from '@angular/router';
-import { User } from 'src/app/models/user';
-import { TokenStorageService } from 'src/app/_services/token-storage.service';
-import { AuthService } from './../../_services/auth.service';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatSort} from '@angular/material/sort';
+import {MatTableDataSource} from '@angular/material/table';
+import {Router} from '@angular/router';
+import {User} from 'src/app/models/user';
+import {TokenStorageService} from 'src/app/_services/token-storage.service';
+import {AuthService} from './../../_services/auth.service';
+import Swal from "sweetalert2";
+
 @Component({
   selector: 'app-users',
   templateUrl: './users.component.html',
@@ -19,7 +21,8 @@ export class UsersComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  constructor(private token: TokenStorageService, private authService: AuthService, private router: Router) { }
+  constructor(private token: TokenStorageService, private authService: AuthService, private router: Router) {
+  }
 
   ngOnInit() {
     if (!this.token.isAdmin()) {
@@ -27,6 +30,7 @@ export class UsersComponent implements OnInit {
     }
     this.getAllUsers()
   }
+
   getAllUsers() {
     this.authService.getAllUsers().subscribe(
       data => {
@@ -42,6 +46,7 @@ export class UsersComponent implements OnInit {
       }
     );
   }
+
   public doFilter = (value: string, type: String) => {
     switch (type) {
       case 'user':
@@ -49,15 +54,36 @@ export class UsersComponent implements OnInit {
 
     }
   }
+
   deleteUser(user: User): any {
-    this.authService.deleteUser(user).subscribe(
-      data => {
-        this.getAllUsers()
-      },
-      err => {
-        console.log(err);
+
+
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.authService.deleteUser(user).subscribe(
+          data => {
+            this.getAllUsers();
+            Swal.fire(
+              'Deleted!',
+              'Account has been deleted.',
+              'success'
+            )
+          },
+          err => {
+            console.log(err);
+          }
+        );
       }
-    );
+    })
+
   }
 
 }

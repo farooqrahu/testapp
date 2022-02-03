@@ -102,6 +102,11 @@ public class ProductController {
     return productService.getAllCategories(categoryRequest);
   }
 
+  @PostMapping("/getAllCompanies")
+  public ResponseEntity<?> getAllCompanies(@Valid @RequestBody CategoryRequest categoryRequest) {
+    return productService.getAllCompanies(categoryRequest);
+  }
+
   // shopping cart
   @PostMapping("/addtocart")
   public ResponseEntity<?> addToCart(@Valid @RequestBody CartRequest cartRequest) {

@@ -6,11 +6,12 @@ import { ProductsComponent } from '../../pages/products/products.component';
 import { UsersComponent } from 'src/app/pages/users/users.component';
 import { ShoppingCartsComponent } from 'src/app/pages/shopping-carts/shopping-carts.component';
 import { InvoiceComponent } from 'src/app/modal/invoice/invoice.component';
+import {RegisterComponent} from "../../pages/register/register.component";
 export const AdminLayoutRoutes: Routes = [
   { path: 'dashboard', component: DashboardComponent },
   { path: 'user-profile', component: UserProfileComponent },
   { path: 'products', component: ProductsComponent },
   { path: 'users', component: UsersComponent },
   { path: 'shopping-carts', component: ShoppingCartsComponent },
-
+  { path: 'register', component: RegisterComponent }
 ];

@@ -21,6 +21,9 @@ export class BarcodeComponent implements OnInit {
   onNoClick(): void {
     this.dialogRef.close();
   }
+  onClick(): void {
+   window.print();
+  }
   validate(data: any): boolean {
     this.errors = ""
     return (this.errors == "")

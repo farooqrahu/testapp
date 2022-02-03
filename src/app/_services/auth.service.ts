@@ -20,10 +20,8 @@ const HttpUploadOptions = {
 export class AuthService {
   constructor(private http: HttpClient, private token: TokenStorageService) { }
   deleteUser(user: User) {
-    var username = this.token.getUsername();
-    var password = this.token.getPassword();
     var id = user.id;
-    return this.http.post(AUTH_API + 'getAllUsers', { username, password, id });
+    return this.http.post(AUTH_API + 'deleteUser', {  id });
   }
   confirmUserAccount(token: string): Observable<any> {
     let headers = new Headers();
