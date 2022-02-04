@@ -9,6 +9,9 @@ export class Product {
     public category: Category,
     public company: Company,
     public images: boolean,
+    public quantityItem: number,
+    public quantityBundle: number,
+    public extraQuantity: number,
     public quantity: number,
     public file: string
 

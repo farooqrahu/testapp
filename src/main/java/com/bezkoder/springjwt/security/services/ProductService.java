@@ -236,9 +236,9 @@ public class ProductService {
     fos.close();
 
 //write to pdf
-    Image png = Image.getInstance(baos.toByteArray());
-    png.setAbsolutePosition(400, 685);
-    png.scalePercent(25);
+//    Image png = Image.getInstance(baos.toByteArray());
+//    png.setAbsolutePosition(400, 685);
+//    png.scalePercent(25);
 
 //    Document document = new Document(new Rectangle(595, 842));
 //    PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream("barcodes.pdf"));

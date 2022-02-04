@@ -10,9 +10,18 @@
     <input matInput (change)="validate(data)" [(ngModel)]="data.price" required>
   </mat-form-field>
   <mat-form-field>
-    <p>Product Quantity</p>
-    <input matInput (change)="validate(data)" [(ngModel)]="data.quantity" required>
+    <p>Quantity Item - Sheet</p>
+    <input matInput (change)="validate(data)" [(ngModel)]="data.quantityItem" required>
   </mat-form-field>
+  <mat-form-field>
+    <p>Quantity Bundle</p>
+    <input matInput (change)="validate(data)" [(ngModel)]="data.quantityBundle" required>
+  </mat-form-field>
+  <mat-form-field>
+    <p>Extra Quantity</p>
+    <input matInput (change)="validate(data)" [(ngModel)]="data.extraQuantity" required>
+  </mat-form-field>
+
   <mat-form-field>
     <p>Product Description</p>
     <textarea matInput (change)="validate(data)" [(ngModel)]="data.description" cdkTextareaAutosize

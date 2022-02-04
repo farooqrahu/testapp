@@ -31,7 +31,7 @@ export class ProductService {
       catchError(() => of(false)));
   }
 
-  productrequest: ProductRequest = new ProductRequest(0, '', '', 0, 0, null,null, false);
+  productrequest: ProductRequest = new ProductRequest(0, '', '', 0, 0,0,0,0, null,null, false);
 
   updateProduct(product: Product): Observable<any> {
 
@@ -41,11 +41,14 @@ export class ProductService {
     var company = this.productrequest.company;
     var name = this.productrequest.name;
     var price = this.productrequest.price;
-    var quantity = this.productrequest.quantity;
+    var quantityItem = this.productrequest.quantityItem;
+    var quantityBundle = this.productrequest.quantityBundle;
+    var extraQuantity = this.productrequest.extraQuantity;
+    var quantity = (this.productrequest.quantityItem*this.productrequest.quantityBundle)+this.productrequest.extraQuantity;
     var description = this.productrequest.description;
 
     return this.http.post(PRODUCT_API + 'updateProduct', {//productrequest
-      id, category,company, price, name, description, quantity
+      id, category,company, price, name, description, quantityItem,quantityBundle,extraQuantity,quantity
 
     }, httpOptions);
   }
@@ -54,12 +57,15 @@ export class ProductService {
     var category = form.get('Category').value;
     var name = form.get('name').value;
     var price = form.get('price').value;
-    var quantity = this.productrequest.quantity;
+    var quantityItem = this.productrequest.quantityItem;
+    var quantityBundle = this.productrequest.quantityBundle;
+    var extraQuantity = this.productrequest.extraQuantity;
+    var quantity = (this.productrequest.quantityItem*this.productrequest.quantityBundle)+this.productrequest.extraQuantity;
     var description = form.get('description').value;
     return this.http.post(PRODUCT_API + 'addProduct', {
       category, price,
       name
-      , description, quantity
+      , description, quantityItem,quantityBundle,extraQuantity,quantity
     }, httpOptions);
   }
 

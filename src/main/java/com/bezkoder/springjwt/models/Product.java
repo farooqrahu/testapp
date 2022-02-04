@@ -23,6 +23,9 @@ public class Product {
   @Nullable
   private String description = "";
   private Float price;
+  private Long quantityItem;
+  private Long quantityBundle;
+  private Long extraQuantity;
   private Long quantity;
   @Nullable
   @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
@@ -57,6 +60,9 @@ public class Product {
     this.category = productRequest.getCategory();
     this.company = productRequest.getCompany();
     this.images = productRequest.isImages();
+    this.quantityItem= productRequest.getQuantityItem();
+    this.quantityBundle= productRequest.getQuantityBundle();
+    this.extraQuantity= productRequest.getExtraQuantity();
     this.quantity=productRequest.getQuantity();
   }
 

@@ -47,7 +47,7 @@ export class ProductsComponent implements OnInit, AfterViewInit {
   loadproductresults(): void {
     this.paginator.page.subscribe(() => {
       const productrequest = new ProductRequest( 0, this.productsearch.nativeElement.value,
-        this.productsearch.nativeElement.value, 0, 0,null, null, false, 'name', 'asc', this.paginator.pageSize, this.paginator.getNumberOfPages())
+        this.productsearch.nativeElement.value, 0,0,0,0, 0,null, null, false, 'name', 'asc', this.paginator.pageSize, this.paginator.getNumberOfPages())
       this.productservice.findProduct(productrequest).subscribe(
         data => {
           this.products = data.list;
@@ -79,7 +79,6 @@ export class ProductsComponent implements OnInit, AfterViewInit {
 
     this.productservice.getAllProducts().subscribe(
       data => {
-        console.log("refres");
         this.products = data.list;
         (this.products.length);
         this.productslength = data.totalitems;
@@ -107,7 +106,7 @@ export class ProductsComponent implements OnInit, AfterViewInit {
   }
   openDialog(product?: Product): void {
     if (product === undefined)
-      product = new Product(0, "", "", 0, this.categories[0],this.companies[0], false,0,"")
+      product = new Product(0, "", "", 0, this.categories[0],this.companies[0], false,0,0,0,0,"")
     const dialogRef = this.dialog.open(ProductformComponent, {
       width: '400px',
       data: {
