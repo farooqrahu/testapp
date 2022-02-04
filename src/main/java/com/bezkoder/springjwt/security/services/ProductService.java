@@ -170,6 +170,9 @@ public class ProductService {
     Optional<Category> category = categoryRepository.findById(productRequest.getCategory().getId());
     if (category.isEmpty())
       return ResponseEntity.badRequest().body(new MessageResponse("Error: Category does not exist"));
+    Optional<Company> company = companyRepository.findById(productRequest.getCompany().getId());
+    if (company.isEmpty())
+      return ResponseEntity.badRequest().body(new MessageResponse("Error: Company does not exist"));
     if (productRequest.getName() == null || Objects.equals(productRequest.getName(), ""))
       return ResponseEntity.badRequest().body(new MessageResponse("Error: name must not be empty"));
     if (productRequest.getPrice() == null || productRequest.getPrice() <= 0)
@@ -329,7 +332,7 @@ public class ProductService {
     List<Category> categorylist = categoryRepository.findAll();
     return ResponseEntity.ok(new CategoryResponse(categorylist));
   }
-  public ResponseEntity<?> getAllCompanies(CategoryRequest compCategoryRequest) {
+  public ResponseEntity<?> getAllCompanies(CompanyRequest compCategoryRequest) {
     userDetailsServiceImpl.checkAdmin();
     List<Company> companyList = companyRepository.findAll();
     return ResponseEntity.ok(new CompanyResponse(companyList));
@@ -341,20 +344,20 @@ public class ProductService {
     Company category = companyRepository.findById(companyRequest.getId()).get();
     category.setName(companyRequest.getName());
     companyRepository.save(category);
-    return ResponseEntity.ok(new MessageResponse("Category updated successfully!"));
+    return ResponseEntity.ok(new MessageResponse("Company Add/Update successfully!"));
   }
 
   public ResponseEntity<?> deleteCompany(@Valid CompanyRequest companyRequest) {
     userDetailsServiceImpl.checkAdmin();
     companyRepository.deleteById(companyRequest.getId());
-    return ResponseEntity.ok(new MessageResponse("Category deleted successfully!"));
+    return ResponseEntity.ok(new MessageResponse("Company deleted successfully!"));
   }
 
   public ResponseEntity<?> addCompany(@Valid CompanyRequest companyRequest) {
     userDetailsServiceImpl.checkAdmin();
-    Company category = new Company(companyRequest.getName());
-    companyRepository.save(category);
-    return ResponseEntity.ok(new MessageResponse("Category added successfully!"));
+    Company company = new Company(companyRequest.getName());
+    companyRepository.save(company);
+    return ResponseEntity.ok(new MessageResponse("Company Add successfully!"));
   }
 
   public ResponseEntity<?> getAllCompany(CompanyRequest companyRequest) {

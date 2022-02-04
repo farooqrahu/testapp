@@ -5,6 +5,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Product } from 'src/app/models/product.model';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSelect } from '@angular/material/select';
+import {Company} from "../../models/compnay.model";
 @Component({
   selector: 'app-productform',
   templateUrl: './productform.component.html',
@@ -12,6 +13,7 @@ import { MatSelect } from '@angular/material/select';
 })
 export class ProductformComponent implements OnInit {
   categories: Category[];
+  companies: Company[];
   errors: String;
   constructor(
     public dialogRef: MatDialogRef<ProductformComponent>,
@@ -20,6 +22,17 @@ export class ProductformComponent implements OnInit {
     this.productservice.getAllCategories().subscribe(
       data => {
         this.categories = data.categories;
+
+      },
+      err => {
+        (err);
+      }
+    );
+  }
+  getAllCompanies(): any {
+    this.productservice.getAllCompanies().subscribe(
+      data => {
+        this.companies = data.companies;
 
       },
       err => {
@@ -45,7 +58,7 @@ export class ProductformComponent implements OnInit {
 
   ngOnInit() {
     this.getAllCategories();
-
+    this.getAllCompanies();
 
   }
 

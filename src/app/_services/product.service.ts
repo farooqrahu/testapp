@@ -31,20 +31,21 @@ export class ProductService {
       catchError(() => of(false)));
   }
 
-  productrequest: ProductRequest = new ProductRequest(0, '', '', 0, 0, null, false);
+  productrequest: ProductRequest = new ProductRequest(0, '', '', 0, 0, null,null, false);
 
   updateProduct(product: Product): Observable<any> {
 
     this.productrequest.convert(product);
     var id = this.productrequest.id;
     var category = this.productrequest.category;
+    var company = this.productrequest.company;
     var name = this.productrequest.name;
     var price = this.productrequest.price;
     var quantity = this.productrequest.quantity;
     var description = this.productrequest.description;
 
     return this.http.post(PRODUCT_API + 'updateProduct', {//productrequest
-      id, category, price, name, description, quantity
+      id, category,company, price, name, description, quantity
 
     }, httpOptions);
   }

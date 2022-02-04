@@ -47,7 +47,7 @@ export class ProductsComponent implements OnInit, AfterViewInit {
   loadproductresults(): void {
     this.paginator.page.subscribe(() => {
       const productrequest = new ProductRequest( 0, this.productsearch.nativeElement.value,
-        this.productsearch.nativeElement.value, 0, 0,null, false, 'name', 'asc', this.paginator.pageSize, this.paginator.getNumberOfPages())
+        this.productsearch.nativeElement.value, 0, 0,null, null, false, 'name', 'asc', this.paginator.pageSize, this.paginator.getNumberOfPages())
       this.productservice.findProduct(productrequest).subscribe(
         data => {
           this.products = data.list;
@@ -70,8 +70,9 @@ export class ProductsComponent implements OnInit, AfterViewInit {
   }
   ngOnInit() {
      // this.productsearch.nativeElement=""
-    this.refreshproduct()
-    this.getAllCategories()
+    this.refreshproduct();
+    this.getAllCategories();
+    this.getAllCompanies();
   }
 
   refreshproduct() {
@@ -80,7 +81,6 @@ export class ProductsComponent implements OnInit, AfterViewInit {
       data => {
         console.log("refres");
         this.products = data.list;
-        // console.log(this.products);
         (this.products.length);
         this.productslength = data.totalitems;
         this.dataSource = new MatTableDataSource(this.products);
@@ -99,18 +99,20 @@ export class ProductsComponent implements OnInit, AfterViewInit {
       case 'product':
         this.dataSource.filter = value.trim().toLocaleLowerCase(); break;
       case 'category':
-        this.categoriesdatasource.filter = value.trim().toLocaleLowerCase();
+        this.categoriesdatasource.filter = value.trim().toLocaleLowerCase(); break;
+      case 'company':
+        this.companiesdatasource.filter = value.trim().toLocaleLowerCase();break;
 
     }
   }
   openDialog(product?: Product): void {
     if (product === undefined)
-      product = new Product(0, "", "", 0, this.categories[0], false,0,"")
+      product = new Product(0, "", "", 0, this.categories[0],this.companies[0], false,0,"")
     const dialogRef = this.dialog.open(ProductformComponent, {
       width: '400px',
       data: {
         id: product.id, name: product.name, description: product.description,
-        price: product.price, category: product.category,quantity:product.quantity
+        price: product.price, category: product.category,company: product.company,quantity:product.quantity
 
       }
     });

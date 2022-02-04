@@ -19,6 +19,16 @@
       #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="5" cdkAutosizeMaxRows="20"></textarea>
   </mat-form-field>
   <mat-form-field appearance="fill">
+    <mat-label>Select Company</mat-label>
+    <mat-select [(ngModel)]="data.company.id">
+
+      <mat-option *ngFor="let company of companies" [value]="company.id" required>
+        {{company.name}}
+      </mat-option>
+    </mat-select>
+
+  </mat-form-field>
+  <mat-form-field appearance="fill">
     <mat-label>Select Category</mat-label>
     <mat-select [(ngModel)]="data.category.id">
 

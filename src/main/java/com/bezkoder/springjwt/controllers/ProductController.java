@@ -2,11 +2,7 @@ package com.bezkoder.springjwt.controllers;
 
 import javax.validation.Valid;
 
-import com.bezkoder.springjwt.payload.request.CartItemRequest;
-import com.bezkoder.springjwt.payload.request.CartRequest;
-import com.bezkoder.springjwt.payload.request.CategoryRequest;
-import com.bezkoder.springjwt.payload.request.ProductRequest;
-import com.bezkoder.springjwt.payload.request.ShoppingCartRequest;
+import com.bezkoder.springjwt.payload.request.*;
 import com.bezkoder.springjwt.repository.CategoryRepository;
 import com.bezkoder.springjwt.repository.ProductRepository;
 import com.bezkoder.springjwt.security.jwt.JwtUtils;
@@ -97,14 +93,31 @@ public class ProductController {
     return productService.updateCategory(categoryRequest);
   }
 
+
+  @PostMapping("/addCompany")
+  public ResponseEntity<?> addCompany(@Valid @RequestBody CompanyRequest companyRequest) {
+
+    return productService.addCompany(companyRequest);
+  }
+
+  @PostMapping("/deleteCompany")
+  public ResponseEntity<?> deleteCompany(@Valid @RequestBody CompanyRequest companyRequest) {
+    return productService.deleteCompany(companyRequest);
+  }
+
+  @PostMapping("/updateCompany")
+  public ResponseEntity<?> updateCompany(@Valid @RequestBody CompanyRequest companyRequest) {
+    return productService.updateCompany(companyRequest);
+  }
+
   @PostMapping("/getAllCategories")
   public ResponseEntity<?> getAllCategories(@Valid @RequestBody CategoryRequest categoryRequest) {
     return productService.getAllCategories(categoryRequest);
   }
 
   @PostMapping("/getAllCompanies")
-  public ResponseEntity<?> getAllCompanies(@Valid @RequestBody CategoryRequest categoryRequest) {
-    return productService.getAllCompanies(categoryRequest);
+  public ResponseEntity<?> getAllCompanies(@Valid @RequestBody CompanyRequest companyRequest) {
+    return productService.getAllCompanies(companyRequest);
   }
 
   // shopping cart
