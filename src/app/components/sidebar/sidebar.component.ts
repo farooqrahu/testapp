@@ -37,10 +37,13 @@ export class SidebarComponent implements OnInit {
   public menuItems: any[];
   public isCollapsed = true;
   public islogged: boolean;
+  profileimg: string;
+
   constructor(private router: Router, private authService: AuthService, private tokenStorage: TokenStorageService) { }
 
   ngOnInit() {
     this.islogged = this.tokenStorage.getUser() != null;
+    this.loadImage();
     if (this.islogged)
       if (this.tokenStorage.isAdmin())
         this.menuItems = adminROUTES.filter(menuItem => menuItem);
@@ -53,6 +56,17 @@ export class SidebarComponent implements OnInit {
 
     });
   }
+  loadImage(): void {
+    this.authService.getProfileImage().subscribe(
+      data => {
+        this.profileimg =data.user.file;
+      },
+      err => {
+        (err);
+      }
+    );
+  }
+
   logout(): void {
     this.islogged = false;
     this.tokenStorage.signOut();

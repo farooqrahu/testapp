@@ -1,5 +1,7 @@
-<div class="header bg-gradient-danger  py-2 py-lg-5">
-  <div class="container">
+<div class="header pb-3 pt-4 pt-lg-7 d-flex align-items-center"
+     style="min-height: 200px; background-image: url(assets/img/theme/hardware3.jpg); background-size: cover; background-position: center top;">
+  <!-- Mask -->
+  <span class="mask bg-gradient-danger opacity-6"></span>  <div class="container">
     <div class="header-body text-center mb-7">
       <div class="row justify-content-center">
         <div class="col-lg-5 col-md-6">
@@ -8,18 +10,18 @@
       </div>
     </div>
   </div>
-  <div class="separator separator-bottom separator-skew zindex-100">
-    <svg x="0" y="0" viewBox="0 0 2560 100" preserveAspectRatio="none" version="1.1" xmlns="http://www.w3.org/2000/svg">
-      <polygon class="fill-default" points="2560 0 2560 100 0 100"></polygon>
-    </svg>
-  </div>
+<!--  <div class="separator separator-bottom separator-skew zindex-100">-->
+<!--    <svg x="0" y="0" viewBox="0 0 2560 100" preserveAspectRatio="none" version="1.1" xmlns="http://www.w3.org/2000/svg">-->
+<!--      <polygon class="fill-default" points="2560 0 2560 100 0 100"></polygon>-->
+<!--    </svg>-->
+<!--  </div>-->
 </div>
 <!-- Page content -->
-<div class="container mt--8 pb-3">
+<div class="container mt--8 pb-2">
   <!-- Table -->
   <form *ngIf="!isSuccessful" name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate>
     <div class="row justify-content-center">
-      <div class="col-lg-6 col-md-8">
+      <div class="col-lg-6 col-md-4">
         <div class="card bg-secondary shadow border-0">
 
           <div class="card-body px-lg-5 py-lg-5">
