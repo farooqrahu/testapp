@@ -63,7 +63,7 @@ public class Product {
     this.quantityItem= productRequest.getQuantityItem();
     this.quantityBundle= productRequest.getQuantityBundle();
     this.extraQuantity= productRequest.getExtraQuantity();
-    this.quantity=productRequest.getQuantity();
+    this.quantity=productRequest.getExtraQuantity()+(productRequest.getQuantityItem()*productRequest.getQuantityBundle());
   }
 
   public boolean isImages() {

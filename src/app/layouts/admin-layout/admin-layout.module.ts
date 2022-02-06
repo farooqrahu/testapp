@@ -22,6 +22,8 @@ import { MatDialogModule } from '@angular/material/dialog';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { UserProfileComponent } from 'src/app/pages/user-profile/user-profile.component';
+import {CategoriesComponent} from "../../pages/categories/categories.component";
+import {CompaniesComponent} from "../../pages/companies/companies.component";
 
 // import { ToastrModule } from 'ngx-toastr';
 
@@ -49,8 +51,8 @@ import { UserProfileComponent } from 'src/app/pages/user-profile/user-profile.co
     DashboardComponent,
     UserProfileComponent,
     ProductsComponent,
-
-
+    CategoriesComponent,
+    CompaniesComponent,
   ]
 })
 

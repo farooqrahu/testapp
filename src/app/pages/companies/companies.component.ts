@@ -1,35 +1,34 @@
-import { ProductRequest } from './../../models/productrequest.model';
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
-import { CategoryformComponent } from 'src/app/modal/categoryform/categoryform.component';
-import { MessageboxComponent } from 'src/app/modal/messagebox/messagebox.component';
-import { ProductformComponent } from 'src/app/modal/productform/productform.component';
-import { ProductService } from 'src/app/_services/product.service';
-import { TokenStorageService } from 'src/app/_services/token-storage.service';
-import { Category } from './../../models/category.model';
-import { Product } from './../../models/product.model';
+import {ProductRequest} from './../../models/productrequest.model';
+import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {MatDialog} from '@angular/material/dialog';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatSort} from '@angular/material/sort';
+import {MatTableDataSource} from '@angular/material/table';
+import {CategoryformComponent} from 'src/app/modal/categoryform/categoryform.component';
+import {MessageboxComponent} from 'src/app/modal/messagebox/messagebox.component';
+import {ProductformComponent} from 'src/app/modal/productform/productform.component';
+import {ProductService} from 'src/app/_services/product.service';
+import {TokenStorageService} from 'src/app/_services/token-storage.service';
+import {Category} from './../../models/category.model';
+import {Product} from './../../models/product.model';
 import Swal from 'sweetalert2'
 import {BarcodeComponent} from "../../modal/barcode/barcode.component";
 import {Company} from "../../models/compnay.model";
 import {CompanyformComponent} from "../../modal/companyform/companyform.component";
+
 @Component({
-  selector: 'app-products',
-  templateUrl: './products.component.html',
-  styleUrls: ['./products.component.scss']
+  selector: 'app-companies',
+  templateUrl: './companies.component.html',
+  styleUrls: ['./companies.component.scss']
 })
-export class ProductsComponent implements OnInit, AfterViewInit {
-  columnsToDisplay = ["id", 'name', "price","quantityItem","quantityBundle","extraQuantity","quantity", "description", "category", "action"];
+export class CompaniesComponent implements OnInit, AfterViewInit {
+  columnsToDisplay = ["id", 'name', "price","quantity", "description", "category", "action"];
   categorycolumnsToDisplay = ["id", 'name', "action"];
   companycolumnsToDisplay = ["id", 'name', "action"];
 
   dataSource: MatTableDataSource<Product> = null;
-  categoriesdatasource: MatTableDataSource<Category> = null;
   companiesdatasource: MatTableDataSource<Company> = null;
   products: Product[] = [];
-  categories: Category[] = [];
   companies: Company[] = [];
   productslength = 0;
   constructor(public productservice: ProductService, private token: TokenStorageService
@@ -71,6 +70,8 @@ export class ProductsComponent implements OnInit, AfterViewInit {
   ngOnInit() {
      // this.productsearch.nativeElement=""
     this.refreshproduct();
+    this.getAllcompanies();
+    this.getAllCompanies();
   }
 
   refreshproduct() {
@@ -97,7 +98,7 @@ export class ProductsComponent implements OnInit, AfterViewInit {
         this.dataSource.filter = value.trim().toLocaleLowerCase();
         break;
       case 'category':
-        this.categoriesdatasource.filter = value.trim().toLocaleLowerCase();
+        this.companiesdatasource.filter = value.trim().toLocaleLowerCase();
         break;
       case 'company':
         this.companiesdatasource.filter = value.trim().toLocaleLowerCase();
@@ -107,7 +108,7 @@ export class ProductsComponent implements OnInit, AfterViewInit {
   }
   openDialog(product?: Product): void {
     if (product === undefined)
-      product = new Product(0, "", "", 0, this.categories[0],this.companies[0], false,0,0,0,0,"")
+      product = new Product(0, "", "", 0, this.companies[0],this.companies[0], false,0,0,0,0,"")
     const dialogRef = this.dialog.open(ProductformComponent, {
       width: '400px',
       data: {
@@ -163,7 +164,7 @@ export class ProductsComponent implements OnInit, AfterViewInit {
             this.addCategory(res);
           else
             this.updateCategory(res);
-          this.getAllCategories();
+          this.getAllcompanies();
         }
       }
     });
@@ -265,7 +266,7 @@ export class ProductsComponent implements OnInit, AfterViewInit {
       if (result.isConfirmed) {
         this.productservice.deleteCategory(category).subscribe(
           data => {
-            this.getAllCategories()
+            this.getAllcompanies()
             Swal.fire(
               'Deleted!',
               'Your Product has been deleted.',
@@ -284,7 +285,7 @@ export class ProductsComponent implements OnInit, AfterViewInit {
     this.productservice.addCategory(category).subscribe(
       data => {
         this.messagebox(data.message);
-        this.getAllCategories()
+        this.getAllcompanies()
       },
       err => {
         this.messagebox("Error adding category. make sure it does not already exist");
@@ -294,9 +295,9 @@ export class ProductsComponent implements OnInit, AfterViewInit {
   updateCategory(category: Category): any {
     this.productservice.updateCategory(category).subscribe(
       data => {
-        var objIndex = this.categories.findIndex((obj => obj.id == category.id));
-        this.categories[objIndex] = category
-        this.categoriesdatasource = new MatTableDataSource(this.categories)
+        var objIndex = this.companies.findIndex((obj => obj.id == category.id));
+        this.companies[objIndex] = category
+        this.companiesdatasource = new MatTableDataSource(this.companies)
 
         this.messagebox(data.message);
       },
@@ -306,19 +307,19 @@ export class ProductsComponent implements OnInit, AfterViewInit {
       }
     );
   }
-  getAllCategories(): any {
-    this.productservice.getAllCategories().subscribe(
+  getAllcompanies(): any {
+    this.productservice.getAllCompanies().subscribe(
       data => {
-        this.categories = data.categories;
-        this.categoriesdatasource = new MatTableDataSource(this.categories);
+        this.companies = data.companies;
+        this.companiesdatasource = new MatTableDataSource(this.companies);
         setTimeout(() => {
-          this.categoriesdatasource.sort = this.sort;
-          this.categoriesdatasource.paginator = this.paginator;
+          this.companiesdatasource.sort = this.sort;
+          this.companiesdatasource.paginator = this.paginator;
         });
 
       },
       err => {
-        this.messagebox("error getting categories");
+        this.messagebox("error getting companies");
       }
     );
   }
@@ -367,7 +368,7 @@ export class ProductsComponent implements OnInit, AfterViewInit {
     this.productservice.addCompany(company).subscribe(
       data => {
         this.messagebox(data.message);
-        this.getAllCategories()
+        this.getAllcompanies()
       },
       err => {
         this.messagebox("Error adding category. make sure it does not already exist");

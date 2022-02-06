@@ -18,6 +18,9 @@ public class ProductDto {
   private String name;
   private String description = "";
   private Float price;
+  private Long quantityItem;
+  private Long quantityBundle;
+  private Long extraQuantity;
   private Long quantity;
   private Category category;
   private Company company;
@@ -26,7 +29,7 @@ public class ProductDto {
 
   public static ProductDto factoryProduct(Product product) {
     return ProductDto.builder().id(product.getId()).name(product.getName()).description(product.getDescription()).price(product.getPrice())
-      .quantity(product.getQuantity()).category(product.getCategory()).company(product.getCompany())
+      .quantityItem(product.getQuantityItem()).quantityBundle(product.getQuantityBundle()).extraQuantity(product.getExtraQuantity()).quantity(product.getQuantity()).category(product.getCategory()).company(product.getCompany())
       .file(product.getFiles() != null ? "data:image/jpg;base64,"+ Base64.getEncoder().encodeToString(product.getFiles().getData()) : "").build();
   }
 }

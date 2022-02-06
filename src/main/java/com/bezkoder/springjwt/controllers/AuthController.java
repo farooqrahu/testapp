@@ -4,9 +4,6 @@ import com.bezkoder.springjwt.payload.request.LoginRequest;
 import com.bezkoder.springjwt.payload.request.SignupRequest;
 import com.bezkoder.springjwt.payload.request.UpdateRequest;
 import com.bezkoder.springjwt.security.services.UserDetailsServiceImpl;
-import com.itextpdf.text.*;
-import com.itextpdf.text.pdf.Barcode128;
-import com.itextpdf.text.pdf.PdfWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,8 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController

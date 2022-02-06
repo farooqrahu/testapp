@@ -1,34 +1,11 @@
 package com.bezkoder.springjwt.security.services;
 
-import java.awt.image.BufferedImage;
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.text.DecimalFormat;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import javax.imageio.ImageIO;
-import javax.validation.Valid;
-
-import com.aspose.barcode.EncodeTypes;
-import com.aspose.barcode.generation.BarcodeGenerator;
 import com.bezkoder.springjwt.dto.ProductDto;
 import com.bezkoder.springjwt.models.*;
 import com.bezkoder.springjwt.payload.request.*;
 import com.bezkoder.springjwt.payload.response.*;
 import com.bezkoder.springjwt.repository.*;
-
-import com.itextpdf.text.*;
-import com.itextpdf.text.pdf.Barcode128;
-import com.itextpdf.text.pdf.PdfWriter;
-import org.krysalis.barcode4j.impl.code128.Code128;
 import org.krysalis.barcode4j.impl.code128.Code128Bean;
-import org.krysalis.barcode4j.impl.upcean.EAN13Bean;
-import org.krysalis.barcode4j.output.CanvasProvider;
 import org.krysalis.barcode4j.output.bitmap.BitmapCanvasProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -40,6 +17,19 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.validation.Valid;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.DecimalFormat;
+import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
@@ -115,7 +105,7 @@ public class ProductService {
         .findByNameContainingAndCategory(productRequest.getName(), productRequest.getCategory(), paging).stream().map(ProductDto::factoryProduct).collect(Collectors.toList())));
   }
 
-  public ResponseEntity<?> addProduct(ProductRequest productRequest) throws IOException, DocumentException {
+  public ResponseEntity<?> addProduct(ProductRequest productRequest) throws IOException {
     userDetailsServiceImpl.checkAdmin();
     Optional<Category> category = categoryRepository.findById(productRequest.getCategory().getId());
     if (category.isEmpty())
@@ -164,7 +154,7 @@ public class ProductService {
     return ResponseEntity.ok(new MessageResponse("product added successfully!"));
   }
 
-  public ResponseEntity<?> updateProduct(ProductRequest productRequest) throws IOException, DocumentException {
+  public ResponseEntity<?> updateProduct(ProductRequest productRequest) throws IOException {
     userDetailsServiceImpl.checkAdmin();
 
     Optional<Category> category = categoryRepository.findById(productRequest.getCategory().getId());

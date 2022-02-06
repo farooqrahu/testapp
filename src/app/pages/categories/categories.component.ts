@@ -16,12 +16,12 @@ import {BarcodeComponent} from "../../modal/barcode/barcode.component";
 import {Company} from "../../models/compnay.model";
 import {CompanyformComponent} from "../../modal/companyform/companyform.component";
 @Component({
-  selector: 'app-products',
-  templateUrl: './products.component.html',
-  styleUrls: ['./products.component.scss']
+  selector: 'app-categories',
+  templateUrl: './categories.component.html',
+  styleUrls: ['./categories.component.scss']
 })
-export class ProductsComponent implements OnInit, AfterViewInit {
-  columnsToDisplay = ["id", 'name', "price","quantityItem","quantityBundle","extraQuantity","quantity", "description", "category", "action"];
+export class CategoriesComponent implements OnInit, AfterViewInit {
+  columnsToDisplay = ["id", 'name', "price","quantity", "description", "category", "action"];
   categorycolumnsToDisplay = ["id", 'name', "action"];
   companycolumnsToDisplay = ["id", 'name', "action"];
 
@@ -71,6 +71,8 @@ export class ProductsComponent implements OnInit, AfterViewInit {
   ngOnInit() {
      // this.productsearch.nativeElement=""
     this.refreshproduct();
+    this.getAllCategories();
+    this.getAllCompanies();
   }
 
   refreshproduct() {

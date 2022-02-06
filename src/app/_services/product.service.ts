@@ -44,7 +44,7 @@ export class ProductService {
     var quantityItem = this.productrequest.quantityItem;
     var quantityBundle = this.productrequest.quantityBundle;
     var extraQuantity = this.productrequest.extraQuantity;
-    var quantity = (this.productrequest.quantityItem*this.productrequest.quantityBundle)+this.productrequest.extraQuantity;
+    var quantity = 0;
     var description = this.productrequest.description;
 
     return this.http.post(PRODUCT_API + 'updateProduct', {//productrequest
@@ -60,7 +60,7 @@ export class ProductService {
     var quantityItem = this.productrequest.quantityItem;
     var quantityBundle = this.productrequest.quantityBundle;
     var extraQuantity = this.productrequest.extraQuantity;
-    var quantity = (this.productrequest.quantityItem*this.productrequest.quantityBundle)+this.productrequest.extraQuantity;
+    var quantity =0;
     var description = form.get('description').value;
     return this.http.post(PRODUCT_API + 'addProduct', {
       category, price,

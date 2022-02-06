@@ -93,17 +93,17 @@
       <version>2.9.2</version>
     </dependency>
     <!-- https://mvnrepository.com/artifact/com.itextpdf/itextpdf -->
-    <dependency>
-      <groupId>com.itextpdf</groupId>
-      <artifactId>itextpdf</artifactId>
-      <version>5.5.13.2</version>
-    </dependency>
-    <!-- https://mvnrepository.com/artifact/com.itextpdf/layout -->
-    <dependency>
-      <groupId>com.itextpdf</groupId>
-      <artifactId>layout</artifactId>
-      <version>7.2.1</version>
-    </dependency>
+<!--    <dependency>-->
+<!--      <groupId>com.itextpdf</groupId>-->
+<!--      <artifactId>itextpdf</artifactId>-->
+<!--      <version>5.5.13.2</version>-->
+<!--    </dependency>-->
+<!--    &lt;!&ndash; https://mvnrepository.com/artifact/com.itextpdf/layout &ndash;&gt;-->
+<!--    <dependency>-->
+<!--      <groupId>com.itextpdf</groupId>-->
+<!--      <artifactId>layout</artifactId>-->
+<!--      <version>7.2.1</version>-->
+<!--    </dependency>-->
 
     <dependency>
       <groupId>net.sf.barcode4j</groupId>
@@ -111,12 +111,12 @@
       <version>2.1</version>
     </dependency>
 
-    <dependency>
-      <groupId>com.aspose</groupId>
-      <artifactId>aspose-barcode</artifactId>
-      <version>20.3</version>
-      <classifier>jdk17</classifier>
-    </dependency>
+<!--    <dependency>-->
+<!--      <groupId>com.aspose</groupId>-->
+<!--      <artifactId>aspose-barcode</artifactId>-->
+<!--      <version>20.3</version>-->
+<!--      <classifier>jdk17</classifier>-->
+<!--    </dependency>-->
 
  </dependencies>
 
@@ -144,12 +144,12 @@
       </plugin>
     </plugins>
 	</build>
-  <repositories>
+<!--  <repositories>-->
 
-    <repository>
-      <id>AsposeJavaAPI</id>
-      <name>Aspose Java API</name>
-      <url>https://repository.aspose.com/repo/</url>
-    </repository>
-  </repositories>
+<!--    <repository>-->
+<!--      <id>AsposeJavaAPI</id>-->
+<!--      <name>Aspose Java API</name>-->
+<!--      <url>https://repository.aspose.com/repo/</url>-->
+<!--    </repository>-->
+<!--  </repositories>-->
 </project>
