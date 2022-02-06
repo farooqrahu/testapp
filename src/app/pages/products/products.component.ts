@@ -71,6 +71,8 @@ export class ProductsComponent implements OnInit, AfterViewInit {
   ngOnInit() {
      // this.productsearch.nativeElement=""
     this.refreshproduct();
+    this.getAllCompanies();
+    this.getAllCategories();
   }
 
   refreshproduct() {
@@ -112,7 +114,7 @@ export class ProductsComponent implements OnInit, AfterViewInit {
       width: '400px',
       data: {
         id: product.id, name: product.name, description: product.description,
-        price: product.price, category: product.category,company: product.company,quantity:product.quantity
+        price: product.price, category: product.category,company: product.company,quantityItem:product.quantityItem,quantityBundle:product.quantityBundle,extraQuantity:product.extraQuantity
 
       }
     });
