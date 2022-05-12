@@ -1,32 +1,19 @@
 package com.bezkoder.springjwt.controllers;
 
-import javax.validation.Valid;
-
 import com.bezkoder.springjwt.payload.request.*;
 import com.bezkoder.springjwt.repository.CategoryRepository;
 import com.bezkoder.springjwt.repository.ProductRepository;
 import com.bezkoder.springjwt.security.jwt.JwtUtils;
 import com.bezkoder.springjwt.security.services.ProductService;
 import com.bezkoder.springjwt.security.services.UserDetailsServiceImpl;
-
-import com.itextpdf.text.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.io.IOException;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -60,13 +47,14 @@ public class ProductController {
   }
 
   @PostMapping("/addProduct")
-  public ResponseEntity<?> addProduct(@Valid @RequestBody ProductRequest productRequest) throws DocumentException, IOException {
+  public ResponseEntity<?> addProduct(@Valid @RequestBody ProductRequest productRequest) throws
+     IOException {
     return productService.addProduct(productRequest);
 
   }
 
   @PostMapping("/updateProduct")
-  public ResponseEntity<?> updateProduct(@Valid @RequestBody ProductRequest productRequest) throws IOException, DocumentException {
+  public ResponseEntity<?> updateProduct(@Valid @RequestBody ProductRequest productRequest) throws IOException {
     return productService.updateProduct(productRequest);
 
   }

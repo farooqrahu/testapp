@@ -25,13 +25,21 @@ import { ProductformComponent } from './modal/productform/productform.component'
 import { MatSelectModule } from '@angular/material/select';
 import { CategoryformComponent } from './modal/categoryform/categoryform.component';
 import { CompanyformComponent } from './modal/companyform/companyform.component';
+import {SaleformComponent} from "./modal/saleform/saleform.component";
 import { MessageboxComponent } from './modal/messagebox/messagebox.component';
 import { UsersComponent } from './pages/users/users.component';
+import { SalesComponent } from './pages/saleproducts/sales.component';
 import { ShoppingCartsComponent } from './pages/shopping-carts/shopping-carts.component';
 import { InvoiceComponent } from './modal/invoice/invoice.component';
 import { EditshoppingcartComponent } from './modal/editshoppingcart/editshoppingcart.component';
 import {AuthInterceptor} from "./_helpers/auth.interceptor";
 import {BarcodeComponent} from "./modal/barcode/barcode.component";
+import {MatCheckboxModule} from "@angular/material/checkbox";
+import {MatListModule} from "@angular/material/list";
+import {MatTooltipModule} from "@angular/material/tooltip";
+import {SaleOrdersComponent} from "./pages/viewsales/sale.orders.component";
+import {SalesInvoiceComponent} from "./modal/saleinvoice/sales-invoice.component";
+import {SalesListComponent} from "./modal/viewsalesform/sales-list.component";
 
 @NgModule({
   imports: [
@@ -54,6 +62,9 @@ import {BarcodeComponent} from "./modal/barcode/barcode.component";
     MatInputModule,
     MatDialogModule,
     ReactiveFormsModule,
+    MatCheckboxModule,
+    MatListModule,
+    MatTooltipModule,
   ],
   declarations: [
     AppComponent,
@@ -62,9 +73,14 @@ import {BarcodeComponent} from "./modal/barcode/barcode.component";
     ProductformComponent,
     CategoryformComponent,
     CompanyformComponent,
+    SaleformComponent,
+    SalesInvoiceComponent,
+    SalesListComponent,
+    SaleOrdersComponent,
     BarcodeComponent,
     MessageboxComponent,
     UsersComponent,
+    SalesComponent,
     ShoppingCartsComponent,
     InvoiceComponent,
     EditshoppingcartComponent

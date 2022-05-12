@@ -13,7 +13,7 @@ import javax.validation.constraints.Size;
 @ToString
 @Setter
 @Entity
-@Table(name = "Company")
+@Table(name = "companies")
 @Builder
 public class Company {
   @Id

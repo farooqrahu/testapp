@@ -23,7 +23,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
   Page<Product> findAllByPrice(double price, Pageable pageable);
 
-  List<Product> findByNameContainingAndCategory(String name, Category Category);
+  List<Product> findByNameContainingAndCategoryName(String name,String category);
 
   Page<Product> findByNameContainingAndCategory(String name, Category Category, Pageable pageable);
 

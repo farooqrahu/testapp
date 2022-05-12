@@ -9,23 +9,54 @@ import { MessageboxComponent } from 'src/app/modal/messagebox/messagebox.compone
 import { ProductformComponent } from 'src/app/modal/productform/productform.component';
 import { ProductService } from 'src/app/_services/product.service';
 import { TokenStorageService } from 'src/app/_services/token-storage.service';
-import { Category } from './../../models/category.model';
-import { Product } from './../../models/product.model';
+import { Category } from '../../models/category.model';
+import { Product } from '../../models/product.model';
 import Swal from 'sweetalert2'
 import {BarcodeComponent} from "../../modal/barcode/barcode.component";
 import {Company} from "../../models/compnay.model";
 import {CompanyformComponent} from "../../modal/companyform/companyform.component";
+import {SelectionModel} from "@angular/cdk/collections";
 @Component({
   selector: 'app-products',
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.scss']
 })
 export class ProductsComponent implements OnInit, AfterViewInit {
-  columnsToDisplay = ["id", 'name', "price","quantity", "description", "category", "action"];
+  columnsToDisplay = ["select","id", 'name', "price","quantityItem","quantityBundle","extraQuantity","quantity", "description", "category","company", "action"];
   categorycolumnsToDisplay = ["id", 'name', "action"];
   companycolumnsToDisplay = ["id", 'name', "action"];
 
   dataSource: MatTableDataSource<Product> = null;
+  selection = new SelectionModel<Product>(true, []);
+
+  /** Whether the number of selected elements matches the total number of rows. */
+  isAllSelected() {
+    if(this.dataSource){
+      const numSelected = this.selection.selected.length;
+      const numRows = this.dataSource.data.length;
+      return numSelected === numRows;
+    }
+  }
+
+  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  masterToggle() {
+    if (this.isAllSelected()) {
+      this.selection.clear();
+      return;
+    }
+
+    this.selection.select(...this.dataSource.data);
+  }
+
+  /** The label for the checkbox on the passed row */
+  checkboxLabel(row?: Product): string {
+    if (!row) {
+      return `${this.isAllSelected() ? 'deselect' : 'select'} all`;
+    }
+    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.id + 1}`;
+  }
+
+
   categoriesdatasource: MatTableDataSource<Category> = null;
   companiesdatasource: MatTableDataSource<Company> = null;
   products: Product[] = [];
@@ -36,8 +67,7 @@ export class ProductsComponent implements OnInit, AfterViewInit {
     , public dialog: MatDialog
     // ,@Inject(DOCUMENT) document:Document
   ) { }
-  ngAfterViewInit(): void {
-  }
+  ngAfterViewInit(): void {}
   @ViewChild(MatSort) sort: MatSort | any;
   @ViewChild(MatPaginator) paginator: MatPaginator | any;
   @ViewChild('productsearch') productsearch: ElementRef  | any;
@@ -47,11 +77,11 @@ export class ProductsComponent implements OnInit, AfterViewInit {
   loadproductresults(): void {
     this.paginator.page.subscribe(() => {
       const productrequest = new ProductRequest( 0, this.productsearch.nativeElement.value,
-        this.productsearch.nativeElement.value, 0, 0,null, null, false, 'name', 'asc', this.paginator.pageSize, this.paginator.getNumberOfPages())
+        this.productsearch.nativeElement.value, 0,0,0,0, 0,null, null, false, 'name', 'asc', this.paginator.pageSize, this.paginator.getNumberOfPages())
       this.productservice.findProduct(productrequest).subscribe(
         data => {
           this.products = data.list;
-          (this.products);
+          // (this.products);
           this.productslength = data.totalitems;
           setTimeout(() => {
             this.dataSource = new MatTableDataSource(this.products);
@@ -71,15 +101,14 @@ export class ProductsComponent implements OnInit, AfterViewInit {
   ngOnInit() {
      // this.productsearch.nativeElement=""
     this.refreshproduct();
-    this.getAllCategories();
     this.getAllCompanies();
+    this.getAllCategories();
   }
 
   refreshproduct() {
 
     this.productservice.getAllProducts().subscribe(
       data => {
-        console.log("refres");
         this.products = data.list;
         (this.products.length);
         this.productslength = data.totalitems;
@@ -97,23 +126,26 @@ export class ProductsComponent implements OnInit, AfterViewInit {
   public doFilter = (value: string, type: String) => {
     switch (type) {
       case 'product':
-        this.dataSource.filter = value.trim().toLocaleLowerCase(); break;
+        this.dataSource.filter = value.trim().toLocaleLowerCase();
+        break;
       case 'category':
-        this.categoriesdatasource.filter = value.trim().toLocaleLowerCase(); break;
+        this.categoriesdatasource.filter = value.trim().toLocaleLowerCase();
+        break;
       case 'company':
-        this.companiesdatasource.filter = value.trim().toLocaleLowerCase();break;
+        this.companiesdatasource.filter = value.trim().toLocaleLowerCase();
+        break;
 
     }
   }
   openDialog(product?: Product): void {
     if (product === undefined)
-      product = new Product(0, "", "", 0, this.categories[0],this.companies[0], false,0,"")
+      product = new Product(0, "", "", 0, this.categories[0],this.companies[0], false,0,0,0,0,"")
     const dialogRef = this.dialog.open(ProductformComponent, {
       width: '400px',
       data: {
         id: product.id, name: product.name, description: product.description,
-        price: product.price, category: product.category,company: product.company,quantity:product.quantity
-
+        price: product.price, category: product.category,company: product.company,quantityItem:product.quantityItem,quantityBundle:product.quantityBundle,extraQuantity:product.extraQuantity
+,quantity:product.quantity
       }
     });
     dialogRef.afterClosed().subscribe(res => {

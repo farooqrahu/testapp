@@ -17,5 +17,8 @@ public class ProductRequest {
   private String sortdirection = "asc";
   private int pagesize = 0;
   private int pagenumber = 0;
+  private Long quantityItem;
+  private Long quantityBundle;
+  private Long extraQuantity;
   private Long quantity;
 }
