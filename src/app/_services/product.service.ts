@@ -44,7 +44,7 @@ export class ProductService {
     var quantityItem = this.productrequest.quantityItem;
     var quantityBundle = this.productrequest.quantityBundle;
     var extraQuantity = this.productrequest.extraQuantity;
-    var quantity = 0;
+    var quantity = this.productrequest.quantity;
     var description = this.productrequest.description;
 
     return this.http.post(PRODUCT_API + 'updateProduct', {//productrequest
@@ -76,7 +76,7 @@ export class ProductService {
   findProduct(productrequest: ProductRequest): Observable<any> {
 
     var id = productrequest.id;
-    var category = productrequest.category;
+    var category = productrequest.category.name;
     var name = productrequest.name;
     var price = productrequest.price;
     var quantity = productrequest.quantity;
@@ -95,7 +95,6 @@ export class ProductService {
   }
 
   getAllProducts(): Observable<any> {
-
     return this.http.post(PRODUCT_API + 'findProduct', {}, httpOptions);
   }
 

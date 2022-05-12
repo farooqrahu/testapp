@@ -99,7 +99,7 @@ public class ProductService {
     Pageable paging = checkPaging(productRequest);
     if (paging == null)
       return ResponseEntity.ok(new ProductResponse(
-        productRepository.findByNameContainingAndCategory(productRequest.getName(), productRequest.getCategory()).stream().map(ProductDto::factoryProduct).collect(Collectors.toList())));
+        productRepository.findByNameContainingAndCategoryName(productRequest.getName(), productRequest.getCategory().getName()).stream().map(ProductDto::factoryProduct).collect(Collectors.toList())));
     else
       return ResponseEntity.ok(new ProductResponse(productRepository
         .findByNameContainingAndCategory(productRequest.getName(), productRequest.getCategory(), paging).stream().map(ProductDto::factoryProduct).collect(Collectors.toList())));

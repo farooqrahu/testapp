@@ -3,8 +3,9 @@ package com.bezkoder.springjwt.payload.response;
 import java.util.List;
 
 import com.bezkoder.springjwt.dto.ProductDto;
+import com.bezkoder.springjwt.dto.ProductOrderInvoiceDto;
+import com.bezkoder.springjwt.dto.ProductSaleDto;
 import com.bezkoder.springjwt.models.Category;
-import com.bezkoder.springjwt.models.Product;
 
 import org.springframework.data.domain.Page;
 
@@ -21,6 +22,7 @@ public class ProductResponse {
   private Float price;
   private boolean images;
   private List<ProductDto> list;
+  private List<ProductOrderInvoiceDto> productOrderInvoiceDtos;
   private int currentpage;
   private long totalitems;
   private int totalpages;
@@ -41,6 +43,9 @@ public class ProductResponse {
     this.list = list;
   }
 
+  public ProductResponse(List<ProductOrderInvoiceDto> productOrderInvoiceDtos,String t) {
+    this.productOrderInvoiceDtos = productOrderInvoiceDtos;
+  }
   public ProductResponse(List<ProductDto> list) {
     this.list = list;
   }

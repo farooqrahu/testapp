@@ -9,23 +9,54 @@ import { MessageboxComponent } from 'src/app/modal/messagebox/messagebox.compone
 import { ProductformComponent } from 'src/app/modal/productform/productform.component';
 import { ProductService } from 'src/app/_services/product.service';
 import { TokenStorageService } from 'src/app/_services/token-storage.service';
-import { Category } from './../../models/category.model';
-import { Product } from './../../models/product.model';
+import { Category } from '../../models/category.model';
+import { Product } from '../../models/product.model';
 import Swal from 'sweetalert2'
 import {BarcodeComponent} from "../../modal/barcode/barcode.component";
 import {Company} from "../../models/compnay.model";
 import {CompanyformComponent} from "../../modal/companyform/companyform.component";
+import {SelectionModel} from "@angular/cdk/collections";
 @Component({
   selector: 'app-products',
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.scss']
 })
 export class ProductsComponent implements OnInit, AfterViewInit {
-  columnsToDisplay = ["id", 'name', "price","quantityItem","quantityBundle","extraQuantity","quantity", "description", "category", "action"];
+  columnsToDisplay = ["select","id", 'name', "price","quantityItem","quantityBundle","extraQuantity","quantity", "description", "category","company", "action"];
   categorycolumnsToDisplay = ["id", 'name', "action"];
   companycolumnsToDisplay = ["id", 'name', "action"];
 
   dataSource: MatTableDataSource<Product> = null;
+  selection = new SelectionModel<Product>(true, []);
+
+  /** Whether the number of selected elements matches the total number of rows. */
+  isAllSelected() {
+    if(this.dataSource){
+      const numSelected = this.selection.selected.length;
+      const numRows = this.dataSource.data.length;
+      return numSelected === numRows;
+    }
+  }
+
+  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  masterToggle() {
+    if (this.isAllSelected()) {
+      this.selection.clear();
+      return;
+    }
+
+    this.selection.select(...this.dataSource.data);
+  }
+
+  /** The label for the checkbox on the passed row */
+  checkboxLabel(row?: Product): string {
+    if (!row) {
+      return `${this.isAllSelected() ? 'deselect' : 'select'} all`;
+    }
+    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.id + 1}`;
+  }
+
+
   categoriesdatasource: MatTableDataSource<Category> = null;
   companiesdatasource: MatTableDataSource<Company> = null;
   products: Product[] = [];
@@ -36,8 +67,7 @@ export class ProductsComponent implements OnInit, AfterViewInit {
     , public dialog: MatDialog
     // ,@Inject(DOCUMENT) document:Document
   ) { }
-  ngAfterViewInit(): void {
-  }
+  ngAfterViewInit(): void {}
   @ViewChild(MatSort) sort: MatSort | any;
   @ViewChild(MatPaginator) paginator: MatPaginator | any;
   @ViewChild('productsearch') productsearch: ElementRef  | any;
@@ -115,7 +145,7 @@ export class ProductsComponent implements OnInit, AfterViewInit {
       data: {
         id: product.id, name: product.name, description: product.description,
         price: product.price, category: product.category,company: product.company,quantityItem:product.quantityItem,quantityBundle:product.quantityBundle,extraQuantity:product.extraQuantity
-
+,quantity:product.quantity
       }
     });
     dialogRef.afterClosed().subscribe(res => {

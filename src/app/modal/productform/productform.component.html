@@ -21,7 +21,10 @@
     <p>Extra Quantity</p>
     <input matInput (change)="validate(data)" [(ngModel)]="data.extraQuantity" required>
   </mat-form-field>
-
+  <mat-form-field>
+    <p>Total Quantity</p>
+    <input matInput (change)="validate(data)" [(ngModel)]="data.quantity" required>
+  </mat-form-field>
   <mat-form-field>
     <p>Product Description</p>
     <textarea matInput (change)="validate(data)" [(ngModel)]="data.description" cdkTextareaAutosize

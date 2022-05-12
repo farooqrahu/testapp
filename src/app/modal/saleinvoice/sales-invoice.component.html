@@ -1,0 +1,58 @@
+<button class="close" mat-button (click)="onNoClick()">X</button>
+<div id="print" class="print">
+  <h3 mat-dialog-title>Invoice</h3>
+  <div mat-dialog-content>
+    <!-- Logo -->
+    <div class="navbar-header">
+      <a class="navbar-brand" href="index.html">
+        <!-- Logo icon -->
+        <!--      <b><img src="/assets/img/brand/logo2.jpg" alt="homepage" class="dark-logo" /></b>-->
+        <!--End Logo icon -->
+        <!-- Logo text -->
+
+      </a>
+      <div class="row ">
+        <span><img width="149px" src="/assets/img/brand/logo2.jpg" alt="homepage" class="dark-logo"/></span>
+        <span
+          style="font-weight: bold;font-size: 18px;color: red"> Habib Paint House Bandhi Road,Moro, Sindh <br/> <span
+          style="font-size: 14px;color: black;font-weight: bold">Mobile No. (021)00000000 Cell No. 0300-0000001</span></span>
+      </div>
+
+    </div>
+    <div class="row mt-1" style="padding: 5px">
+      <p>Customer Name:___________________________ </p>
+      <p>&nbsp;Invoice No. {{productOrderList.invoiceNo}}</p>
+      <p>&nbsp;Date. {{productOrderList.createdAt}}</p>
+    </div>
+
+    <table id="receipt" class="table table-striped table-bordered" aria-label="order">
+      <thead>
+      <tr>
+        <th>Product</th>
+        <th>Quantity</th>
+        <th>Item Price</th>
+        <th>Sub Total</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let p of productOrderList.productSales">
+        <td>{{p.product.name}}</td>
+        <td>{{p.quantity}}</td>
+        <td>{{p.product.price | currency:'Rs:'}}</td>
+        <td>{{p.product.price * p.quantity | currency:'Rs:'}}</td>
+      </tr>
+      <tr class="table table-borderless table-dark">
+        <th>Total Products</th>
+        <td>{{productOrderList.totalQuantity}}</td>
+        <th>Grand Total</th>
+        <td>{{productOrderList.grandTotal | currency:'Rs:'}}</td>
+
+      </tr>
+
+      </tbody>
+
+    </table>
+  </div>
+</div>
+<button mat-button (click)="printTest()" class="mat-button mat-raised-button mat-primary">Print  <span class="material-icons">print</span></button>
+
