@@ -1,20 +1,21 @@
 <div class="header pb-4 pt-3 pt-lg-4 d-flex align-items-center"
-     style="min-height: 300px; background-image: url(assets/img/theme/hardware1.jpg); background-size: cover; background-position: center top;">
+     style="min-height: 300px; background-image: url(assets/img/theme/cloth3.jpg); background-size: cover; background-position: center top;">
   <!-- Mask -->
   <span class="mask bg-gradient-danger opacity-6"></span>
   <div class="container">
     <div class="header-body text-center mb-7">
       <div class="row justify-content-center">
         <div class="col-lg-5 col-md-6">
-          <h1 class="text-white">Habib Paints & Construction Material</h1>
-          <p class="text-lead text-light">Use your credentials to login or contact administrator to create new account.</p>
+          <h1 class="text-white">Khalil Cloth House</h1>
+          <p class="text-lead text-light">Use your credentials to login or contact administrator to create new
+            account.</p>
         </div>
       </div>
     </div>
   </div>
   <div class="separator separator-bottom separator-skew zindex-100">
     <svg x="0" y="0" viewBox="0 0 2560 100" preserveAspectRatio="none" version="1.1"
-      xmlns="http://www.w3.org/2000/svg">
+         xmlns="http://www.w3.org/2000/svg">
       <polygon class="fill-default" points="2560 0 2560 100 0 100"></polygon>
     </svg>
   </div>
@@ -27,11 +28,11 @@
 
         <div class="card-body px-lg-5 py-lg-5">
           <form *ngIf="!isLoggedIn" name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm"
-            novalidate>
+                novalidate>
             <div class="form-group">
               <label for="username">Username</label>
               <input type="text" class="form-control" name="username" [(ngModel)]="form.username" required
-                #username="ngModel" />
+                     #username="ngModel"/>
               <div class="alert alert-danger" role="alert" *ngIf="username.errors && f.submitted">
                 Username is required!
               </div>
@@ -39,7 +40,7 @@
             <div class="form-group">
               <label for="password">Password</label>
               <input type="password" class="form-control" name="password" [(ngModel)]="form.password"
-                required minlength="6" #password="ngModel" />
+                     required minlength="6" #password="ngModel"/>
               <div class="alert alert-danger" role="alert" *ngIf="password.errors && f.submitted">
                 <div *ngIf="password.errors.required">Password is required</div>
                 <div *ngIf="password.errors.minlength">
@@ -70,3 +71,5 @@
         </div>
       </div>
     </div>
+  </div>
+</div>

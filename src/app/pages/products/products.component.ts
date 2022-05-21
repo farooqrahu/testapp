@@ -22,7 +22,7 @@ import {SelectionModel} from "@angular/cdk/collections";
   styleUrls: ['./products.component.scss']
 })
 export class ProductsComponent implements OnInit, AfterViewInit {
-  columnsToDisplay = ["select","id", 'name', "price","quantityItem","quantityBundle","extraQuantity","quantity", "description", "category","company", "action"];
+  columnsToDisplay = ["select","id", 'name', "price","quantity", "description", "category","company", "action"];
   categorycolumnsToDisplay = ["id", 'name', "action"];
   companycolumnsToDisplay = ["id", 'name', "action"];
 
