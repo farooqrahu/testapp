@@ -220,6 +220,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     return ResponseEntity.ok(UserResponse.userResponseFactory(user,null));
 
   }
+  public User getUser() {
+    UserDetailsImpl userDetails = getUserDetails();
+    return userRepository.findById(userDetails.getId()).get();
+  }
 
   public ResponseEntity<?> updateUser(UpdateRequest updateRequest) {
     checkAdminOrConcernedUser(updateRequest.getId());

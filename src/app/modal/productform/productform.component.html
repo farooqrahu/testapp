@@ -3,31 +3,34 @@
 
   <mat-form-field>
     <p>Product Name</p>
-    <input matInput (change)="validate(data)" [(ngModel)]="data.name" cdkFocusInitial required>
+    <input matInput   [(ngModel)]="data.name" cdkFocusInitial required>
   </mat-form-field>
   <mat-form-field>
     <p>Product Price</p>
-    <input matInput (change)="validate(data)" [(ngModel)]="data.price" required>
+    <input matInput  [(ngModel)]="data.price" required>
   </mat-form-field>
+  <section class="example-section">
+    <mat-checkbox [disabled]="data.id>0" (change)="validate(data);clearQty(data)" [(ngModel)]="data.enableTQ" >Enter Total Quantity</mat-checkbox>
+  </section>
   <mat-form-field>
     <p>Quantity Item - Sheet</p>
-    <input matInput (change)="validate(data)" [(ngModel)]="data.quantityItem" required>
+    <input [disabled]="data.enableTQ"  matInput (change)="validate(data);calculateQty(data)" [(ngModel)]="data.quantityItem" required>
   </mat-form-field>
   <mat-form-field>
     <p>Quantity Bundle</p>
-    <input matInput (change)="validate(data)" [(ngModel)]="data.quantityBundle" required>
+    <input matInput  [disabled]="data.enableTQ" (change)="validate(data);calculateQty(data)" [(ngModel)]="data.quantityBundle" required>
   </mat-form-field>
   <mat-form-field>
     <p>Extra Quantity</p>
-    <input matInput (change)="validate(data)" [(ngModel)]="data.extraQuantity" required>
+    <input matInput  [disabled]="data.enableTQ" (change)="validate(data);calculateQty(data)" [(ngModel)]="data.extraQuantity" required>
   </mat-form-field>
   <mat-form-field>
     <p>Total Quantity</p>
-    <input matInput (change)="validate(data)" [(ngModel)]="data.quantity" required>
+    <input matInput [disabled]="!data.enableTQ" [(ngModel)]="data.quantity" required>
   </mat-form-field>
   <mat-form-field>
     <p>Product Description</p>
-    <textarea matInput (change)="validate(data)" [(ngModel)]="data.description" cdkTextareaAutosize
+    <textarea matInput  [(ngModel)]="data.description" cdkTextareaAutosize
       #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="5" cdkAutosizeMaxRows="20"></textarea>
   </mat-form-field>
   <mat-form-field appearance="fill">
@@ -54,5 +57,5 @@
 <p *ngIf="errors!=''" style="color:red;">{{errors}}</p>
 <div mat-dialog-actions>
   <button mat-button (click)="onNoClick()">Cancel</button>
-  <button *ngIf="validate(data)" mat-button [mat-dialog-close]="data">Ok</button>
+  <button class="mat-button mat-raised-button mat-primary" *ngIf="validate(data)" mat-button [mat-dialog-close]="data">Submit</button>
 </div>

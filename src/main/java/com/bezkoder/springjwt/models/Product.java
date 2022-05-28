@@ -27,6 +27,8 @@ public class Product {
   private Long quantityBundle;
   private Long extraQuantity;
   private Long quantity;
+  @Column(name = "enable_tq")
+  private boolean enableTQ;
   @Nullable
   @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
   private Category category;
@@ -63,6 +65,7 @@ public class Product {
     this.quantityItem= productRequest.getQuantityItem();
     this.quantityBundle= productRequest.getQuantityBundle();
     this.extraQuantity= productRequest.getExtraQuantity();
+    this.enableTQ = productRequest.isEnableTQ();
     if(productRequest.getQuantity()>0){
       this.quantity=productRequest.getQuantity();
     }else {

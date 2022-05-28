@@ -4,6 +4,7 @@ import com.bezkoder.springjwt.payload.request.*;
 import com.bezkoder.springjwt.repository.CategoryRepository;
 import com.bezkoder.springjwt.repository.ProductRepository;
 import com.bezkoder.springjwt.security.jwt.JwtUtils;
+import com.bezkoder.springjwt.security.services.ProductHistoryServices;
 import com.bezkoder.springjwt.security.services.ProductService;
 import com.bezkoder.springjwt.security.services.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,8 @@ public class ProductController {
   UserDetailsServiceImpl userDetailsServiceImpl;
   @Autowired
   ProductService productService;
+  @Autowired
+  ProductHistoryServices productHistoryServices;
 
   @RequestMapping(value = "/updateProductimage", consumes = {"multipart/mixed", "multipart/form-data"})
   @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -44,6 +47,11 @@ public class ProductController {
   @PostMapping("/findProduct")
   public ResponseEntity<?> findProduct(@Valid @RequestBody ProductRequest productRequest) {
     return productService.findProduct(productRequest);
+  }
+
+  @PostMapping("/findProductHistory")
+  public ResponseEntity<?> findProductHistory(@Valid @RequestBody ProductRequest productRequest) {
+    return productHistoryServices.findProductHistory(productRequest);
   }
 
   @PostMapping("/addProduct")

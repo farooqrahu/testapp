@@ -13,6 +13,7 @@ export class Product {
     public quantityBundle: number,
     public extraQuantity: number,
     public quantity: number,
+    public enableTQ: boolean,
     public file: string
 
   ) { }

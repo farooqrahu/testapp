@@ -31,7 +31,7 @@ export class ProductService {
       catchError(() => of(false)));
   }
 
-  productrequest: ProductRequest = new ProductRequest(0, '', '', 0, 0,0,0,0, null,null, false);
+  productrequest: ProductRequest = new ProductRequest(0, '', '', 0, 0,0,0,0, false,null,null, false);
 
   updateProduct(product: Product): Observable<any> {
 
@@ -46,10 +46,11 @@ export class ProductService {
     var extraQuantity = this.productrequest.extraQuantity;
     var quantity = this.productrequest.quantity;
     var description = this.productrequest.description;
+    var enableTQ =this.productrequest.enableTQ;
 
     return this.http.post(PRODUCT_API + 'updateProduct', {//productrequest
       id, category,company, price, name, description, quantityItem,quantityBundle,extraQuantity,quantity
-
+    ,enableTQ
     }, httpOptions);
   }
 
@@ -60,12 +61,13 @@ export class ProductService {
     var quantityItem = this.productrequest.quantityItem;
     var quantityBundle = this.productrequest.quantityBundle;
     var extraQuantity = this.productrequest.extraQuantity;
-    var quantity =0;
+    var quantity =this.productrequest.quantity;
+    var enableTQ =this.productrequest.enableTQ;
     var description = form.get('description').value;
     return this.http.post(PRODUCT_API + 'addProduct', {
       category, price,
       name
-      , description, quantityItem,quantityBundle,extraQuantity,quantity
+      , description, quantityItem,quantityBundle,extraQuantity,quantity,enableTQ
     }, httpOptions);
   }
 
@@ -89,6 +91,22 @@ export class ProductService {
     }, httpOptions);
   }
 
+  findProductHistory(productrequest: ProductRequest): Observable<any> {
+
+    var id = productrequest.id;
+    var category = productrequest.category.name;
+    var name = productrequest.name;
+    var price = productrequest.price;
+    var quantity = productrequest.quantity;
+    var description = productrequest.description;
+    console.log(productrequest)
+
+    return this.http.post(PRODUCT_API + 'findProductHistory', {
+
+      id, category, price, name, description, quantity
+    }, httpOptions);
+  }
+
   deleteProduct(product: Product): Observable<any> {
     var id = product.id
     return this.http.post(PRODUCT_API + 'deleteProduct', {id}, httpOptions);
@@ -96,6 +114,10 @@ export class ProductService {
 
   getAllProducts(): Observable<any> {
     return this.http.post(PRODUCT_API + 'findProduct', {}, httpOptions);
+  }
+
+  getAllProductHistory(): Observable<any> {
+    return this.http.post(PRODUCT_API + 'findProductHistory', {}, httpOptions);
   }
 
   getAllCategories(): Observable<any> {

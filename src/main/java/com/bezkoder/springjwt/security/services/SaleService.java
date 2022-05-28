@@ -20,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
@@ -62,6 +63,36 @@ public class SaleService {
       productRequest.getData().forEach(saleRequest -> {
         Optional<Product> product = productRepository.findById(saleRequest.getProductId());
         if (product.isPresent()) {
+          if(saleRequest.getQuantity()<=product.get().getExtraQuantity()){
+            product.get().setExtraQuantity(product.get().getExtraQuantity() - saleRequest.getQuantity());
+          }else{
+            double saleBundle=Double.valueOf(saleRequest.getQuantity())/Double.valueOf(product.get().getQuantityItem());
+            if((saleBundle-(long)saleBundle)==0){
+              product.get().setQuantityBundle(product.get().getQuantityBundle()-(long) saleBundle);
+            }else{
+              String[] bundleValues=String.valueOf(saleBundle).split("\\.");
+              long bundles=Long.parseLong(bundleValues[0]);
+              long extra=Long.parseLong(bundleValues[1]);
+              if(extra>product.get().getExtraQuantity()){
+                bundles++;
+                double extraRemaining=product.get().getQuantityItem() - extra;
+                double totalExtra = product.get().getExtraQuantity() + extraRemaining;
+                if(product.get().getExtraQuantity()>0){
+                  product.get().setExtraQuantity((long) totalExtra-product.get().getExtraQuantity());
+                }else {
+                  product.get().setExtraQuantity((long) totalExtra);
+                }
+              }else{
+                if(product.get().getExtraQuantity()>0){
+                  product.get().setExtraQuantity(extra -product.get().getExtraQuantity());
+                }else {
+                  product.get().setExtraQuantity(extra);
+                }
+              }
+              product.get().setQuantityBundle(product.get().getQuantityBundle()-(long) bundles);
+            }
+          }
+
           product.get().setQuantity(product.get().getQuantity() - saleRequest.getQuantity());
           grandTotal.set(grandTotal.get() + (saleRequest.getQuantity() * product.get().getPrice()));
           productRepository.save(product.get());
@@ -74,6 +105,11 @@ public class SaleService {
     return ResponseEntity.ok(new MessageResponse("Sale order submitted successfully!"));
   }
 
+//  private static double[] separateFractional(double d) {
+//    BigDecimal bd = new BigDecimal(d);
+//    return new double[] { bd.intValue(),
+//      bd.remainder(BigDecimal.ONE).doubleValue() };
+//  }
   public ResponseEntity<?> findOrders(ProductRequest productRequest) {
     Pageable paging = checkPaging(productRequest);
     if (paging == null)

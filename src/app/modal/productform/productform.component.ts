@@ -6,6 +6,7 @@ import { Product } from 'src/app/models/product.model';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSelect } from '@angular/material/select';
 import {Company} from "../../models/compnay.model";
+
 @Component({
   selector: 'app-productform',
   templateUrl: './productform.component.html',
@@ -43,6 +44,9 @@ export class ProductformComponent implements OnInit {
   onNoClick(): void {
     this.dialogRef.close();
   }
+  calculateQty(data: Product){
+    this.data.quantity=Number(this.data.extraQuantity)+(Number(this.data.quantityItem)*Number(this.data.quantityBundle));
+  }
   validate(data: Product): boolean {
     // data = data.price.replace(/,/g, '.')
     this.errors = "";
@@ -62,4 +66,10 @@ export class ProductformComponent implements OnInit {
 
   }
 
+  clearQty(data: Product) {
+    this.data.quantity = 0;
+    this.data.extraQuantity = 0;
+    this.data.quantityItem = 0;
+    this.data.quantityBundle = 0;
+  }
 }

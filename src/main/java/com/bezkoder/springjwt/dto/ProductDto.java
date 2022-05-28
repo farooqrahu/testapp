@@ -1,8 +1,5 @@
 package com.bezkoder.springjwt.dto;
 
-import com.bezkoder.springjwt.models.Category;
-import com.bezkoder.springjwt.models.Company;
-import com.bezkoder.springjwt.models.FileDB;
 import com.bezkoder.springjwt.models.Product;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,6 +19,7 @@ public class ProductDto {
   private Long quantityBundle;
   private Long extraQuantity;
   private Long quantity;
+  private boolean enableTQ;
   private CategoryDto category;
   private CompanyDto company;
   private String file;
@@ -29,6 +27,6 @@ public class ProductDto {
 
   public static ProductDto factoryProduct(Product product) {
     return ProductDto.builder().id(product.getId()).name(product.getName()).description(product.getDescription()).price(product.getPrice())
-      .quantityItem(product.getQuantityItem()).quantityBundle(product.getQuantityBundle()).extraQuantity(product.getExtraQuantity()).quantity(product.getQuantity()).category(CategoryDto.factoryCategoryDto(product.getCategory())).company(CompanyDto.factoryCompanyDto(product.getCompany())).file(product.getFiles() != null ? "data:image/jpg;base64,"+ Base64.getEncoder().encodeToString(product.getFiles().getData()) : "").build();
+      .quantityItem(product.getQuantityItem()).quantityBundle(product.getQuantityBundle()).extraQuantity(product.getExtraQuantity()).quantity(product.getQuantity()).enableTQ(product.isEnableTQ()).category(CategoryDto.factoryCategoryDto(product.getCategory())).company(CompanyDto.factoryCompanyDto(product.getCompany())).file(product.getFiles() != null ? "data:image/jpg;base64,"+ Base64.getEncoder().encodeToString(product.getFiles().getData()) : "").build();
   }
 }

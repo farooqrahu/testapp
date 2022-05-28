@@ -36,6 +36,8 @@ public class ProductService {
   @Autowired
   ProductRepository productRepository;
   @Autowired
+  ProductHistoryRepository productHistoryRepository;
+  @Autowired
   CategoryRepository categoryRepository;
   @Autowired
   CompanyRepository companyRepository;
@@ -167,6 +169,15 @@ public class ProductService {
       return ResponseEntity.badRequest().body(new MessageResponse("Error: name must not be empty"));
     if (productRequest.getPrice() == null || productRequest.getPrice() <= 0)
       return ResponseEntity.badRequest().body(new MessageResponse("Error: price must not be empty, zero or negative"));
+    Optional<Product> prodFound=productRepository.findById(productRequest.getId());
+    if(prodFound.isPresent()){
+      User user=userDetailsServiceImpl.getUser();
+      ProductHistory productHistory= ProductHistory.builder().quantityItem(prodFound.get().getQuantityItem())
+        .quantityBundle(prodFound.get().getQuantityBundle()).extraQuantity(prodFound.get().getExtraQuantity()).quantity(prodFound.get().getQuantity())
+        .price(prodFound.get().getPrice()).product(prodFound.get()).category(prodFound.get().getCategory()).company(prodFound.get().getCompany()).name(prodFound.get().getName()).description(prodFound.get().getDescription())
+        .updatedByUser(user).build();
+      productHistoryRepository.save(productHistory);
+    }
     Product product = new Product(productRequest);
 // ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 //    Document document = new Document(new Rectangle(new RectangleReadOnly(400.0F, 240.0F)));

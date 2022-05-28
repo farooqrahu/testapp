@@ -21,4 +21,6 @@ public class ProductRequest {
   private Long quantityBundle;
   private Long extraQuantity;
   private Long quantity;
+  private boolean enableTQ;
+
 }
