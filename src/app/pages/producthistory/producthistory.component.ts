@@ -7,7 +7,7 @@ import {ProductService} from 'src/app/_services/product.service';
 import {TokenStorageService} from 'src/app/_services/token-storage.service';
 import {Category} from '../../models/category.model';
 import {Product} from '../../models/product.model';
-import {BarcodeComponent} from "../../modal/barcode/barcode.component";
+import {BarcodeComponent}  from "../../modal/barcode/barcode.component";
 import {Company} from "../../models/compnay.model";
 import {MessageboxComponent} from "../../modal/messagebox/messagebox.component";
 import {ProductRequest} from "../../models/productrequest.model";
