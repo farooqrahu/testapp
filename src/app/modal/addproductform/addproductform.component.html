@@ -1,0 +1,42 @@
+<h1 mat-dialog-title>Sale Product</h1>
+  <table class="table table-condensed">
+    <thead>
+    <tr>
+      <th>Product Name:</th>
+      <th>Product Price:</th>
+      <th>Quantity Item:</th>
+      <th>Quantity Bundle:</th>
+      <th>Extra Quantity:</th>
+      <th>Total Quantity:</th></tr>
+    </thead>
+    <tbody><tr>
+      <td>{{data.name}}</td>
+      <td>{{data.price}}</td>
+      <td>{{data.quantityItem}}</td>
+      <td>{{data.quantityBundle}}</td>
+      <td>{{data.extraQuantity}}</td>
+      <td>{{data.quantity}}</td>
+    </tr></tbody>
+  </table>
+<div mat-dialog-content>
+
+  <mat-form-field *ngIf="!data.enableTQ">
+    <p>Enter Quantity Bundle</p>
+    <input matInput type="number" [(ngModel)]="data.returnQuantityBundle"  (change)="calculateRetQty(data)" required>
+  </mat-form-field>
+  <mat-form-field *ngIf="!data.enableTQ">
+    <p>Enter Extra Quantity</p>
+    <input matInput  type="number" [(ngModel)]="data.returnExtraQuantity"  (change)="calculateRetQty(data);calcExt()" required>
+  </mat-form-field>
+  <mat-form-field >
+    <p>Enter Total</p>
+    <input matInput type="number" [disabled]="!data.enableTQ" [(ngModel)]="data.returnTotalQuantity" (change)="validateTotal()" required>
+  </mat-form-field>
+  <p *ngIf="errors!=''" style="color:red;">{{errors}}</p>
+
+</div>
+
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Cancel</button>
+  <button class="mat-button mat-raised-button mat-primary" *ngIf="validate(data)" mat-button [mat-dialog-close]="data">Submit</button>
+</div>
