@@ -39,6 +39,7 @@
       <tr *ngFor="let p of productOrderList.productSales">
         <td>{{p.product.name}}</td>
         <td>{{p.quantity}}</td>
+        <td>{{p.quantity}}</td>
         <td>
           <mat-form-field>
             <input matInput [(ngModel)]="p.returnQuantity" (change)="validate(p)" (click)="validate(p)"

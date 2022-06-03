@@ -35,7 +35,23 @@ export class ProductsComponent implements OnInit, AfterViewInit {
       return numSelected === numRows;
     }
   }
+async test() {
+  // @ts-ignore
+  const mql = require('@microlink/mql')
 
+  const {data} = await mql('https://github.com/farooqrahu', {
+    data: {
+      avatar: {
+        selector: '#avatar',
+        type: 'image',
+        attr: 'src'
+      }
+    }
+  })
+
+  console.log(data
+  )
+}
   /** Selects all rows if they are not all selected; otherwise clear selection. */
   masterToggle() {
     if (this.isAllSelected()) {
@@ -136,9 +152,8 @@ export class ProductsComponent implements OnInit, AfterViewInit {
     }
   }
   openDialog(product?: Product): void {
-    console.log(product);
     if (product === undefined)
-      product = new Product(0, "", "", 0, this.categories[0],this.companies[0], false,0,0,0,0,false,"")
+      product = new Product(0, "", "", 0, this.categories[0],this.companies[0], false,0,0,0,0,false,"",null,"",0,0,0)
     const dialogRef = this.dialog.open(ProductformComponent, {
       width: '400px',
       data: {

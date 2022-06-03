@@ -18,7 +18,8 @@ import {ProductRequest} from "../../models/productrequest.model";
   styleUrls: ['./producthistory.component.scss']
 })
 export class ProductHistoryComponent implements OnInit, AfterViewInit {
-  columnsToDisplay = ["id", 'name', "price","quantity", "description", "category"];
+  columnsToDisplay = ["id", 'name', "price","quantityItem","quantityBundle","extraQuantity","quantity", "description", "category","createdAt","userName"];
+
   dataSource: MatTableDataSource<Product> = null;
   products: Product[] = [];
   productslength = 0;

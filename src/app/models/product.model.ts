@@ -14,7 +14,12 @@ export class Product {
     public extraQuantity: number,
     public quantity: number,
     public enableTQ: boolean,
-    public file: string
+    public file: string,
+    public createdAt: Date,
+    public userName: string,
+    public returnQuantityBundle: number,
+    public returnExtraQuantity: number,
+    public returnTotalQuantity: number,
 
   ) { }
 

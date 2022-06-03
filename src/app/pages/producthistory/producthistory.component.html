@@ -98,6 +98,14 @@
               <th mat-header-cell *matHeaderCellDef mat-sort-header="name">Company</th>
               <td mat-cell *matCellDef="let product">{{product.company.name}}</td>
             </ng-container>
+            <ng-container matColumnDef="createdAt">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>created At</th>
+              <td mat-cell *matCellDef="let product">{{product.createdAt | date:'medium'}}</td>
+            </ng-container>
+            <ng-container matColumnDef="userName">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>User Name</th>
+              <td mat-cell *matCellDef="let product">{{product.userName}}</td>
+            </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
             <tr mat-row *matRowDef="let row; columns: columnsToDisplay"></tr>
