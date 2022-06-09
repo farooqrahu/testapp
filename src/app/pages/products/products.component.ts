@@ -22,7 +22,7 @@ import {SelectionModel} from "@angular/cdk/collections";
   styleUrls: ['./products.component.scss']
 })
 export class ProductsComponent implements OnInit, AfterViewInit {
-  columnsToDisplay = ["select","id", 'name', "price","quantityItem","quantityBundle","extraQuantity","quantity", "description", "category","company", "action"];
+  columnsToDisplay = ["select","id", 'name', "price","quantityItem","quantityBundle","extraQuantity","quantity", "outOfStock","description", "category","company", "action"];
 
   dataSource: MatTableDataSource<Product> = null;
   selection = new SelectionModel<Product>(true, []);
@@ -91,7 +91,7 @@ async test() {
   loadproductresults(): void {
     this.paginator.page.subscribe(() => {
       const productrequest = new ProductRequest( 0, this.productsearch.nativeElement.value,
-        this.productsearch.nativeElement.value, 0,0,0,0, 0,false,null, null, false, 'name', 'asc', this.paginator.pageSize, this.paginator.getNumberOfPages())
+        this.productsearch.nativeElement.value, 0,0,0,0, 0,false,0,0,0,null, null, false, 'name', 'asc', this.paginator.pageSize, this.paginator.getNumberOfPages())
       this.productservice.findProduct(productrequest).subscribe(
         data => {
           this.products = data.list;

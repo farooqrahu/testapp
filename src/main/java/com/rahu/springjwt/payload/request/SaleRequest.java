@@ -14,6 +14,7 @@ public class SaleRequest {
   private ProductDto product;
   private String name;
   private Long quantity;
-  private Long returnQuantity;
-
+  public long userQuantityBundle;
+  public long userExtraQuantity;
+  public long userTotalQuantity;
 }

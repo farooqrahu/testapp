@@ -5,10 +5,6 @@ import com.rahu.springjwt.models.*;
 import com.rahu.springjwt.payload.request.*;
 import com.rahu.springjwt.payload.response.*;
 import com.rahu.springjwt.repository.*;
-import com.rahu.springjwt.models.*;
-import com.rahu.springjwt.payload.request.*;
-import com.rahu.springjwt.payload.response.*;
-import com.rahu.springjwt.repository.*;
 import org.krysalis.barcode4j.impl.code128.Code128Bean;
 import org.krysalis.barcode4j.output.bitmap.BitmapCanvasProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,6 +67,17 @@ public class ProductService {
       }
     }
   }
+  public ResponseEntity<?> findProductOutOfStock(ProductRequest productRequest) {
+    if (productRequest.getCategory() != null && productRequest.getName() != null) {
+      return findByNameContainingAndCategoryOutOfStock(productRequest);
+    } else {
+      if (productRequest.getName() != null) {
+        return findByNameContainingOutOfStock(productRequest);
+      } else {
+        return findAllProductsOutOfStock(productRequest);
+      }
+    }
+  }
 
   public Pageable checkPaging(ProductRequest productRequest) {
     if (productRequest.getPagesize() > 0 && productRequest.getPagenumber() >= 0) {
@@ -92,6 +99,13 @@ public class ProductService {
     return ResponseEntity.ok(new ProductResponse(productRepository.findAll(paging).stream().map(ProductDto::factoryProduct).collect(Collectors.toList())));
   }
 
+  public ResponseEntity<?> findAllProductsOutOfStock(ProductRequest productRequest) {
+    Pageable paging = checkPaging(productRequest);
+    if (paging == null)
+      return ResponseEntity.ok(new ProductResponse(productRepository.findAllOutOfStock(productRequest.isOutOfStock()).stream().map(ProductDto::factoryProduct).collect(Collectors.toList())));
+    return ResponseEntity.ok(new ProductResponse(productRepository.findAllOutOfStock(productRequest.isOutOfStock(),paging).stream().map(ProductDto::factoryProduct).collect(Collectors.toList())));
+  }
+
   public ResponseEntity<?> findByNameContaining(ProductRequest productRequest) {
     Pageable paging = checkPaging(productRequest);
     if (paging == null)
@@ -99,6 +113,14 @@ public class ProductService {
     else
       return ResponseEntity
         .ok(new ProductResponse(productRepository.findByNameContaining(productRequest.getName(), paging).stream().map(ProductDto::factoryProduct).collect(Collectors.toList())));
+  }
+  public ResponseEntity<?> findByNameContainingOutOfStock(ProductRequest productRequest) {
+    Pageable paging = checkPaging(productRequest);
+    if (paging == null)
+      return ResponseEntity.ok(new ProductResponse(productRepository.findByNameContainingAndOutOfStock(productRequest.getName(),productRequest.isOutOfStock()).stream().map(ProductDto::factoryProduct).collect(Collectors.toList())));
+    else
+      return ResponseEntity
+        .ok(new ProductResponse(productRepository.findByNameContainingAndOutOfStock(productRequest.getName(),productRequest.isOutOfStock(), paging).stream().map(ProductDto::factoryProduct).collect(Collectors.toList())));
   }
 
   public ResponseEntity<?> findByNameContainingAndCategory(ProductRequest productRequest) {
@@ -109,6 +131,15 @@ public class ProductService {
     else
       return ResponseEntity.ok(new ProductResponse(productRepository
         .findByNameContainingAndCategory(productRequest.getName(), productRequest.getCategory(), paging).stream().map(ProductDto::factoryProduct).collect(Collectors.toList())));
+  }
+  public ResponseEntity<?> findByNameContainingAndCategoryOutOfStock(ProductRequest productRequest) {
+    Pageable paging = checkPaging(productRequest);
+    if (paging == null)
+      return ResponseEntity.ok(new ProductResponse(
+        productRepository.findByNameContainingAndCategoryNameAndOutOfStock(productRequest.getName(), productRequest.getCategory().getName(),productRequest.isOutOfStock()).stream().map(ProductDto::factoryProduct).collect(Collectors.toList())));
+    else
+      return ResponseEntity.ok(new ProductResponse(productRepository
+        .findByNameContainingAndCategoryAndOutOfStock(productRequest.getName(), productRequest.getCategory(),productRequest.isOutOfStock(), paging).stream().map(ProductDto::factoryProduct).collect(Collectors.toList())));
   }
 
   public ResponseEntity<?> addProduct(ProductRequest productRequest) throws IOException {
@@ -155,7 +186,9 @@ public class ProductService {
 
 
 //    FileDB fileDB = new FileDB(fileName,"pdf",);
-
+    if(product.getQuantity()>0){
+      product.setOutOfStock(Boolean.FALSE);
+    }
     productRepository.save(product);
     return ResponseEntity.ok(new MessageResponse("product added successfully!"));
   }
@@ -263,6 +296,11 @@ public class ProductService {
 //    generator.getParameters().setResolution(200);
 //// generate barcode
 //    generator.save(fileName);
+    if(product.getQuantity()>0){
+      product.setOutOfStock(Boolean.FALSE);
+    }else {
+      product.setOutOfStock(Boolean.TRUE);
+    }
     product.setFiles(fileDB);
     productRepository.save(product);
     return ResponseEntity.ok(new MessageResponse("product updated successfully!"));

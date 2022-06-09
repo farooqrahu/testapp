@@ -5,5 +5,8 @@ export class Sale {
     public productId:number,
     public price:number,
     public quantity:number,
+    public userQuantityBundle: number,
+    public userExtraQuantity: number,
+    public userTotalQuantity: number,
   ) { }
 }

@@ -22,5 +22,6 @@ public class ProductRequest {
   private Long extraQuantity;
   private Long quantity;
   private boolean enableTQ;
+  private boolean outOfStock;
 
 }

@@ -5,8 +5,12 @@ export class ProductSales {
     public id: number,
     public product: Product,
     public productId: number,
+    public extra: number,
+    public bundle: number,
     public quantity: number,
-    public returnQuantity: number,
+    public userQuantityBundle: number,
+    public userExtraQuantity: number,
+    public userTotalQuantity: number,
     public detail: string,
   ) {
   }

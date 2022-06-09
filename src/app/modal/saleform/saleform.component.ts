@@ -55,8 +55,9 @@ export class SaleformComponent implements OnInit {
   }
 
   submitOrder(): any {
+    console.log(this.productSaleList)
     if (this.productSaleList._sales.length > 0) {
-      this.saleService.addProduct(this.productSaleList._sales).subscribe(
+      this.saleService.submitSaleOrder(this.productSaleList).subscribe(
         productSaleList => {
           this.swAlert(productSaleList.message, "Product Sale!");
           // this.exportAsExcelFile(this.productSaleList._sales,"receipt")
@@ -111,7 +112,7 @@ export class SaleformComponent implements OnInit {
     if (this.productSaleList._sales.length <= 0) {
       this.onNoClick();
     }
-    console.log(this.productSaleList);
+    // console.log(this.productSaleList);
 
   }
 }

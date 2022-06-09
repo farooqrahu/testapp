@@ -52,7 +52,7 @@ export class SaleOrdersComponent implements OnInit, AfterViewInit {
   loadproductresults(): void {
     this.paginator.page.subscribe(() => {
         const productrequest = new ProductRequest(0, this.productsearch.nativeElement.value,
-          this.productsearch.nativeElement.value, 0, 0, 0, 0, 0, false,null, null, false, 'name', 'asc', this.paginator.pageSize, this.paginator.getNumberOfPages())
+          this.productsearch.nativeElement.value, 0, 0, 0, 0, 0, false,0,0,0,null, null, false, 'name', 'asc', this.paginator.pageSize, this.paginator.getNumberOfPages())
         this.saleservice.findProduct(productrequest).subscribe(
           data => {
             this.saleOrders = data.productOrderInvoiceDtos;
@@ -122,7 +122,7 @@ export class SaleOrdersComponent implements OnInit, AfterViewInit {
 
   openDialog(saleOrders?: SaleOrders): void {
     if (saleOrders === undefined)
-      saleOrders = new SaleOrders(0, "",  0,0,0, null, null, null,null,null)
+      saleOrders = new SaleOrders(0, "",  0,0,0,null, null, null,null,null)
     const dialogRef = this.dialog.open(SalesListComponent, {
       width: '1120px', height: '600px',
       data: {
@@ -156,69 +156,6 @@ export class SaleOrdersComponent implements OnInit, AfterViewInit {
       // console.log(res);
           this.refreshproduct()
     });
-  }
-  add(product?: Product): void {
-    Swal.fire({
-      title: "Product Sale!",
-      text: "Enter item quantity",
-      input: 'number',
-      showCancelButton: true
-    }).then((result) => {
-      let qu=0;
-      let tu=0;
-
-      if (!isNaN(result.value)) {
-        if (product.quantity >= parseInt(result.value)) {
-          this.sale = new Sale(null, product.name, product.id, product.price, result.value);
-          let found = [];
-          if (this.invoice!=null && this.invoice._sales.length>0) {
-            found = this.invoice._sales.filter(value => {
-              if (value.productId == product.id) {
-                Swal.fire(
-                  'Product Sale!',
-                  'Product already added!.',
-                  'error'
-                )
-                return value.productId;
-              }
-            });
-          }
-          if (found.length == 0) {
-            this.sales.push(this.sale);
-            Swal.fire(
-              'Product Sale!',
-              'Product added in the list!.',
-              'success'
-            )
-            if(this.invoice){
-              if(this.invoice._totalQuantity>0) {
-                qu = this.invoice._totalQuantity
-              }
-              if(this.invoice._grandTotal>0) {
-                tu=this.invoice._grandTotal
-              }
-            }
-            this.invoice._sales=this.sales;
-            this.invoice._totalQuantity=Number(qu)+Number(result.value);
-            this.invoice._grandTotal= tu+(Number(product.price)*Number(result.value));
-            // this.invoice = new Invoice(this.sales,  ,);
-          }
-        } else {
-          Swal.fire(
-            'Product Sale!',
-            'Product quantity invalid!',
-            'error'
-          )
-        }
-      }
-
-      // this.invoice.getSales(this.sale);
-      // this.invoice = new Invoice(this.sales,  Number(qu)+Number(result.value), tu+(Number(product.price)*Number(result.value)));
-    console.log(this.invoice)
-    });
-
-
-
   }
 
   // addSale(sale: Sale): any {

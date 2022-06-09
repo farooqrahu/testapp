@@ -12,5 +12,6 @@ import java.util.List;
 @Setter
 public class SaleRequestList implements Serializable {
  private List<SaleRequest> data;
+  private Float grandTotal;
  private Long id;
 }

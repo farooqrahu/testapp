@@ -22,21 +22,21 @@
 
   <mat-form-field *ngIf="!data.enableTQ">
     <p>Enter Quantity Bundle</p>
-    <input matInput type="number" [(ngModel)]="data.returnQuantityBundle"  (change)="calculateRetQty(data)" required>
+    <input matInput type="number" [(ngModel)]="data.userQuantityBundle" (change)="calculateRetQty(data);validateBundle()" required>
   </mat-form-field>
   <mat-form-field *ngIf="!data.enableTQ">
     <p>Enter Extra Quantity</p>
-    <input matInput  type="number" [(ngModel)]="data.returnExtraQuantity"  (change)="calculateRetQty(data);calcExt()" required>
+    <input matInput type="number" [(ngModel)]="data.userExtraQuantity" (change)="calculateRetQty(data);calcExt()" required>
   </mat-form-field>
   <mat-form-field >
     <p>Enter Total</p>
-    <input matInput type="number" [disabled]="!data.enableTQ" [(ngModel)]="data.returnTotalQuantity" (change)="validateTotal()" required>
+    <input matInput type="number" [disabled]="!data.enableTQ" [(ngModel)]="data.userTotalQuantity" (change)="validateTotal()" required>
   </mat-form-field>
-  <p *ngIf="errors!=''" style="color:red;">{{errors}}</p>
+
 
 </div>
 
 <div mat-dialog-actions>
   <button mat-button (click)="onNoClick()">Cancel</button>
-  <button class="mat-button mat-raised-button mat-primary" *ngIf="validate(data)" mat-button [mat-dialog-close]="data">Submit</button>
+  <button class="mat-button mat-raised-button mat-primary"  mat-button [mat-dialog-close]="data"   *ngIf="validate(data)" >Add</button>
 </div>

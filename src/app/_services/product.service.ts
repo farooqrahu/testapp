@@ -31,7 +31,7 @@ export class ProductService {
       catchError(() => of(false)));
   }
 
-  productrequest: ProductRequest = new ProductRequest(0, '', '', 0, 0,0,0,0, false,null,null, false);
+  productrequest: ProductRequest = new ProductRequest(0, '', '', 0, 0,0,0,0, false,0,0,0,null,null, false);
 
   updateProduct(product: Product): Observable<any> {
 
@@ -114,6 +114,10 @@ export class ProductService {
 
   getAllProducts(): Observable<any> {
     return this.http.post(PRODUCT_API + 'findProduct', {}, httpOptions);
+  }
+
+  findProductOutOfStock(outOfStock :boolean): Observable<any> {
+    return this.http.post(PRODUCT_API + 'findProductOutOfStock', {outOfStock}, httpOptions);
   }
 
   getAllProductHistory(): Observable<any> {

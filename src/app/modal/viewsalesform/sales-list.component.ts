@@ -12,6 +12,7 @@ import * as es6printJS from "print-js";
 import * as XLSX from "xlsx";
 import {SaleOrders} from "../../models/sale.orders.model";
 import {ProductSales} from "../../models/product.sale.model";
+import {Product} from "../../models/product.model";
 
 @Component({
   selector: 'app-sales-list',
@@ -55,15 +56,46 @@ export class SalesListComponent implements OnInit {
     es6printJS("print", "html");
   }
 
-  validate(p: ProductSales){
-    if(p.returnQuantity>p.quantity){
-      p.returnQuantity=p.quantity;
+  // validate(p: ProductSales){
+  //   if(p.returnQuantity>p.quantity){
+  //     p.returnQuantity=p.quantity;
+  //   }
+  // }
+
+  calculateRetQty(p: ProductSales,product: Product) {
+    if(p.userExtraQuantity>0){
+      p.userTotalQuantity = Number(p.userExtraQuantity) + (Number(product.quantityItem) * Number(p.userQuantityBundle)) || 0;
+    }else {
+      p.userTotalQuantity = (Number(product.quantityItem) * Number(p.userQuantityBundle)) || 0;
     }
   }
 
+  validateTotal(p: ProductSales, product: Product) {
+    if (p.userTotalQuantity > p.quantity) {
+      p.userTotalQuantity = 0;
+    }
+  }
+
+  calcExt(p: ProductSales, product: Product) {
+    if (p.userExtraQuantity > p.extra) {
+      p.userExtraQuantity = 0;
+      p.userQuantityBundle = 0;
+      p.userTotalQuantity = 0;
+    }
+  }
+
+  validateBundle(p: ProductSales, product: Product) {
+    if (p.userQuantityBundle > p.bundle) {
+      p.userQuantityBundle = 0;
+      p.userExtraQuantity = 0;
+      p.userTotalQuantity = 0;
+    }
+
+  }
+
   returnProductSale(): any{
-console.log("return qu");
-    console.log(this.productOrderList);
+// console.log("return qu");
+//     console.log(this.productOrderList);
     Swal.fire({
       title: 'Are you sure?',
       text: "You want to return this!",

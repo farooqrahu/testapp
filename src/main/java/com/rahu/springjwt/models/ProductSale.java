@@ -21,6 +21,8 @@ public class ProductSale {
   @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
   private Product product;
   private Long quantity;
+  private Long extra;
+  private Long bundle;
   private String detail;
   @Nullable
   @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)

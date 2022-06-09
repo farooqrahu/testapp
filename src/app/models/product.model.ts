@@ -17,9 +17,9 @@ export class Product {
     public file: string,
     public createdAt: Date,
     public userName: string,
-    public returnQuantityBundle: number,
-    public returnExtraQuantity: number,
-    public returnTotalQuantity: number,
+    public userQuantityBundle: number,
+    public userExtraQuantity: number,
+    public userTotalQuantity: number,
 
   ) { }
 

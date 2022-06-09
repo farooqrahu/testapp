@@ -29,6 +29,9 @@ public class Product {
   private Long quantity;
   @Column(name = "enable_tq")
   private boolean enableTQ;
+
+  @Column(name = "out_of_stock",columnDefinition = "boolean default true")
+  private Boolean outOfStock;
   @Nullable
   @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
   private Category category;

@@ -59,9 +59,9 @@ export class SalesInvoiceComponent implements OnInit {
   }
 
   validate(p: ProductSales) {
-    if (p.returnQuantity > p.quantity || p.returnQuantity == 0) {
-      p.returnQuantity = p.quantity;
-    }
+    // if (p.returnQuantity > p.quantity || p.returnQuantity == 0) {
+    //   p.returnQuantity = p.quantity;
+    // }
   }
 
   returnProductSale(): any {

@@ -54,7 +54,7 @@ export class SalesComponent implements OnInit, AfterViewInit {
   loadproductresults(): void {
     this.paginator.page.subscribe(() => {
         const productrequest = new ProductRequest(0, this.productsearch.nativeElement.value,
-          this.productsearch.nativeElement.value, 0, 0, 0, 0, 0, false,null ,null, false, 'name', 'asc', this.paginator.pageSize, this.paginator.getNumberOfPages())
+          this.productsearch.nativeElement.value, 0, 0, 0, 0, 0, false,0,0,0,null ,null, false, 'name', 'asc', this.paginator.pageSize, this.paginator.getNumberOfPages())
         this.productservice.findProduct(productrequest).subscribe(
           data => {
             this.products = data.list;
@@ -77,12 +77,12 @@ export class SalesComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    this.refreshproduct();
+    this.findProductOutOfStock();
   }
 
-  refreshproduct() {
+  findProductOutOfStock() {
 
-    this.productservice.getAllProducts().subscribe(
+    this.productservice.findProductOutOfStock(false).subscribe(
       data => {
         this.products = data.list;
         (this.products.length);
@@ -151,7 +151,7 @@ export class SalesComponent implements OnInit, AfterViewInit {
           console.log("error")
         else {
           // this.updateProduct(res)
-          // this.refreshproduct()
+          // this.findProductOutOfStock()
         }
       }
 
@@ -165,14 +165,50 @@ export class SalesComponent implements OnInit, AfterViewInit {
       data: {
         id: product.id, name: product.name, description: product.description,
         price: product.price, category: product.category,company: product.company,quantityItem:product.quantityItem,quantityBundle:product.quantityBundle,extraQuantity:product.extraQuantity
-        ,quantity:product.quantity,enableTQ:product.enableTQ
+        ,quantity:product.quantity,enableTQ:product.enableTQ,userTotalQuantity:0,userExtraQuantity:0,userQuantityBundle:0
       }
     });
     dialogRef.afterClosed().subscribe(res => {
       if (JSON.stringify(product) != JSON.stringify(res)) {
-        if (product.id != res.id)
+        if (product.id != res.id){
           console.log("error")
+          return;
+        }
         else {
+          this.sale = new Sale(null, res.name, res.id, res.price,res.userTotalQuantity, res.userQuantityBundle,res.userExtraQuantity,res.userTotalQuantity);
+          let qu = 0;
+          let tu = 0;
+          let found = [];
+          if (this.invoice != null && this.invoice._sales.length > 0) {
+            found = this.invoice._sales.filter(value => {
+              if (value.productId == res.id) {
+                Swal.fire(
+                  'Product Sale!',
+                  'Product already added!.',
+                  'error'
+                )
+                return value.productId;
+              }
+            });
+          }
+          if (found.length == 0) {
+            this.sales.push(this.sale);
+            if (this.invoice) {
+              if (this.invoice._totalQuantity > 0) {
+                qu = this.invoice._totalQuantity
+              }
+              if (this.invoice._grandTotal > 0) {
+                tu = this.invoice._grandTotal
+              }
+            }
+            this.invoice._sales = this.sales;
+            this.invoice._totalQuantity = Number(qu) + Number(res.userTotalQuantity);
+            this.invoice._grandTotal = tu + (Number(res.price) * Number(res.userTotalQuantity));
+            // this.invoice = new Invoice(this.sales,  ,);
+            this.itemCount++;
+            this.view();
+          }
+
         }
       }
     });
@@ -305,40 +341,47 @@ export class SalesComponent implements OnInit, AfterViewInit {
         width: '1120px', height: '600px',
         data: this.invoice
       });
+      dialogRef.afterClosed().subscribe(res => {
+        if (res == 'clear') {
+          this.clear();
+        }
+      });
+    }else{
+      this.clear();
     }
   }
 
   clear() {
     this.invoice = new Invoice([], 0, 0);
     this.sales = [];
-    this.refreshproduct();
+    this.findProductOutOfStock();
     this.itemCount = 0;
   }
 
-  submitOrder() {
-    if (this.invoice == undefined || this.invoice._sales.length <= 0) {
-      Swal.fire(
-        'Product Sale!',
-        'List is empty!',
-        'warning'
-      )
-    } else {
-      const dialogRef = this.dialog.open(SaleformComponent, {
-        width: '1120px', height: '600px',
-        data: this.invoice
-      });
-      dialogRef.afterClosed().subscribe(res => {
-        console.log(res);
-        if (res == 'clear') {
-          this.invoice = new Invoice([], 0, 0);
-          this.sales = [];
-          this.refreshproduct();
-          this.itemCount = 0;
-        }
-      });
-
-    }
-  }
+  // submitOrder() {
+  //   if (this.invoice == undefined || this.invoice._sales.length <= 0) {
+  //     Swal.fire(
+  //       'Product Sale!',
+  //       'List is empty!',
+  //       'warning'
+  //     )
+  //   } else {
+  //     const dialogRef = this.dialog.open(SaleformComponent, {
+  //       width: '1120px', height: '600px',
+  //       data: this.invoice
+  //     });
+  //     dialogRef.afterClosed().subscribe(res => {
+  //       console.log(res);
+  //       if (res == 'clear') {
+  //         this.invoice = new Invoice([], 0, 0);
+  //         this.sales = [];
+  //         this.findProductOutOfStock();
+  //         this.itemCount = 0;
+  //       }
+  //     });
+  //
+  //   }
+  // }
 }
 
 

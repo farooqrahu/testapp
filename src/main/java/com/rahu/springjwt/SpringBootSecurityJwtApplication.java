@@ -124,7 +124,7 @@ public class SpringBootSecurityJwtApplication {
    * the following method adds the API info to the swagger api documentation
    */
   private ApiInfo apiInfo() {
-    return new ApiInfoBuilder().title("RahuDigiTech - App")
+    return new ApiInfoBuilder().title("Test - App")
       .description("This api document serves as collection")
       .termsOfServiceUrl("http://javainuse.com").license("JavaInUse License")
       .licenseUrl("farahu2008@gmail.com").version("1.0").build();

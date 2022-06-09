@@ -29,8 +29,12 @@
       <thead>
       <tr>
         <th>Product</th>
+        <th>Bundle</th>
+        <th>Extra</th>
         <th>Quantity</th>
-        <th>Enter Quantity to return</th>
+        <th>Enter Bundles</th>
+        <th>Enter Extra</th>
+        <th>Enter Quantity</th>
         <!--        <th>Item Price</th>-->
         <!--        <th>Sub Total</th>-->
       </tr>
@@ -38,12 +42,25 @@
       <tbody>
       <tr *ngFor="let p of productOrderList.productSales">
         <td>{{p.product.name}}</td>
-        <td>{{p.quantity}}</td>
+        <td>{{p.bundle}}</td>
+        <td>{{p.extra}}</td>
         <td>{{p.quantity}}</td>
         <td>
           <mat-form-field>
-            <input matInput [(ngModel)]="p.returnQuantity" (change)="validate(p)" (click)="validate(p)"
-                   (focus)="validate(p)" cdkFocusInitial required>
+            <input matInput [disabled]="p.product.enableTQ" [(ngModel)]="p.userQuantityBundle" (change)="validateBundle(p,p.product);calculateRetQty(p,p.product)" (click)="validateBundle(p,p.product);calculateRetQty(p,p.product)"
+                   (focus)="validateBundle(p,p.product);calculateRetQty(p,p.product)" cdkFocusInitial required>
+          </mat-form-field>
+        </td>
+        <td>
+          <mat-form-field>
+            <input matInput [disabled]="p.product.enableTQ" [(ngModel)]="p.userExtraQuantity" (change)="calcExt(p,p.product);calculateRetQty(p,p.product)" (click)="calcExt(p,p.product);calculateRetQty(p,p.product)"
+                   (focus)="calcExt(p,p.product);calculateRetQty(p,p.product)" cdkFocusInitial required>
+          </mat-form-field>
+        </td>
+        <td >
+          <mat-form-field>
+            <input matInput [disabled]="!p.product.enableTQ" [(ngModel)]="p.userTotalQuantity" (change)="validateTotal(p,p.product)" (click)="validateTotal(p,p.product)"
+                   (focus)="validateTotal(p,p.product)" cdkFocusInitial required>
           </mat-form-field>
         </td>
         <!--        <td>{{p.product.price | currency:'Rs:'}}</td>-->

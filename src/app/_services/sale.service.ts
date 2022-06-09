@@ -5,6 +5,7 @@ import {Observable} from 'rxjs';
 import {Sale} from "../models/sale.model";
 import {ProductRequest} from "../models/productrequest.model";
 import {SaleOrders} from "../models/sale.orders.model";
+import {Invoice} from "../models/invoice.model";
 
 const PRODUCT_SALE_API = 'http://localhost:8080/api/sale/';
 
@@ -22,9 +23,10 @@ export class SaleService {
   constructor(private http: HttpClient, private token: TokenStorageService) {
   }
 
-  addProduct(data: Sale[]): Observable<any> {
-    // let json = JSON.stringify(data);
-    return this.http.post(PRODUCT_SALE_API + 'submitSaleOrder', {data}, httpOptions);
+  submitSaleOrder(productSaleList: Invoice): Observable<any> {
+    let data = productSaleList._sales;
+    let grandTotal = productSaleList._grandTotal;
+    return this.http.post(PRODUCT_SALE_API + 'submitSaleOrder', {data,grandTotal}, httpOptions);
   }
   findProduct(productrequest: ProductRequest): Observable<any> {
 
