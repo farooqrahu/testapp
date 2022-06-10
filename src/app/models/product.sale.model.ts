@@ -8,10 +8,14 @@ export class ProductSales {
     public extra: number,
     public bundle: number,
     public quantity: number,
+    public extraReturn: number,
+    public bundleReturn: number,
+    public quantityReturn: number,
     public userQuantityBundle: number,
     public userExtraQuantity: number,
     public userTotalQuantity: number,
     public detail: string,
+    public isReturn: boolean,
   ) {
   }
 }

@@ -124,7 +124,7 @@ export class SaleOrdersComponent implements OnInit, AfterViewInit {
     if (saleOrders === undefined)
       saleOrders = new SaleOrders(0, "",  0,0,0,null, null, null,null,null)
     const dialogRef = this.dialog.open(SalesListComponent, {
-      width: '1120px', height: '600px',
+      width: '1220px', height: '600px',
       data: {
         id: saleOrders.id,
         invoiceNo:saleOrders.invoiceNo,

@@ -29,9 +29,9 @@
       <thead>
       <tr>
         <th>Product</th>
-        <th>Bundle</th>
-        <th>Extra</th>
-        <th>Quantity</th>
+        <th>Bundle | Return</th>
+        <th>Extra | Return</th>
+        <th>Quantity | Return</th>
         <th>Enter Bundles</th>
         <th>Enter Extra</th>
         <th>Enter Quantity</th>
@@ -42,9 +42,9 @@
       <tbody>
       <tr *ngFor="let p of productOrderList.productSales">
         <td>{{p.product.name}}</td>
-        <td>{{p.bundle}}</td>
-        <td>{{p.extra}}</td>
-        <td>{{p.quantity}}</td>
+        <td>{{p.bundle}} | {{p.bundleReturn==null ? "0":p.bundleReturn}}</td>
+        <td>{{p.extra}} | {{p.extraReturn==null ? "0":p.extraReturn}}</td>
+        <td>{{p.quantity}} | {{p.quantityReturn==null ? "0":p.quantityReturn}}</td>
         <td>
           <mat-form-field>
             <input matInput [disabled]="p.product.enableTQ" [(ngModel)]="p.userQuantityBundle" (change)="validateBundle(p,p.product);calculateRetQty(p,p.product)" (click)="validateBundle(p,p.product);calculateRetQty(p,p.product)"
@@ -59,7 +59,7 @@
         </td>
         <td >
           <mat-form-field>
-            <input matInput [disabled]="!p.product.enableTQ" [(ngModel)]="p.userTotalQuantity" (change)="validateTotal(p,p.product)" (click)="validateTotal(p,p.product)"
+            <input matInput  [disabled]="!p.product.enableTQ" [(ngModel)]="p.userTotalQuantity" (change)="validateTotal(p,p.product)" (click)="validateTotal(p,p.product)"
                    (focus)="validateTotal(p,p.product)" cdkFocusInitial required>
           </mat-form-field>
         </td>

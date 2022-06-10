@@ -23,6 +23,11 @@ public class ProductSale {
   private Long quantity;
   private Long extra;
   private Long bundle;
+  private Long quantityReturn;
+  private Long extraReturn;
+  private Long bundleReturn;
+  @Column(columnDefinition = "boolean default false")
+  private boolean isReturned = false;
   private String detail;
   @Nullable
   @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)

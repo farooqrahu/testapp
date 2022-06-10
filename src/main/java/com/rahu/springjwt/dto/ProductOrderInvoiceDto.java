@@ -23,7 +23,12 @@ public class ProductOrderInvoiceDto {
   private List<ProductSaleDto> productSales;
 
   public static ProductOrderInvoiceDto factoryProductOrderInvoice(ProductOrder productOrder) {
-    long count=productOrder.getProductSales().stream().mapToLong(ProductSale::getQuantity).sum();
-    return ProductOrderInvoiceDto.builder().id(productOrder.getId()).createdAt(Utility.formatDate(productOrder.getCreatedAt(),"dd-MM-yyyy")).totalQuantity(count).grandTotal(productOrder.getGrandTotal()).invoiceNo(productOrder.getInvoiceNo()).productSales(productOrder.getProductSales().stream().map(ProductSaleDto::factoryProductSale).collect(Collectors.toList())).build();
+    long count = productOrder.getProductSales().stream().mapToLong(ProductSale::getQuantity).sum();
+    List<ProductSaleDto> productSales = productOrder.getProductSales().stream().map(ProductSaleDto::factoryProductSale).filter(productSaleDto -> !productSaleDto.isReturned()).collect(Collectors.toList());
+    if (!productSales.isEmpty()) {
+      return ProductOrderInvoiceDto.builder().id(productOrder.getId()).createdAt(Utility.formatDate(productOrder.getCreatedAt(), "dd-MM-yyyy")).totalQuantity(count).grandTotal(productOrder.getGrandTotal()).invoiceNo(productOrder.getInvoiceNo()).productSales(productSales).build();
+    } else {
+      return null;
+    }
   }
 }

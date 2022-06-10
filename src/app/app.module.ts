@@ -40,6 +40,7 @@ import {SalesInvoiceComponent} from "./modal/saleinvoice/sales-invoice.component
 import {SalesListComponent} from "./modal/viewsalesform/sales-list.component";
 import {ProductHistoryComponent} from "./pages/producthistory/producthistory.component";
 import {AddProductFormComponent} from "./modal/addproductform/addproductform.component";
+import {SaleListReturn} from "./modal/viewsalesform/sale-list-return";
 
 @NgModule({
   imports: [
@@ -85,7 +86,8 @@ import {AddProductFormComponent} from "./modal/addproductform/addproductform.com
     InvoiceComponent,
     EditshoppingcartComponent,
     ProductHistoryComponent,
-    AddProductFormComponent
+    AddProductFormComponent,
+    SaleListReturn
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,
