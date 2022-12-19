@@ -48,11 +48,12 @@
             <input matInput type="text" (keyup)="doFilter($event.target.value,'category')" placeholder="Filter">
           </mat-form-field>
           <button (click)="opencategorydialog()" mat-button>Add Category</button>
+          <button class="mat-button mat-raised-button mat-primary"  (click)="exporter.exportTable('xlsx')"> Export Excel</button>
           <mat-paginator  [length]="productslength" [pageSize]="10" [pageSizeOptions]="[2, 4, 6, 10, 20]">
           </mat-paginator>
         </div>
         <div class="table-responsive">
-          <table mat-table [dataSource]="categoriesdatasource" matSort matSortActive="id" matSortDirection="asc" matSort
+          <table  [hiddenColumns]="[2]" matTableExporter #exporter="matTableExporter"  mat-table [dataSource]="categoriesdatasource" matSort matSortActive="id" matSortDirection="asc" matSort
             class="mat-elevation-z8 demo-table">
             <ng-container matColumnDef="id">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>No.</th>

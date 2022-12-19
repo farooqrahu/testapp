@@ -152,51 +152,40 @@ public class SaleService {
           if (Objects.nonNull(productSale.get().getProduct())) {
             Product product = productSale.get().getProduct();
             long totalQuantity = returnRequest.getUserTotalQuantity();
-            if (totalQuantity > 0) {
-              if (!product.isEnableTQ()) {
-                if (returnRequest.getUserTotalQuantity() <= product.getExtraQuantity()) {
-                  product.setExtraQuantity(product.getExtraQuantity() + returnRequest.getUserTotalQuantity());
-                  productSale.get().setExtraReturn(zeroIfNull(productSale.get().getExtraReturn())+returnRequest.getUserExtraQuantity());
-                } else {
-                  long bundles = returnRequest.getUserQuantityBundle();
-                  long extra = returnRequest.getUserExtraQuantity();
-                  if (bundles > 0 && extra <= 0) {
-                    product.setQuantityBundle(product.getQuantityBundle() + bundles);
-                    productSale.get().setBundleReturn(zeroIfNull(productSale.get().getBundleReturn())+bundles);
-                    totalQuantity = (bundles * product.getQuantityItem());
-                  } else {
-                    long totalEx = extra + product.getExtraQuantity();
-                    if (totalEx > product.getQuantityItem()) {
-                      bundles++;
-                      long totalExtras = totalEx - product.getQuantityItem();
-                      if (totalExtras < product.getExtraQuantity()) {
-                        product.setExtraQuantity(product.getExtraQuantity() + totalExtras);
-                        product.setQuantityBundle(product.getQuantityBundle() + bundles);
-                        productSale.get().setBundleReturn(zeroIfNull(productSale.get().getBundleReturn())+bundles);
-                        productSale.get().setExtraReturn(zeroIfNull(productSale.get().getExtraReturn())+totalExtras);
-
-                      }
-                    } else {
-                      if (product.getExtraQuantity() > 0) {
-                        product.setExtraQuantity(product.getExtraQuantity() + totalEx);
-                        productSale.get().setExtraReturn(zeroIfNull(productSale.get().getExtraReturn())+totalEx);
-                      } else {
-                        product.setExtraQuantity(totalEx);
-                        productSale.get().setExtraReturn(zeroIfNull(productSale.get().getExtraReturn())+totalEx);
-                      }
+            if (totalQuantity > 0 && totalQuantity<=productSale.get().getQuantity()) {
+              if (!Objects.isNull(product) && !product.isEnableTQ()) {
+                long bundles = returnRequest.getUserQuantityBundle();
+                long extra = returnRequest.getUserExtraQuantity();
+                if (bundles <= 0 && extra <= 0 && returnRequest.getUserTotalQuantity() > 0) {
+                  long totalEx = returnRequest.getUserTotalQuantity() + product.getExtraQuantity();
+                  if (totalEx > product.getQuantityItem()) {
+                    long totalExtras = totalEx - product.getQuantityItem();
+                    if (totalExtras < product.getExtraQuantity()) {
+                      product.setExtraQuantity(totalExtras);
+                      product.setQuantityBundle(product.getQuantityBundle() + 1);
+                      productSale.get().setBundleReturn(zeroIfNull(productSale.get().getBundleReturn()) + 1);
                     }
+                  } else {
+                    product.setExtraQuantity(product.getExtraQuantity() + returnRequest.getUserTotalQuantity());
                   }
+                } else {
+                  calculateBundleWise(returnRequest, product, productSale, totalQuantity);
                 }
               }
-              Objects.requireNonNull(product).setQuantity(Objects.requireNonNull(product).getQuantity() + totalQuantity);
-              productSale.get().setQuantityReturn(zeroIfNull(productSale.get().getQuantityReturn())+totalQuantity);
+
+              long retProd=Objects.requireNonNull(product).getQuantity() + totalQuantity;
+              if(retProd<=productSale.get().getQuantity())
+              Objects.requireNonNull(product).setQuantity(retProd);
+              long pro=zeroIfNull(productSale.get().getQuantityReturn()) + totalQuantity;
+              if(pro<=productSale.get().getQuantity())
+              productSale.get().setQuantityReturn(pro);
               if (product.getQuantity() > 0) { // check each product for stock
                 product.setOutOfStock(Boolean.FALSE);
               } else {
                 product.setOutOfStock(Boolean.TRUE);
               }
               productRepository.save(Objects.requireNonNull(product));
-              if(productSale.get().getQuantityReturn()>=productSale.get().getQuantity()){
+              if (productSale.get().getQuantityReturn() >= productSale.get().getQuantity()) {
                 productSale.get().setReturned(Boolean.TRUE);
               }
               saleRepository.save(productSale.get());
@@ -217,6 +206,81 @@ public class SaleService {
     }
     return ResponseEntity.ok(new MessageResponse("Ok"));
 
+  }
+
+  private void calculateBundleWise(SaleRequest returnRequest, Product product, Optional<ProductSale> productSale, long totalQuantity) {
+
+    if (returnRequest.getUserTotalQuantity() <= product.getExtraQuantity()) {
+      long totalEx = returnRequest.getUserTotalQuantity() + product.getExtraQuantity();
+      if (totalEx > product.getQuantityItem()) {
+        long totalExtras = totalEx - product.getQuantityItem();
+        if (totalExtras < product.getExtraQuantity()) {
+          product.setExtraQuantity(totalExtras);
+          productSale.get().setExtraReturn(zeroIfNull(productSale.get().getExtraReturn()) + returnRequest.getUserExtraQuantity());
+          product.setQuantityBundle(product.getQuantityBundle() + 1);
+        }
+      } else {
+        product.setExtraQuantity(product.getExtraQuantity() + returnRequest.getUserTotalQuantity());
+        productSale.get().setExtraReturn(zeroIfNull(productSale.get().getExtraReturn()) + returnRequest.getUserExtraQuantity());
+      }
+    } else {///with bundle and/or extra
+      long bundles = returnRequest.getUserQuantityBundle();
+      long extra = returnRequest.getUserExtraQuantity();
+      if (bundles > 0 && (extra > 0 && extra < product.getQuantityItem()) && extra < product.getExtraQuantity()) {
+        long totalEx = extra + product.getExtraQuantity();
+        if (totalEx > product.getQuantityItem()) {
+          long totalExtras = totalEx - product.getQuantityItem();
+          if (totalExtras < product.getExtraQuantity()) {
+            bundles++;
+            product.setExtraQuantity(totalExtras);
+            productSale.get().setExtraReturn(zeroIfNull(productSale.get().getExtraReturn()) + returnRequest.getUserExtraQuantity());
+            product.setQuantityBundle(product.getQuantityBundle() + bundles);
+          }
+        } else {
+          product.setExtraQuantity(product.getExtraQuantity() + extra);
+          productSale.get().setExtraReturn(zeroIfNull(productSale.get().getExtraReturn()) + extra);
+          product.setQuantityBundle(product.getQuantityBundle() + bundles);
+          productSale.get().setBundleReturn(zeroIfNull(productSale.get().getBundleReturn()) + returnRequest.getUserQuantityBundle());
+        }
+      } else if (bundles > 0 && (extra > 0 && extra < product.getQuantityItem()) && extra > product.getExtraQuantity()) {
+        product.setQuantityBundle(product.getQuantityBundle() + bundles);
+        productSale.get().setBundleReturn(zeroIfNull(productSale.get().getBundleReturn()) + returnRequest.getUserQuantityBundle());
+        long totalEx = extra + product.getExtraQuantity();
+        if (totalEx > product.getQuantityItem()) {
+          long totalExtras = totalEx - product.getQuantityItem();
+          if (totalExtras < product.getExtraQuantity()) {
+            product.setExtraQuantity(totalExtras);
+            productSale.get().setExtraReturn(zeroIfNull(productSale.get().getExtraReturn()) + totalExtras);
+            product.setQuantityBundle(product.getQuantityBundle() + bundles);
+          }
+        } else {
+          if (product.getExtraQuantity() > 0) {
+            product.setExtraQuantity(product.getExtraQuantity() + totalEx);
+          } else {
+            product.setExtraQuantity(totalEx);
+          }
+          productSale.get().setExtraReturn(zeroIfNull(productSale.get().getExtraReturn()) + totalEx);
+        }
+      } else if (bundles > 0 && extra <= 0) {
+        product.setQuantityBundle(product.getQuantityBundle() + bundles);
+        productSale.get().setBundleReturn(zeroIfNull(productSale.get().getBundleReturn()) + returnRequest.getUserQuantityBundle());
+        totalQuantity = (bundles * product.getQuantityItem());
+      } else if (extra > 0 && bundles <= 0) {
+        long totalEx = returnRequest.getUserTotalQuantity() + product.getExtraQuantity();
+        if (totalEx > product.getQuantityItem()) {
+          long totalExtras = totalEx - product.getQuantityItem();
+          if (totalExtras < product.getExtraQuantity()) {
+            product.setExtraQuantity(totalExtras);
+            productSale.get().setExtraReturn(zeroIfNull(productSale.get().getExtraReturn()) + returnRequest.getUserExtraQuantity());
+            product.setQuantityBundle(product.getQuantityBundle() + 1);
+          }
+        } else {
+          product.setExtraQuantity(product.getExtraQuantity() + extra);
+          productSale.get().setExtraReturn(zeroIfNull(productSale.get().getExtraReturn()) + extra);
+        }
+      }
+
+    }
   }
 
   public long zeroIfNull(Long bonus) {

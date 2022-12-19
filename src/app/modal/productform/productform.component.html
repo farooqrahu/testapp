@@ -1,32 +1,35 @@
-<h1 mat-dialog-title>Product</h1>
-<div mat-dialog-content>
+<!--<h1  class="mat-dialog-title">Product <button class="float-right" class="close"   mat-button (click)="onNoClick()">&times;</button></h1>-->
+<h1 mat-dialog-title  id="exampleModalLongTitle">Product
+  <button  class="float-right"   mat-button (click)="onNoClick()">&times;</button>
 
+</h1>
+<div mat-dialog-content>
   <mat-form-field>
     <p>Product Name</p>
     <input matInput   [(ngModel)]="data.name" cdkFocusInitial required>
   </mat-form-field>
   <mat-form-field>
     <p>Product Price</p>
-    <input matInput  [(ngModel)]="data.price" required>
+    <input matInput type="number" [(ngModel)]="data.price" required>
   </mat-form-field>
   <section class="example-section">
-    <mat-checkbox [disabled]="data.id>0" (change)="validate(data);clearQty(data)" [(ngModel)]="data.enableTQ" >Enter Total Quantity</mat-checkbox>
+    <mat-checkbox [disabled]="data.id>0"  (change)="validate(data);clearQty(data)" [(ngModel)]="data.enableTQ" >Enter Total Quantity</mat-checkbox>
   </section>
   <mat-form-field>
     <p>Quantity Item - Sheet</p>
-    <input [disabled]="data.enableTQ"  matInput (change)="validate(data);calculateQty(data)" [(ngModel)]="data.quantityItem" required>
+    <input [disabled]="data.enableTQ" type="number" matInput (change)="validate(data);calculateQty(data)" [(ngModel)]="data.quantityItem" required>
   </mat-form-field>
   <mat-form-field>
     <p>Quantity Bundle</p>
-    <input matInput  [disabled]="data.enableTQ" (change)="validate(data);calculateQty(data)" [(ngModel)]="data.quantityBundle" required>
+    <input matInput type="number" [disabled]="data.enableTQ" (change)="validate(data);calculateQty(data)" [(ngModel)]="data.quantityBundle" required>
   </mat-form-field>
   <mat-form-field>
     <p>Extra Quantity</p>
-    <input matInput  [disabled]="data.enableTQ" (change)="validate(data);calculateQty(data)" [(ngModel)]="data.extraQuantity" required>
+    <input matInput type="number" [disabled]="data.enableTQ" (change)="validate(data);calculateQty(data)" [(ngModel)]="data.extraQuantity" required>
   </mat-form-field>
   <mat-form-field>
     <p>Total Quantity</p>
-    <input matInput [disabled]="!data.enableTQ" [(ngModel)]="data.quantity" required>
+    <input matInput type="number" [disabled]="!data.enableTQ" [(ngModel)]="data.quantity" required>
   </mat-form-field>
   <mat-form-field>
     <p>Product Description</p>

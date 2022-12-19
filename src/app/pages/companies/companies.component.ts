@@ -15,6 +15,7 @@ import Swal from 'sweetalert2'
 import {BarcodeComponent} from "../../modal/barcode/barcode.component";
 import {Company} from "../../models/compnay.model";
 import {CompanyformComponent} from "../../modal/companyform/companyform.component";
+import {MatTableExporterDirective} from "mat-table-exporter";
 
 @Component({
   selector: 'app-companies',
@@ -27,6 +28,7 @@ export class CompaniesComponent implements OnInit, AfterViewInit {
   companycolumnsToDisplay = ["id", 'name', "action"];
 
   dataSource: MatTableDataSource<Product> = null;
+  @ViewChild("exporter") exporter! : MatTableExporterDirective;
   companiesdatasource: MatTableDataSource<Company> = null;
   products: Product[] = [];
   companies: Company[] = [];

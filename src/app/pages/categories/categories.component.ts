@@ -15,6 +15,7 @@ import Swal from 'sweetalert2'
 import {BarcodeComponent} from "../../modal/barcode/barcode.component";
 import {Company} from "../../models/compnay.model";
 import {CompanyformComponent} from "../../modal/companyform/companyform.component";
+import {MatTableExporterDirective} from "mat-table-exporter";
 @Component({
   selector: 'app-categories',
   templateUrl: './categories.component.html',
@@ -24,7 +25,7 @@ export class CategoriesComponent implements OnInit, AfterViewInit {
   columnsToDisplay = ["id", 'name', "price","quantity", "description", "category", "action"];
   categorycolumnsToDisplay = ["id", 'name', "action"];
   companycolumnsToDisplay = ["id", 'name', "action"];
-
+  @ViewChild("exporter") exporter! : MatTableExporterDirective;
   dataSource: MatTableDataSource<Product> = null;
   categoriesdatasource: MatTableDataSource<Category> = null;
   companiesdatasource: MatTableDataSource<Company> = null;

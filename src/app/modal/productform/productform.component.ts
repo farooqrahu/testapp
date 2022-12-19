@@ -45,7 +45,20 @@ export class ProductformComponent implements OnInit {
     this.dialogRef.close();
   }
   calculateQty(data: Product){
-    this.data.quantity=Number(this.data.extraQuantity)+(Number(this.data.quantityItem)*Number(this.data.quantityBundle));
+    debugger;
+    let ext = Number(this.data.extraQuantity) || 0;
+    let qtyItem = Number(this.data.quantityItem) || 0;
+    let bundle = Number(this.data.quantityBundle) || 0;
+    if(qtyItem<=0 && bundle<=0){
+     this.resetFields();
+    }else if(qtyItem>0 && ext>=qtyItem){
+      this.resetFields();
+    }else if(qtyItem<=0 && (bundle>0 || ext>0) ){
+      this.resetFields();
+    }else {
+      this.data.quantity=ext+(qtyItem*bundle);
+    }
+
   }
   validate(data: Product): boolean {
     // data = data.price.replace(/,/g, '.')
@@ -71,5 +84,12 @@ export class ProductformComponent implements OnInit {
     this.data.extraQuantity = 0;
     this.data.quantityItem = 0;
     this.data.quantityBundle = 0;
+  }
+
+  private resetFields() {
+    this.data.extraQuantity=0;
+    this.data.quantity=0
+    this.data.quantityBundle=0;
+    this.data.quantityItem=0;
   }
 }

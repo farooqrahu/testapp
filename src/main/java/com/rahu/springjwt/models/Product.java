@@ -13,7 +13,7 @@ import javax.validation.constraints.Size;
 @Getter
 @Entity
 @Table(name = "Products")
-public class Product {
+public class Product extends BaseEntity{
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;

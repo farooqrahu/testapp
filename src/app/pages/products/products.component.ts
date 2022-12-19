@@ -16,14 +16,15 @@ import {BarcodeComponent} from "../../modal/barcode/barcode.component";
 import {Company} from "../../models/compnay.model";
 import {CompanyformComponent} from "../../modal/companyform/companyform.component";
 import {SelectionModel} from "@angular/cdk/collections";
+import {MatTableExporterDirective} from "mat-table-exporter";
 @Component({
   selector: 'app-products',
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.scss']
 })
 export class ProductsComponent implements OnInit, AfterViewInit {
-  columnsToDisplay = ["select","id", 'name', "price","quantityItem","quantityBundle","extraQuantity","quantity", "outOfStock","description", "category","company", "action"];
-
+  columnsToDisplay = ["select","id", 'name', "price","quantityItem","quantityBundle","extraQuantity","quantity", "description", "category","company","outOfStock","createdAt", "action"];
+  @ViewChild("exporter") exporter! : MatTableExporterDirective;
   dataSource: MatTableDataSource<Product> = null;
   selection = new SelectionModel<Product>(true, []);
 
@@ -35,23 +36,6 @@ export class ProductsComponent implements OnInit, AfterViewInit {
       return numSelected === numRows;
     }
   }
-async test() {
-  // @ts-ignore
-  const mql = require('@microlink/mql')
-
-  const {data} = await mql('https://github.com/farooqrahu', {
-    data: {
-      avatar: {
-        selector: '#avatar',
-        type: 'image',
-        attr: 'src'
-      }
-    }
-  })
-
-  console.log(data
-  )
-}
   /** Selects all rows if they are not all selected; otherwise clear selection. */
   masterToggle() {
     if (this.isAllSelected()) {

@@ -1,1 +1,8 @@
 
+
+::ng-deep .mat-dialog-title{
+  color: darkred !important;
+  border-bottom: 2px solid !important;
+  padding: 7px !important;
+}
+

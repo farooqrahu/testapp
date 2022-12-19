@@ -1,6 +1,8 @@
-<button class="close" mat-button (click)="onNoClick()">X</button>
 <div id="print" class="print">
-  <h3 mat-dialog-title>Invoice</h3>
+  <h3 mat-dialog-title>Customer Invoice
+    <button  class="float-right"   mat-button (click)="onNoClick()">&times;</button>
+
+  </h3>
   <div mat-dialog-content>
     <!-- Logo -->
     <div class="navbar-header">

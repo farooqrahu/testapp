@@ -25,6 +25,7 @@ import { UserProfileComponent } from 'src/app/pages/user-profile/user-profile.co
 import {CategoriesComponent} from "../../pages/categories/categories.component";
 import {CompaniesComponent} from "../../pages/companies/companies.component";
 import {MatCheckboxModule} from "@angular/material/checkbox";
+import {MatTableExporterModule} from "mat-table-exporter";
 
 // import { ToastrModule } from 'ngx-toastr';
 
@@ -46,7 +47,7 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
         MatIconModule,
         MatFormFieldModule,
 
-        MatDialogModule, MatCheckboxModule
+        MatDialogModule, MatCheckboxModule, MatTableExporterModule
     ],
   declarations: [
     DashboardComponent,

@@ -55,6 +55,7 @@ export class SaleOrdersComponent implements OnInit, AfterViewInit {
           this.productsearch.nativeElement.value, 0, 0, 0, 0, 0, false,0,0,0,null, null, false, 'name', 'asc', this.paginator.pageSize, this.paginator.getNumberOfPages())
         this.saleservice.findProduct(productrequest).subscribe(
           data => {
+            debugger;
             this.saleOrders = data.productOrderInvoiceDtos;
             console.log(this.saleOrders);
             this.productslength = data.totalitems;

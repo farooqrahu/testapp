@@ -49,12 +49,13 @@
 
           <button (click)="loadproductresults()" mat-button>Search</button>
           <button (click)="openDialog()" mat-button>Add Product</button>
+          <button class="mat-button mat-raised-button mat-primary"  (click)="exporter.exportTable('xlsx')"> Export Excel</button>
           <mat-paginator [pageSize]="10" [pageSizeOptions]="[10,20,30,40]">
           </mat-paginator>
         </div>
         <div class="table-responsive">
           <table mat-table [dataSource]="dataSource" matSort matSortActive="id" matSortDirection="asc"
-            class="mat-elevation-z8 demo-table">
+                 [hiddenColumns]="[0,13]" matTableExporter #exporter="matTableExporter" class="mat-elevation-z8 demo-table">
 
             <!-- Checkbox Column -->
             <ng-container matColumnDef="select">
@@ -102,11 +103,6 @@
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Quantity</th>
               <td  mat-cell *matCellDef="let product" >{{product.quantity}}</td>
             </ng-container>
-            <ng-container matColumnDef="outOfStock">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>Out of Stock</th>
-              <td mat-cell *matCellDef="let product"><label *ngIf="product.outOfStock"><mat-icon class="bg-red">report</mat-icon></label> <label *ngIf="!product.outOfStock"><mat-icon class="bg-green">check</mat-icon></label></td>
-
-            </ng-container>
             <ng-container matColumnDef="description">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Description</th>
               <td mat-cell *matCellDef="let product">
@@ -140,6 +136,17 @@
                 </div>
               </td>
             </ng-container>
+            <ng-container matColumnDef="createdAt">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>created At</th>
+              <td mat-cell *matCellDef="let product">{{product.createdAt | date:'short'}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="outOfStock">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Stock</th>
+              <td mat-cell *matCellDef="let product"><label *ngIf="product.outOfStock"><mat-icon class="bg-red icon-display">report</mat-icon></label> <label *ngIf="!product.outOfStock"><mat-icon class="bg-green icon-display">check</mat-icon></label></td>
+
+            </ng-container>
+
             <ng-container matColumnDef="action">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Actions</th>
               <td mat-cell *matCellDef="let product">

@@ -76,8 +76,8 @@ export class SalesListComponent implements OnInit {
     }
   }
 
-  calcExt(p: ProductSales, product: Product) {
-    if (p.userExtraQuantity > p.extra) {
+  validateExt(p: ProductSales, product: Product) {
+    if (p.userExtraQuantity > (p.extra-p.extraReturn)) {
       p.userExtraQuantity = 0;
       p.userQuantityBundle = 0;
       p.userTotalQuantity = 0;
@@ -85,7 +85,7 @@ export class SalesListComponent implements OnInit {
   }
 
   validateBundle(p: ProductSales, product: Product) {
-    if (p.userQuantityBundle > p.bundle) {
+    if (p.userQuantityBundle > (p.bundle-p.bundleReturn)) {
       p.userQuantityBundle = 0;
       p.userExtraQuantity = 0;
       p.userTotalQuantity = 0;

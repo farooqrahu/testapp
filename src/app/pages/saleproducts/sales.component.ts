@@ -57,6 +57,7 @@ export class SalesComponent implements OnInit, AfterViewInit {
           this.productsearch.nativeElement.value, 0, 0, 0, 0, 0, false,0,0,0,null ,null, false, 'name', 'asc', this.paginator.pageSize, this.paginator.getNumberOfPages())
         this.productservice.findProduct(productrequest).subscribe(
           data => {
+            debugger;
             this.products = data.list;
             // (this.products);
             this.productslength = data.totalitems;
