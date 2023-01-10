@@ -176,7 +176,8 @@ export class SalesComponent implements OnInit, AfterViewInit {
           return;
         }
         else {
-          this.sale = new Sale(null, res.name, res.id, res.price,res.userTotalQuantity, res.userQuantityBundle,res.userExtraQuantity,res.userTotalQuantity);
+          //send customer and item detail to submit view invoice
+          this.sale = new Sale(null, res.name,"","", res.id, res.price,res.userTotalQuantity, res.userQuantityBundle,res.userExtraQuantity,res.userTotalQuantity);
           let qu = 0;
           let tu = 0;
           let found = [];

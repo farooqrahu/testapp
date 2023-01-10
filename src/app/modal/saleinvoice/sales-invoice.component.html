@@ -3,28 +3,25 @@
     <button  class="float-right"   mat-button (click)="onNoClick()">&times;</button>
 
   </h3>
-  <div mat-dialog-content>
+  <div id="pdfTable" #pdfTable mat-dialog-content>
     <!-- Logo -->
-    <div class="navbar-header">
-      <a class="navbar-brand" href="index.html">
-        <!-- Logo icon -->
-        <!--      <b><img src="/assets/img/brand/logo2.jpg" alt="homepage" class="dark-logo" /></b>-->
-        <!--End Logo icon -->
-        <!-- Logo text -->
-
-      </a>
-      <div class="row ">
+    <div class="row navbar-header">
+      <div class="col-md-2 ">
         <span><img width="149px" src="/assets/img/brand/logo2.jpg" alt="homepage" class="dark-logo"/></span>
-        <span
-          style="font-weight: bold;font-size: 18px;color: red"> Habib Paint House Bandhi Road,Moro, Sindh <br/> <span
-          style="font-size: 14px;color: black;font-weight: bold">Mobile No. (021)00000000 Cell No. 0300-0000001</span></span>
       </div>
+      <div class="col-md-7" >
+        <p style="font-weight: bold;font-size: 18px;color: red"> Habib Paint House Bandhi Road,Moro, Sindh </p>
+        <p> <span
+          style="font-size: 14px;color: black;font-weight: bold">Mobile No. (021)00000000 Cell No. 0300-0000001</span></p>
 
-    </div>
-    <div class="row mt-1" style="padding: 5px">
-      <p>Customer Name:___________________________ </p>
-      <p>&nbsp;Invoice No. {{productOrderList.invoiceNo}}</p>
-      <p>&nbsp;Date. {{productOrderList.createdAt}}</p>
+      </div>
+      <div class="col-md-3" >
+        <p>Customer Name: {{productOrderList.customerName}} </p>
+        <p>Mobile Number: {{productOrderList.mobileNumber}} </p>
+        <p>Invoice No. {{productOrderList.invoiceNo}}</p>
+        <p>Date. {{productOrderList.createdAt}}</p>
+
+      </div>
     </div>
 
     <table id="receipt" class="table table-striped table-bordered" aria-label="order">
@@ -57,4 +54,4 @@
   </div>
 </div>
 <button mat-button (click)="printTest()" class="mat-button mat-raised-button mat-primary">Print  <span class="material-icons">print</span></button>
-
+<!--<button class="btn btn-primary" (click)="downloadAsPDF()">Export To PDF</button>-->

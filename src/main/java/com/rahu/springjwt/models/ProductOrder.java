@@ -21,7 +21,7 @@ public class ProductOrder extends BaseEntity {
   private Long invoiceNo;
   private Float grandTotal;
   @Nullable
-  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
+  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private Customer customer;
 
   @OneToMany(mappedBy = "productOrder")

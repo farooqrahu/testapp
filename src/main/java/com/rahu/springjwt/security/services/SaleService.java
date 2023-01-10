@@ -1,17 +1,15 @@
 package com.rahu.springjwt.security.services;
 
 import com.rahu.springjwt.dto.ProductOrderInvoiceDto;
-import com.rahu.springjwt.models.Product;
-import com.rahu.springjwt.models.ProductOrder;
-import com.rahu.springjwt.models.ProductReturn;
-import com.rahu.springjwt.models.ProductSale;
+import com.rahu.springjwt.models.*;
 import com.rahu.springjwt.payload.request.ProductRequest;
 import com.rahu.springjwt.payload.request.SaleRequest;
 import com.rahu.springjwt.payload.request.SaleRequestList;
 import com.rahu.springjwt.payload.response.MessageResponse;
 import com.rahu.springjwt.payload.response.ProductResponse;
 import com.rahu.springjwt.repository.*;
-import com.rahu.springjwt.repository.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
@@ -21,14 +19,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
-import java.text.DecimalFormat;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 @Service
 public class SaleService {
+  private static final Logger logger = LoggerFactory.getLogger(SaleService.class);
+
   @Autowired
   ProductRepository productRepository;
   @Autowired
@@ -55,6 +57,8 @@ public class SaleService {
   private ProductOrderRepository productOrderRepository;
   @Autowired
   private ReturnRepository returnRepository;
+  @Autowired
+  private CustomerRepository customerRepository;
 
   public ResponseEntity<?> submitSaleOrder(@Valid SaleRequestList productRequest) {
     userDetailsServiceImpl.checkAdmin();
@@ -110,6 +114,13 @@ public class SaleService {
         }
       });
       productOrder.setGrandTotal(productRequest.getGrandTotal());
+      Optional<Customer> customerFound=customerRepository.findByMobileNumber(productRequest.getMobileNumber());
+      if(customerFound.isPresent()){
+        productOrder.setCustomer(customerFound.get());
+      }else{
+        Customer customer=Customer.builder().mobileNumber(productRequest.getMobileNumber()).name(productRequest.getCustomerName()).address(productRequest.getAddress()).build();
+        productOrder.setCustomer(customer);
+      }
       productOrderRepository.save(productOrder);
     }
     return ResponseEntity.ok(new
@@ -124,14 +135,21 @@ public class SaleService {
 //  }
   public ResponseEntity<?> findOrders(ProductRequest productRequest) {
     Pageable paging = checkPaging(productRequest);
-    if (paging == null)
-      return ResponseEntity.ok(new ProductResponse(productOrderRepository.findAllByReturnedIsFalse().stream().map(ProductOrderInvoiceDto::factoryProductOrderInvoice).filter(Objects::nonNull).collect(Collectors.toList()), ""));
-    return ResponseEntity.ok(new ProductResponse(productOrderRepository.findAllByReturnedIsFalse(paging).stream().map(ProductOrderInvoiceDto::factoryProductOrderInvoice).filter(Objects::nonNull).collect(Collectors.toList()), ""));
+    if (paging == null){
+      List<ProductOrderInvoiceDto> list =productOrderRepository.findAllByReturnedIsFalse().stream().map(ProductOrderInvoiceDto::factoryProductOrderInvoice).filter(Objects::nonNull).collect(Collectors.toList());
+      list.sort(Comparator.comparing(ProductOrderInvoiceDto::getCreatedAt).reversed());
+      return ResponseEntity.ok(new ProductResponse(list, ""));
+    }else{
+      List<ProductOrderInvoiceDto> list =productOrderRepository.findAllByReturnedIsFalse(paging).stream().map(ProductOrderInvoiceDto::factoryProductOrderInvoice).filter(Objects::nonNull).collect(Collectors.toList());
+      list.sort(Comparator.comparing(ProductOrderInvoiceDto::getCreatedAt).reversed());
+      return ResponseEntity.ok(new ProductResponse(list, ""));
+    }
+
   }
 
   public Pageable checkPaging(ProductRequest productRequest) {
     if (productRequest.getPagesize() > 0 && productRequest.getPagenumber() >= 0) {
-      if (productRequest.getSortdirection() == "desc") {
+      if (Objects.equals(productRequest.getSortdirection(), "desc")) {
         return PageRequest.of(productRequest.getPagenumber(), productRequest.getPagesize(),
           Sort.by(productRequest.getSort()).descending());
       } else {
@@ -146,6 +164,8 @@ public class SaleService {
     userDetailsServiceImpl.checkAdmin();
     Optional<ProductOrder> productOrder = productOrderRepository.findById(productReturnRequest.getId());
     if (productOrder.isPresent()) {
+      AtomicLong quantitySold= new AtomicLong();
+      AtomicLong quantityReturned= new AtomicLong();
       productReturnRequest.getData().forEach(returnRequest -> {
         Optional<ProductSale> productSale = saleRepository.findById(returnRequest.getId());
         if (productSale.isPresent()) {
@@ -172,10 +192,11 @@ public class SaleService {
                   calculateBundleWise(returnRequest, product, productSale, totalQuantity);
                 }
               }
-
+              quantitySold.set(productSale.get().getQuantity());
+              quantityReturned.set(zeroIfNull(productSale.get().getQuantityReturn())+returnRequest.getUserTotalQuantity());
               long retProd=Objects.requireNonNull(product).getQuantity() + totalQuantity;
-              if(retProd<=productSale.get().getQuantity())
-              Objects.requireNonNull(product).setQuantity(retProd);
+//              if(retProd<=productSale.get().getQuantity() || retProd<=product.getQuantity())
+                product.setQuantity(retProd);
               long pro=zeroIfNull(productSale.get().getQuantityReturn()) + totalQuantity;
               if(pro<=productSale.get().getQuantity())
               productSale.get().setQuantityReturn(pro);
@@ -196,11 +217,14 @@ public class SaleService {
         }
       });
 
-//      Long totalReturn = productReturnRequest.getData().stream().mapToLong(SaleRequest::getUserTotalQuantity).sum();
-//      Long totalSold = productReturnRequest.getData().stream().mapToLong(SaleRequest::getQuantity).sum();
-//      if (totalReturn.equals(totalSold)) {
-//        productOrder.get().setReturned(Boolean.TRUE);
-//      }
+      if (quantitySold.get()==quantityReturned.get()) {
+        productOrder.get().setReturned(Boolean.TRUE);
+      }
+   /*   long totalReturn = productReturnRequest.getData().stream().mapToLong(SaleRequest::getUserTotalQuantity).sum();
+      long totalSold = productReturnRequest.getData().stream().mapToLong(SaleRequest::getQuantity).sum();
+      if (totalReturn==totalSold) {
+        productOrder.get().setReturned(Boolean.TRUE);
+      }*/
       productOrder.get().setGrandTotal(productReturnRequest.getGrandTotal());
       productOrderRepository.save(productOrder.get());
     }
@@ -210,7 +234,7 @@ public class SaleService {
 
   private void calculateBundleWise(SaleRequest returnRequest, Product product, Optional<ProductSale> productSale, long totalQuantity) {
 
-    if (returnRequest.getUserTotalQuantity() <= product.getExtraQuantity()) {
+    if (returnRequest.getUserTotalQuantity() <= product.getExtraQuantity()) {//returning quantity lese then extra quantity
       long totalEx = returnRequest.getUserTotalQuantity() + product.getExtraQuantity();
       if (totalEx > product.getQuantityItem()) {
         long totalExtras = totalEx - product.getQuantityItem();
@@ -240,11 +264,11 @@ public class SaleService {
           product.setExtraQuantity(product.getExtraQuantity() + extra);
           productSale.get().setExtraReturn(zeroIfNull(productSale.get().getExtraReturn()) + extra);
           product.setQuantityBundle(product.getQuantityBundle() + bundles);
-          productSale.get().setBundleReturn(zeroIfNull(productSale.get().getBundleReturn()) + returnRequest.getUserQuantityBundle());
+          productSale.get().setBundleReturn(zeroIfNull(bundles));
         }
       } else if (bundles > 0 && (extra > 0 && extra < product.getQuantityItem()) && extra > product.getExtraQuantity()) {
         product.setQuantityBundle(product.getQuantityBundle() + bundles);
-        productSale.get().setBundleReturn(zeroIfNull(productSale.get().getBundleReturn()) + returnRequest.getUserQuantityBundle());
+        productSale.get().setBundleReturn(zeroIfNull(bundles));
         long totalEx = extra + product.getExtraQuantity();
         if (totalEx > product.getQuantityItem()) {
           long totalExtras = totalEx - product.getQuantityItem();
@@ -263,7 +287,7 @@ public class SaleService {
         }
       } else if (bundles > 0 && extra <= 0) {
         product.setQuantityBundle(product.getQuantityBundle() + bundles);
-        productSale.get().setBundleReturn(zeroIfNull(productSale.get().getBundleReturn()) + returnRequest.getUserQuantityBundle());
+        productSale.get().setBundleReturn(zeroIfNull(bundles));
         totalQuantity = (bundles * product.getQuantityItem());
       } else if (extra > 0 && bundles <= 0) {
         long totalEx = returnRequest.getUserTotalQuantity() + product.getExtraQuantity();
@@ -278,6 +302,22 @@ public class SaleService {
           product.setExtraQuantity(product.getExtraQuantity() + extra);
           productSale.get().setExtraReturn(zeroIfNull(productSale.get().getExtraReturn()) + extra);
         }
+      }else{
+        product.setQuantityBundle(product.getQuantityBundle() + bundles);
+        productSale.get().setBundleReturn(zeroIfNull(bundles));
+        long totalEx = returnRequest.getUserTotalQuantity() + product.getExtraQuantity();
+        if (totalEx > product.getQuantityItem()) {
+          long totalExtras = totalEx - product.getQuantityItem();
+          if (totalExtras < product.getExtraQuantity()) {
+            product.setExtraQuantity(totalExtras);
+            productSale.get().setExtraReturn(zeroIfNull(productSale.get().getExtraReturn()) + returnRequest.getUserExtraQuantity());
+            product.setQuantityBundle(product.getQuantityBundle() + 1);
+          }
+        } else {
+          product.setExtraQuantity(product.getExtraQuantity() + extra);
+          productSale.get().setExtraReturn(zeroIfNull(productSale.get().getExtraReturn()) + extra);
+        }
+
       }
 
     }

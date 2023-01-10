@@ -22,15 +22,13 @@ import {SalesInvoiceComponent} from "../../modal/saleinvoice/sales-invoice.compo
   styleUrls: ['./sale.orders.component.scss']
 })
 export class SaleOrdersComponent implements OnInit, AfterViewInit {
-  columnsToDisplay = ["id","invoiceNo","createdAt",  "action"];
-  companycolumnsToDisplay = ["id", "invoiceNo","createdAt", "action"];
+  companycolumnsToDisplay = ["id","customerName","mobileNumber", "invoiceNo","createdAt", "action"];
   // saleList =Sale[] = [];
   saleOrdersdatasource: MatTableDataSource<SaleOrders> = null;
   saleOrders: SaleOrders[] = [];
   sales: Sale[] = [];
   // invoices: Invoice[] = [];
-  sale: Sale;
-  invoice: Invoice=new Invoice([],0,0);
+   invoice: Invoice=new Invoice([],0,0);
   productslength = 0;
 
   constructor(public saleservice: SaleService, private token: TokenStorageService
@@ -89,10 +87,6 @@ export class SaleOrdersComponent implements OnInit, AfterViewInit {
         this.productslength = data.totalitems;
         this.saleOrdersdatasource = new MatTableDataSource(this.saleOrders);
         console.log(this.saleOrders);
-        setTimeout(() => {
-          this.saleOrdersdatasource.sort = this.sort;
-          this.saleOrdersdatasource.paginator = this.paginator;
-        });
       },
       err => {
         (err);
@@ -123,11 +117,13 @@ export class SaleOrdersComponent implements OnInit, AfterViewInit {
 
   openDialog(saleOrders?: SaleOrders): void {
     if (saleOrders === undefined)
-      saleOrders = new SaleOrders(0, "",  0,0,0,null, null, null,null,null)
+      saleOrders = new SaleOrders(0, "","","",  0,0,0,null, null, null,null,null)
     const dialogRef = this.dialog.open(SalesListComponent, {
       width: '1220px', height: '600px',
       data: {
         id: saleOrders.id,
+        customerName:saleOrders.customerName,
+        mobileNumber:saleOrders.mobileNumber,
         invoiceNo:saleOrders.invoiceNo,
         grandTotal:saleOrders.grandTotal,
         createdAt: saleOrders.createdAt,
@@ -141,11 +137,13 @@ export class SaleOrdersComponent implements OnInit, AfterViewInit {
   }
   printDialog(saleOrders?: SaleOrders): void {
     if (saleOrders === undefined)
-      saleOrders = new SaleOrders(0, "",  0,0,0, null, null, null,null,null)
+      saleOrders = new SaleOrders(0, "","","",  0,0,0, null, null, null,null,null)
     const dialogRef = this.dialog.open(SalesInvoiceComponent, {
       width: '1120px', height: '600px',
       data: {
         id: saleOrders.id,
+        customerName:saleOrders.customerName,
+        mobileNumber:saleOrders.mobileNumber,
         invoiceNo:saleOrders.invoiceNo,
         grandTotal:saleOrders.grandTotal,
         totalQuantity:saleOrders.totalQuantity,

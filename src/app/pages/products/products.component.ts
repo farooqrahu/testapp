@@ -229,7 +229,7 @@ export class ProductsComponent implements OnInit, AfterViewInit {
         window.location.reload()
       },
       err => {
-        this.messagebox("cannot update image");
+        this.messageboxError("cannot update image");
       }
     );
 
@@ -241,11 +241,11 @@ export class ProductsComponent implements OnInit, AfterViewInit {
         this.products[objIndex] = product
         this.dataSource = new MatTableDataSource(this.products)
         this.refreshproduct()
-        this.messagebox(data.message);
+        this.messageboxSuccess(data.message);
 
       },
       err => {
-        this.messagebox("error updating product");
+        this.messageboxError("error updating product");
 
       }
     );
@@ -272,7 +272,7 @@ export class ProductsComponent implements OnInit, AfterViewInit {
             this.refreshproduct()
           },
           err => {
-            this.messagebox("Error deleting product");
+            this.messageboxError("error deleting product");
           }
         );
       }
@@ -303,7 +303,7 @@ export class ProductsComponent implements OnInit, AfterViewInit {
             )
           },
           err => {
-            this.messagebox("Error deleting category, please make sure no products are in this category.");
+            this.messageboxError("error deleting category, please make sure no products are in this category.");
           }
         );
       }
@@ -313,11 +313,11 @@ export class ProductsComponent implements OnInit, AfterViewInit {
   addCategory(category: Category): any {
     this.productservice.addCategory(category).subscribe(
       data => {
-        this.messagebox(data.message);
+        this.messageboxSuccess(data.message);
         this.getAllCategories()
       },
       err => {
-        this.messagebox("Error adding category. make sure it does not already exist");
+        this.messageboxError("error adding category. make sure it does not already exist");
       }
     );
   }
@@ -328,10 +328,10 @@ export class ProductsComponent implements OnInit, AfterViewInit {
         this.categories[objIndex] = category
         this.categoriesdatasource = new MatTableDataSource(this.categories)
 
-        this.messagebox(data.message);
+        this.messageboxSuccess(data.message);
       },
       err => {
-        this.messagebox(err.message);
+        this.messageboxError(err.message);
 
       }
     );
@@ -348,19 +348,28 @@ export class ProductsComponent implements OnInit, AfterViewInit {
 
       },
       err => {
-        this.messagebox("error getting categories");
+        this.messageboxError("error getting categories");
       }
     );
   }
-  messagebox(body: string, title?: string) {
+  messageboxSuccess(body: string, title?: string) {
     if (title === undefined)
       title = "Notice"
-    const dialogRef = this.dialog.open(MessageboxComponent, {
-      width: '350px',
-      data: {
-        title: title, body: body
-      }
-    });
+    Swal.fire(
+      title,
+      body,
+      'success'
+    )
+  }
+
+  messageboxError(body: string, title?: string) {
+    if (title === undefined)
+      title = "Notice"
+    Swal.fire(
+      title,
+      body,
+      'error'
+    )
   }
 
 
@@ -396,11 +405,11 @@ export class ProductsComponent implements OnInit, AfterViewInit {
   addCompany(company: Company): any {
     this.productservice.addCompany(company).subscribe(
       data => {
-        this.messagebox(data.message);
+        this.messageboxSuccess(data.message);
         this.getAllCategories()
       },
       err => {
-        this.messagebox("Error adding category. make sure it does not already exist");
+        this.messageboxError("error adding category. make sure it does not already exist");
       }
     );
   }
@@ -411,10 +420,10 @@ export class ProductsComponent implements OnInit, AfterViewInit {
         this.companies[objIndex] = company
         this.companiesdatasource = new MatTableDataSource(this.companies)
 
-        this.messagebox(data.message);
+        this.messageboxSuccess(data.message);
       },
       err => {
-        this.messagebox(err.message);
+        this.messageboxError(err.message);
 
       }
     );
@@ -432,7 +441,7 @@ export class ProductsComponent implements OnInit, AfterViewInit {
 
       },
       err => {
-        this.messagebox("error getting companies");
+        this.messageboxError("error getting companies");
       }
     );
   }
@@ -460,7 +469,7 @@ export class ProductsComponent implements OnInit, AfterViewInit {
             )
           },
           err => {
-            this.messagebox("Error deleting company, please make sure no products are in this company.");
+            this.messageboxError("error deleting company, please make sure no products are in this company.");
           }
         );
       }

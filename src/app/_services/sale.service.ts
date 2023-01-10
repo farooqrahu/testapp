@@ -23,10 +23,10 @@ export class SaleService {
   constructor(private http: HttpClient, private token: TokenStorageService) {
   }
 
-  submitSaleOrder(productSaleList: Invoice): Observable<any> {
+  submitSaleOrder(productSaleList: Invoice,customerName?,mobileNumber?): Observable<any> {
     let data = productSaleList._sales;
     let grandTotal = productSaleList._grandTotal;
-    return this.http.post(PRODUCT_SALE_API + 'submitSaleOrder', {data,grandTotal}, httpOptions);
+    return this.http.post(PRODUCT_SALE_API + 'submitSaleOrder', {data,grandTotal,customerName,mobileNumber}, httpOptions);
   }
   findProduct(productrequest: ProductRequest): Observable<any> {
 

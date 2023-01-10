@@ -36,6 +36,10 @@ export class SaleformComponent implements OnInit {
   companies: Sale[];
   invoice: Invoice;
   errors: String = "";
+  customerName: String = "";
+  mobileNumber: String = "";
+  mobileNumberError: boolean;
+  mobileNumberErrorText: String = "";
 
   constructor(
     public dialogRef: MatDialogRef<SaleformComponent>,
@@ -54,20 +58,43 @@ export class SaleformComponent implements OnInit {
     es6printJS("receipt", "html");
   }
 
+  validateForm():boolean {
+    if(this.customerName==undefined || this.customerName===""){
+    return false;
+    }else
+    if(this.mobileNumber==undefined || this.mobileNumber===""){
+    return false;
+    }else if(this.mobileNumber.length<11){
+      return false;
+    }
+    return true;
+  }
+
   submitOrder(): any {
     console.log(this.productSaleList)
-    if (this.productSaleList._sales.length > 0) {
-      this.saleService.submitSaleOrder(this.productSaleList).subscribe(
-        productSaleList => {
-          this.swAlert(productSaleList.message, "Product Sale!");
-          // this.exportAsExcelFile(this.productSaleList._sales,"receipt")
 
-          return this.dialogRef.close("clear");
-        },
-        err => {
-          this.swAlert("System error occurred!", "Product Sale!");
-        }
-      );
+
+    if (this.productSaleList._sales.length > 0) {
+    let isValid=this.validateForm();
+      if(isValid){
+        this.saleService.submitSaleOrder(this.productSaleList,this.customerName,this.mobileNumber).subscribe(
+          productSaleList => {
+            this.swAlert(productSaleList.message, "Product Sale!");
+            // this.exportAsExcelFile(this.productSaleList._sales,"receipt")
+
+            return this.dialogRef.close("clear");
+          },
+          err => {
+            this.swAlert("System error occurred!", "Product Sale!");
+          }
+        );
+
+      }else{
+        Swal.fire(
+          'Product Sale!',
+          'Please enter customer detail!',
+          'error')
+      }
     }
   }
 
@@ -114,5 +141,11 @@ export class SaleformComponent implements OnInit {
     }
     // console.log(this.productSaleList);
 
+  }
+
+  validateMobileNumber() {
+    if(this.mobileNumber.length<11){
+      this.mobileNumberErrorText='Invalid mobile Number!';
+    }
   }
 }

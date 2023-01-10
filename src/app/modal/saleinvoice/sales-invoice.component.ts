@@ -12,7 +12,11 @@ import * as es6printJS from "print-js";
 import * as XLSX from "xlsx";
 import {SaleOrders} from "../../models/sale.orders.model";
 import {ProductSales} from "../../models/product.sale.model";
-
+import jsPDF from 'jspdf';
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
+import htmlToPdfmake from 'html-to-pdfmake';
 @Component({
   selector: 'app-sales-invoice',
   templateUrl: './sales-invoice.component.html',
@@ -35,7 +39,9 @@ export class SalesInvoiceComponent implements OnInit {
   counter(i: number) {
     return new Array(i);
   }
+  title = 'htmltopdf';
 
+  @ViewChild('pdfTable') pdfTable: ElementRef;
   companies: Sale[];
   invoice: Invoice;
   errors: string = "";
@@ -113,5 +119,18 @@ export class SalesInvoiceComponent implements OnInit {
 
 
   ngOnInit() {
+  }
+
+  public downloadAsPDF() {
+
+   // const doc = new jsPDF();
+debugger
+    const pdfTable = this.pdfTable.nativeElement;
+
+    var html = htmlToPdfmake(pdfTable.innerHTML);
+
+    const documentDefinition = { content: html,imagesByReference:true };
+    pdfMake.createPdf(documentDefinition).open();
+
   }
 }

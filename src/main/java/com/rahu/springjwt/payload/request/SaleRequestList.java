@@ -13,5 +13,8 @@ import java.util.List;
 public class SaleRequestList implements Serializable {
  private List<SaleRequest> data;
   private Float grandTotal;
+  private String customerName;
+  private String mobileNumber;
+  private String address;
  private Long id;
 }
