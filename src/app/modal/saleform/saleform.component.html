@@ -52,9 +52,9 @@
     <tbody>
     <tr *ngFor="let product of productSaleList._sales">
       <td>{{product.name}}</td>
-      <td>{{product.quantity}}</td>
+      <td>{{product.totalQuantitySale}}</td>
       <td>{{product.price | currency:'Rs:'}}</td>
-      <td>{{product.price * product.quantity | currency:'Rs:'}}</td>
+      <td>{{product.price * product.totalQuantitySale | currency:'Rs:'}}</td>
       <td>
         <button type="button" style=" outline: none;box-shadow: none;" mat-mini-fab color="warn"
                 matTooltip="Remove this item" (click)="remove(product)">

@@ -116,8 +116,9 @@ export class SaleOrdersComponent implements OnInit, AfterViewInit {
 
 
   openDialog(saleOrders?: SaleOrders): void {
-    if (saleOrders === undefined)
-      saleOrders = new SaleOrders(0, "","","",  0,0,0,null, null, null,null,null)
+    console.log(saleOrders)
+    // if (saleOrders === undefined)
+    //   saleOrders = new SaleOrders(0, "","","",  0,0,0,null, null, null,null,null)
     const dialogRef = this.dialog.open(SalesListComponent, {
       width: '1220px', height: '600px',
       data: {

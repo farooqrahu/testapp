@@ -63,21 +63,22 @@ export class SalesListComponent implements OnInit {
   // }
 
   calculateRetQty(p: ProductSales,product: Product) {
+    debugger;
     if(p.userExtraQuantity>0){
-      p.userTotalQuantity = Number(p.userExtraQuantity) + (Number(product.quantityItem) * Number(p.userQuantityBundle)) || 0;
+      p.userTotalQuantity = Number(p.userExtraQuantity) + (Number(product.quantityItem) * Number(p.userQuantityBundle) || 0 ) || 0;
     }else {
-      p.userTotalQuantity = (Number(product.quantityItem) * Number(p.userQuantityBundle)) || 0;
+      p.userTotalQuantity = (Number(product.quantityItem) * Number(p.userQuantityBundle) || 0) || 0;
     }
   }
 
   validateTotal(p: ProductSales, product: Product) {
-    if (p.userTotalQuantity > p.quantity) {
+    if (p.userTotalQuantity > p.totalQuantitySale) {
       p.userTotalQuantity = 0;
     }
   }
 
   validateExt(p: ProductSales, product: Product) {
-    if (p.userExtraQuantity > (p.extra-p.extraReturn)) {
+    if (p.userExtraQuantity >= 10 || p.userTotalQuantity>p.totalQuantitySale) {
       p.userExtraQuantity = 0;
       p.userQuantityBundle = 0;
       p.userTotalQuantity = 0;
@@ -85,7 +86,7 @@ export class SalesListComponent implements OnInit {
   }
 
   validateBundle(p: ProductSales, product: Product) {
-    if (p.userQuantityBundle > (p.bundle-p.bundleReturn)) {
+    if (p.userQuantityBundle > p.bundleSale || p.userTotalQuantity>p.totalQuantitySale) {
       p.userQuantityBundle = 0;
       p.userExtraQuantity = 0;
       p.userTotalQuantity = 0;

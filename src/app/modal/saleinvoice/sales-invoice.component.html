@@ -36,9 +36,9 @@
       <tbody>
       <tr *ngFor="let p of productOrderList.productSales">
         <td>{{p.product.name}}</td>
-        <td>{{p.quantity}}</td>
+        <td>{{p.totalQuantitySale}}</td>
         <td>{{p.product.price | currency:'Rs:'}}</td>
-        <td>{{p.product.price * p.quantity | currency:'Rs:'}}</td>
+        <td>{{p.product.price * p.totalQuantitySale | currency:'Rs:'}}</td>
       </tr>
       <tr class="table table-borderless table-dark">
         <th>Total Products</th>

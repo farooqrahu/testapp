@@ -4,59 +4,73 @@
 
 </h1>
 <div mat-dialog-content>
-  <mat-form-field>
-    <p>Product Name</p>
-    <input matInput   [(ngModel)]="data.name" cdkFocusInitial required>
-  </mat-form-field>
-  <mat-form-field>
-    <p>Product Price</p>
-    <input matInput type="number" [(ngModel)]="data.price" required>
-  </mat-form-field>
-  <section class="example-section">
-    <mat-checkbox [disabled]="data.id>0"  (change)="validate(data);clearQty(data)" [(ngModel)]="data.enableTQ" >Enter Total Quantity</mat-checkbox>
-  </section>
-  <mat-form-field>
-    <p>Quantity Item - Sheet</p>
-    <input [disabled]="data.enableTQ" type="number" matInput (change)="validate(data);calculateQty(data)" [(ngModel)]="data.quantityItem" required>
-  </mat-form-field>
-  <mat-form-field>
-    <p>Quantity Bundle</p>
-    <input matInput type="number" [disabled]="data.enableTQ" (change)="validate(data);calculateQty(data)" [(ngModel)]="data.quantityBundle" required>
-  </mat-form-field>
-  <mat-form-field>
-    <p>Extra Quantity</p>
-    <input matInput type="number" [disabled]="data.enableTQ" (change)="validate(data);calculateQty(data)" [(ngModel)]="data.extraQuantity" required>
-  </mat-form-field>
-  <mat-form-field>
-    <p>Total Quantity</p>
-    <input matInput type="number" [disabled]="!data.enableTQ" [(ngModel)]="data.quantity" required>
-  </mat-form-field>
-  <mat-form-field>
-    <p>Product Description</p>
-    <textarea matInput  [(ngModel)]="data.description" cdkTextareaAutosize
-      #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="5" cdkAutosizeMaxRows="20"></textarea>
-  </mat-form-field>
-  <mat-form-field appearance="fill">
-    <mat-label>Select Company</mat-label>
-    <mat-select [(ngModel)]="data.company.id">
 
-      <mat-option *ngFor="let company of companies" [value]="company.id" required>
-        {{company.name}}
-      </mat-option>
-    </mat-select>
+  <div class="row">
+    <div class="col-md-6 col-6">
+      <mat-form-field appearance="fill">
+        <mat-label>Product Name</mat-label>
+        <input matInput   [(ngModel)]="data.name" cdkFocusInitial required>
+      </mat-form-field>
 
-  </mat-form-field>
-  <mat-form-field appearance="fill">
-    <mat-label>Select Category</mat-label>
-    <mat-select [(ngModel)]="data.category.id">
+      <section class="example-section">
+        <mat-checkbox [disabled]="data.id>0"  (change)="validate(data);clearQty(data)" [(ngModel)]="data.enableTQ" >Enter Total Quantity</mat-checkbox>
+      </section>
+      <mat-form-field appearance="fill">
+        <mat-label>Quantity Item - Sheet</mat-label>
+        <input [disabled]="data.enableTQ" type="number" matInput (change)="validate(data);calculateQty(data)" [(ngModel)]="data.quantityItem" required>
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Quantity Bundle</mat-label>
+        <input matInput type="number" [disabled]="data.enableTQ" (change)="validate(data);calculateQty(data)" [(ngModel)]="data.quantityBundle" required>
+      </mat-form-field >
+      <mat-form-field appearance="fill">
+        <mat-label>Extra Quantity</mat-label>
+        <input matInput type="number" [disabled]="data.enableTQ" (change)="validate(data);calculateQty(data)" [(ngModel)]="data.extraQuantity" required>
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Total Quantity</mat-label>
+        <input matInput type="number" [disabled]="!data.enableTQ" [(ngModel)]="data.quantity" required>
+      </mat-form-field>
 
-      <mat-option *ngFor="let category of categories" [value]="category.id" required>
-        {{category.name}}
-      </mat-option>
-    </mat-select>
+    </div>
+    <div class="col-md-6 col-6">
+      <mat-form-field appearance="fill">
+        <mat-label>Product Price</mat-label>
+        <input matInput type="number" [(ngModel)]="data.price" required>
+      </mat-form-field>
 
-  </mat-form-field>
-</div>
+      <mat-form-field appearance="fill">
+        <mat-label>Product Description</mat-label>
+        <textarea matInput  [(ngModel)]="data.description" cdkTextareaAutosize
+                  #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="5" cdkAutosizeMaxRows="20"></textarea>
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Select Company</mat-label>
+        <mat-select [(ngModel)]="data.company.id">
+
+          <mat-option *ngFor="let company of companies" [value]="company.id" required>
+            {{company.name}}
+          </mat-option>
+        </mat-select>
+
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Select Category</mat-label>
+        <mat-select [(ngModel)]="data.category.id">
+
+          <mat-option *ngFor="let category of categories" [value]="category.id" required>
+            {{category.name}}
+          </mat-option>
+        </mat-select>
+
+      </mat-form-field>
+    </div>
+
+    </div>
+  </div>
+
+
+
 <p *ngIf="errors!=''" style="color:red;">{{errors}}</p>
 <div mat-dialog-actions>
   <button mat-button (click)="onNoClick()">Cancel</button>

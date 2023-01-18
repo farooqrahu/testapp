@@ -132,8 +132,8 @@ export class SaleformComponent implements OnInit {
   remove(product: Sale) {
     let index: number = this.productSaleList._sales.findIndex(a => a.productId === product.productId);
     if (index != -1) {
-      this.productSaleList._totalQuantity = this.productSaleList._totalQuantity - product.quantity;
-      this.productSaleList._grandTotal = this.productSaleList._grandTotal - (product.price * product.quantity);
+      this.productSaleList._totalQuantity = this.productSaleList._totalQuantity - product.totalQuantitySale;
+      this.productSaleList._grandTotal = this.productSaleList._grandTotal - (product.price * product.totalQuantitySale);
       this.productSaleList._sales.splice(index, 1);
     }
     if (this.productSaleList._sales.length <= 0) {

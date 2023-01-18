@@ -139,7 +139,7 @@ export class ProductsComponent implements OnInit, AfterViewInit {
     if (product === undefined)
       product = new Product(0, "", "", 0, this.categories[0],this.companies[0], false,0,0,0,0,false,"",null,"",0,0,0)
     const dialogRef = this.dialog.open(ProductformComponent, {
-      width: '400px',
+      width: '530px',
       data: {
         id: product.id, name: product.name, description: product.description,
         price: product.price, category: product.category,company: product.company,quantityItem:product.quantityItem,quantityBundle:product.quantityBundle,extraQuantity:product.extraQuantity

@@ -6,7 +6,7 @@ export class Sale {
     public mobileNumber: string,
     public productId:number,
     public price:number,
-    public quantity:number,
+    public totalQuantitySale:number,
     public userQuantityBundle: number,
     public userExtraQuantity: number,
     public userTotalQuantity: number,

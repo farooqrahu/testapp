@@ -1,8 +1,7 @@
 package com.rahu.springjwt.dto;
 
-import com.rahu.springjwt.models.ProductSale;
+import com.rahu.springjwt.models.ProductSaleList;
 import lombok.*;
-import org.apache.commons.lang.ObjectUtils;
 
 @Setter
 @Getter
@@ -13,17 +12,17 @@ public class ProductSaleDto {
 
   private Long id;
   private ProductDto product;
-  private Long quantityReturn;
+  private Long totalQuantityReturn;
   private Long extraReturn;
   private Long bundleReturn;
-  private Long quantity;
-  private Long extra;
-  private Long bundle;
+  private Long totalQuantitySale;
+  private Long extraSale;
+  private Long bundleSale;
   private String detail;
   private boolean isReturned = false;
 
-  public static ProductSaleDto factoryProductSale(ProductSale productSale) {
-    return ProductSaleDto.builder().id(productSale.getId()).extra(productSale.getExtra()).bundle(productSale.getBundle()).quantity(productSale.getQuantity()).extraReturn(productSale.getExtraReturn()).bundleReturn(productSale.getBundleReturn()).quantityReturn(productSale.getQuantityReturn()).isReturned(productSale.isReturned()).product(ProductDto.factoryProduct(productSale.getProduct())).build();
+  public static ProductSaleDto factoryProductSale(ProductSaleList productSaleList) {
+    return ProductSaleDto.builder().id(productSaleList.getId()).extraSale(productSaleList.getExtraSale()).bundleSale(productSaleList.getBundleSale()).totalQuantitySale(productSaleList.getTotalQuantitySale()).isReturned(productSaleList.isReturned()).product(ProductDto.factoryProduct(productSaleList.getProduct())).build();
   }
 
 
