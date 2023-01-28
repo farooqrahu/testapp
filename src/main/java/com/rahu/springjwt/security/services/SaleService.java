@@ -23,6 +23,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
@@ -73,7 +74,7 @@ public class SaleService {
           totalQuantity = saleRequest.getUserTotalQuantity();
           if (!product.get().isEnableTQ()) {
             if (saleRequest.getUserTotalQuantity() <= product.get().getExtraQuantity()) {
-              product.get().setExtraQuantity(product.get().getExtraQuantity() - saleRequest.getQuantity());
+              product.get().setExtraQuantity(zeroIfNull(product.get().getExtraQuantity()) - zeroIfNull(saleRequest.getQuantity()));
             } else {
               long bundles = saleRequest.getUserQuantityBundle();
               long extra = saleRequest.getUserExtraQuantity();
@@ -109,7 +110,6 @@ public class SaleService {
           if (product.get().getQuantity() <= 0) {
             product.get().setOutOfStock(Boolean.TRUE);
           }
-//          grandTotal.set(grandTotal.get() + (saleRequest.getQuantity() * product.get().getPrice()));
           productRepository.save(product.get());
           productSaleRepository.save(ProductSaleList.builder().id(0L).totalQuantitySale(totalQuantity).bundleSale(saleRequest.getUserQuantityBundle()).extraSale(saleRequest.getUserExtraQuantity()).product(product.get()).productOrder(productOrder).build());
         }
@@ -169,6 +169,8 @@ public class SaleService {
       ProductReturn productReturnFound = productReturn.orElseGet(() -> ProductReturn.builder().id(0L).invoiceNo(productOrder.get().getInvoiceNo()).customer(productOrder.get().getCustomer()).grandTotalQtReturn(productReturnRequest.getGrandTotalQtReturn()).build());
       productReturnFound.setGrandTotal(productReturnRequest.getGrandTotal());
       ProductReturn productReturnSaved = returnRepository.save(productReturnFound);
+      AtomicLong quantitySold= new AtomicLong();
+      AtomicLong quantityReturned= new AtomicLong();
 
       productReturnRequest.getData().forEach(returnRequest -> {
         Optional<ProductSaleList> productSold = productSaleRepository.findById(returnRequest.getId());
@@ -238,13 +240,11 @@ public class SaleService {
             }
           }
         }
+        quantitySold.set(productSold.get().getTotalQuantitySale());
       });
-
-   /*   long totalReturn = productReturnRequest.getData().stream().mapToLong(SaleRequest::getUserTotalQuantity).sum();
-      long totalSold = productReturnRequest.getData().stream().mapToLong(SaleRequest::getQuantity).sum();
-      if (totalReturn==totalSold) {
+      if (quantitySold.get()<=0) {
         productOrder.get().setReturned(Boolean.TRUE);
-      }*/
+      }
       productOrder.get().setGrandTotal(productReturnRequest.getGrandTotal());
       productOrderRepository.save(productOrder.get());
 

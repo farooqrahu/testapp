@@ -89,7 +89,7 @@ public class SpringBootSecurityJwtApplication {
       r.add(r1);
       r.add(r2);
       r.add(r3);
-      User user = new User("admin", "farahu2008@gmail.com", encoder.encode("Admin@123"), r);
+      User user = new User("admin", "farahu2008@gmail.com", encoder.encode("msisdn"), r);
       user.setName("Administrator");
       user.setStatus("Activated");
       userRepository.save(user);

@@ -24,6 +24,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Locale;
@@ -563,5 +567,4 @@ public class ProductService {
     return ResponseEntity.ok(new MessageResponse("Cart updated"));
 
   }
-
 }
