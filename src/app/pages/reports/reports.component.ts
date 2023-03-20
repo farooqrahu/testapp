@@ -16,12 +16,12 @@ import {SalesListComponent} from "../../modal/viewsalesform/sales-list.component
 import {SalesInvoiceComponent} from "../../modal/saleinvoice/sales-invoice.component";
 
 @Component({
-  selector: 'app-sales',
-  templateUrl: './sale.orders.component.html',
-  styleUrls: ['./sale.orders.component.scss']
+  selector: 'app-reports',
+  templateUrl: './reports.component.html',
+  styleUrls: ['./reports.component.scss']
 })
-export class SaleOrdersComponent implements OnInit, AfterViewInit {
-  companycolumnsToDisplay = ["id","customerName","mobileNumber", "invoiceNo","createdAt", "action"];
+export class ReportsComponent implements OnInit, AfterViewInit {
+  companycolumnsToDisplay = ["id","customerName","mobileNumber", "invoiceNo","grandTotal","createdAt","action"];
   // saleList =Sale[] = [];
   saleOrdersdatasource: MatTableDataSource<SaleOrders> = null;
   saleOrders: SaleOrders[] = [];

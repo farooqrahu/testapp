@@ -40,5 +40,9 @@ public class SaleController {
   public ResponseEntity<?> findOrders(@Valid @RequestBody ProductRequest productRequest) {
     return saleService.findOrders(productRequest);
   }
+  @PostMapping("/findCustomerByMobileNumber")
+  public ResponseEntity<?> findCustomerByMobileNumber(@Valid @RequestBody SaleRequestList productRequest) {
+    return saleService.findCustomerByMobileNumber(productRequest);
+  }
 
 }

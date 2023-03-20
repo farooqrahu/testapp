@@ -17,6 +17,8 @@ import {Company} from "../../models/compnay.model";
 import {CompanyformComponent} from "../../modal/companyform/companyform.component";
 import {SelectionModel} from "@angular/cdk/collections";
 import {MatTableExporterDirective} from "mat-table-exporter";
+import {AddProductFormComponent} from "../../modal/addproductform/addproductform.component";
+
 @Component({
   selector: 'app-products',
   templateUrl: './products.component.html',
@@ -139,7 +141,7 @@ export class ProductsComponent implements OnInit, AfterViewInit {
     if (product === undefined)
       product = new Product(0, "", "", 0, this.categories[0],this.companies[0], false,0,0,0,0,false,"",null,"",0,0,0)
     const dialogRef = this.dialog.open(ProductformComponent, {
-      width: '530px',
+      width: '550px',
       data: {
         id: product.id, name: product.name, description: product.description,
         price: product.price, category: product.category,company: product.company,quantityItem:product.quantityItem,quantityBundle:product.quantityBundle,extraQuantity:product.extraQuantity

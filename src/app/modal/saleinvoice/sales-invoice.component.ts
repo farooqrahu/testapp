@@ -121,16 +121,54 @@ export class SalesInvoiceComponent implements OnInit {
   ngOnInit() {
   }
 
-  public downloadAsPDF() {
-
-   // const doc = new jsPDF();
-debugger
+  public async downloadAsPDF() {
+    // document.getElementById("myimage").innerHTML="";
+    // const doc = new jsPDF();
+    debugger
     const pdfTable = this.pdfTable.nativeElement;
 
     var html = htmlToPdfmake(pdfTable.innerHTML);
+    const documentDefinition = {   content: [html],
+      margin: [20, 5, 0, 10],
+      styles:{
+        tableCenter: {
+          alignment: 'center',
+          absolutePosition: { x: 10, y: 35 },
+        },
+      rightme:
+          {
+            alignment: 'right'
+          },'html-table':{alignment:'center'},'html-th':{color:'green'},'html-h5':{color:'blue', alignment:'center'}},
+      pageOrientation: 'portrait', pageMargins: [40,60,40,30],
+      footer: function (currentPage, pageCount) {return {table: { widths: [ "*"],body: [[{text: 'Page: ' + currentPage.toString() + ' of ' + pageCount, alignment: 'center'}]]},};},
 
-    const documentDefinition = { content: html,imagesByReference:true };
+    };
     pdfMake.createPdf(documentDefinition).open();
+  }
 
+  getBase64ImageFromURL(url) {
+    return new Promise((resolve, reject) => {
+      var img = new Image();
+      img.setAttribute("crossOrigin", "anonymous");
+
+      img.onload = () => {
+        var canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+
+        var ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0);
+
+        var dataURL = canvas.toDataURL("image/png");
+
+        resolve(dataURL);
+      };
+
+      img.onerror = error => {
+        reject(error);
+      };
+
+      img.src = url;
+    });
   }
 }

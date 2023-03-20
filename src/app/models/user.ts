@@ -15,7 +15,6 @@ export class User {
     public password: string,
     public roles: Role[],
     public name: string,
-    public file: string,
 
   ) { }
 

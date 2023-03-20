@@ -64,9 +64,9 @@ export class ProductformComponent implements OnInit {
     // data = data.price.replace(/,/g, '.')
     this.errors = "";
     if (this.data.price <= 0)
-      this.errors += "price must not be zero or negative. "
+      this.errors += "Price must not be zero or negative. "
     if (this.data.name == null || this.data.name == "")
-      this.errors += "name must not be empty\n"
+      this.errors += "product name must not be empty\n"
     return (this.errors == "")
   }
   save(data: any): any {

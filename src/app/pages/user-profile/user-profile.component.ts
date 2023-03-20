@@ -71,9 +71,7 @@ export class UserProfileComponent implements OnInit {
       job: this.currentUser.job,
       description: this.currentUser.description,
     });
-
   }
-
 
   public onFileChanged(event) {
     //Select File

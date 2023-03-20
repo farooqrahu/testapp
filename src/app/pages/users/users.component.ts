@@ -5,8 +5,10 @@ import {MatTableDataSource} from '@angular/material/table';
 import {Router} from '@angular/router';
 import {User} from 'src/app/models/user';
 import {TokenStorageService} from 'src/app/_services/token-storage.service';
-import {AuthService} from './../../_services/auth.service';
+import {AuthService} from '../../_services/auth.service';
 import Swal from "sweetalert2";
+import {MatDialog} from "@angular/material/dialog";
+import {AdduserformComponent} from "../../modal/adduserform/adduserform.component";
 
 @Component({
   selector: 'app-users',
@@ -17,11 +19,10 @@ export class UsersComponent implements OnInit {
   columnsToDisplay = ["id", "username", "fullname", "email", "status", "roles", "action"];
   users: User[] = null;
   dataSource: MatTableDataSource<User> = null;
-
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  constructor(private token: TokenStorageService, private authService: AuthService, private router: Router) {
+  constructor(private token: TokenStorageService, private authService: AuthService, private router: Router,public dialog: MatDialog) {
   }
 
   ngOnInit() {
@@ -84,6 +85,26 @@ export class UsersComponent implements OnInit {
       }
     })
 
+  }
+
+
+  openDialog(user?: User): void {
+    const dialogRef = this.dialog.open(AdduserformComponent, {
+      width: '530px',
+    });
+    dialogRef.afterClosed().subscribe(res => {
+      if (JSON.stringify(user) != JSON.stringify(res)) {
+        if (user.id != res.id)
+          console.log("error")
+        else {
+          // this.updateProduct(res)
+          // this.refreshproduct()
+        }
+      }
+
+
+
+    });
   }
 
 }

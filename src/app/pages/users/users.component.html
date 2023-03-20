@@ -44,6 +44,7 @@
           <mat-form-field>
             <input matInput type="text" (keyup)="doFilter($event.target.value,'user')" placeholder="Search">
           </mat-form-field>
+          <button (click)="openDialog()" mat-button>Register User</button>
         </div>
         <div class="table-responsive">
           <table mat-table [dataSource]="dataSource" matSort matSortActive="id" matSortDirection="asc"

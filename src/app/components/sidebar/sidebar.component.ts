@@ -22,13 +22,11 @@ export var adminROUTES: RouteInfo[] = [
   { path: '/sale-orders', title: 'View Sales', icon: 'ni-bullet-list-67 text-red', class: '' },
   { path: '/users', title: 'Users', icon: 'ni-bullet-list-67 text-red', class: '' },
   // { path: '/shopping-carts', title: 'Shopping Carts', icon: 'ni-bullet-list-67 text-red', class: '' },
-
+  { path: '/reports', title: 'Reports', icon: 'ni-bullet-list-67 text-red', class: '' },
 ];
 export var ROUTES: RouteInfo[] = [
-  // { path: '/dashboard', title: 'Dashboard',  icon: 'ni-tv-2 text-primary', class: '' },
-  //{ path: '/icons', title: 'Icons',  icon:'ni-planet text-blue', class: '' },
-  // { path: '/maps', title: 'Maps',  icon:'ni-pin-3 text-orange', class: '' },
-
+  { path: '/sales', title: 'Create Sales', icon: 'ni-bullet-list-67 text-red', class: '' },
+  { path: '/sale-orders', title: 'View Sales', icon: 'ni-bullet-list-67 text-red', class: '' },
 
 ];
 

@@ -12,7 +12,6 @@ import {SaleformComponent} from "../../modal/saleform/saleform.component";
 import {Sale} from "../../models/sale.model";
 import {ProductRequest} from "../../models/productrequest.model";
 import {Invoice} from "../../models/invoice.model";
-import {ProductformComponent} from "../../modal/productform/productform.component";
 import {AddProductFormComponent} from "../../modal/addproductform/addproductform.component";
 
 @Component({

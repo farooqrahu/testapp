@@ -54,5 +54,7 @@ export class SaleService {
     // let json = JSON.stringify(data);
     return this.http.post(PRODUCT_SALE_API + 'returnProductSale', {data,id}, httpOptions);
   }
-
+  findCustomerByMobileNumber(mobileNumber?): Observable<any> {
+    return this.http.post(PRODUCT_SALE_API + 'findCustomerByMobileNumber', {mobileNumber}, httpOptions);
+  }
 }

@@ -10,6 +10,7 @@ import {Invoice} from "../../models/invoice.model";
 import * as printJS from "print-js";
 import * as es6printJS from "print-js";
 import * as XLSX from "xlsx";
+import {CustomerModel} from "../../models/Customer.model";
 
 @Component({
   selector: 'app-saleform',
@@ -34,10 +35,12 @@ export class SaleformComponent implements OnInit {
   }
 
   companies: Sale[];
+  customerList: CustomerModel[];
   invoice: Invoice;
   errors: String = "";
   customerName: String = "";
-  mobileNumber: String = "";
+  isOldCustomer: boolean = false;
+  mobileNumber: String = "03";
   mobileNumberError: boolean;
   mobileNumberErrorText: String = "";
 
@@ -59,7 +62,7 @@ export class SaleformComponent implements OnInit {
   }
 
   validateForm():boolean {
-    if(this.customerName==undefined || this.customerName===""){
+    if((this.customerName==undefined || this.customerName==="") && this.isOldCustomer){
     return false;
     }else
     if(this.mobileNumber==undefined || this.mobileNumber===""){
@@ -67,13 +70,11 @@ export class SaleformComponent implements OnInit {
     }else if(this.mobileNumber.length<11){
       return false;
     }
+
     return true;
   }
 
   submitOrder(): any {
-    console.log(this.productSaleList)
-
-
     if (this.productSaleList._sales.length > 0) {
     let isValid=this.validateForm();
       if(isValid){
@@ -146,6 +147,19 @@ export class SaleformComponent implements OnInit {
   validateMobileNumber() {
     if(this.mobileNumber.length<11){
       this.mobileNumberErrorText='Invalid mobile Number!';
+    }else{
+      this.saleService.findCustomerByMobileNumber(this.mobileNumber).subscribe(
+        customer => {
+          this.customerName=customer.name;
+          this.isOldCustomer=true;
+        },
+        err => {
+          if(err.status==400)
+            // this.swAlert("Customer not found!", "Customer");
+          this.customerName="";
+          this.isOldCustomer=false;
+        }
+      );
     }
   }
 }

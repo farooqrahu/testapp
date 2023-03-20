@@ -7,11 +7,15 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { LoginComponent } from '../../pages/login/login.component';
 import { RegisterComponent } from '../../pages/register/register.component';
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatSelectModule} from "@angular/material/select";
 @NgModule({
   imports: [
     CommonModule,
     RouterModule.forChild(AuthLayoutRoutes),
-    FormsModule
+    FormsModule,
+    MatFormFieldModule,
+    MatSelectModule,
     // NgbModule
   ],
   declarations: [

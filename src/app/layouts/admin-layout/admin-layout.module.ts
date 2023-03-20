@@ -26,6 +26,7 @@ import {CategoriesComponent} from "../../pages/categories/categories.component";
 import {CompaniesComponent} from "../../pages/companies/companies.component";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatTableExporterModule} from "mat-table-exporter";
+import {MatTooltipModule} from "@angular/material/tooltip";
 
 // import { ToastrModule } from 'ngx-toastr';
 
@@ -47,7 +48,7 @@ import {MatTableExporterModule} from "mat-table-exporter";
         MatIconModule,
         MatFormFieldModule,
 
-        MatDialogModule, MatCheckboxModule, MatTableExporterModule
+        MatDialogModule, MatCheckboxModule, MatTableExporterModule, MatTooltipModule
     ],
   declarations: [
     DashboardComponent,

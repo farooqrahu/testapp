@@ -19,7 +19,6 @@ import {MatSortModule} from "@angular/material/sort";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {AppRoutingModule} from './app.routing';
 import {ComponentsModule} from './components/components.module';
-import {ProductformComponent} from './modal/productform/productform.component';
 import {MatSelectModule} from '@angular/material/select';
 import {CategoryformComponent} from './modal/categoryform/categoryform.component';
 import {CompanyformComponent} from './modal/companyform/companyform.component';
@@ -41,36 +40,44 @@ import {SalesListComponent} from "./modal/viewsalesform/sales-list.component";
 import {ProductHistoryComponent} from "./pages/producthistory/producthistory.component";
 import {AddProductFormComponent} from "./modal/addproductform/addproductform.component";
 import {SaleListReturn} from "./modal/viewsalesform/sale-list-return";
+import {MatRadioModule} from "@angular/material/radio";
+import {MatAutocompleteModule} from "@angular/material/autocomplete";
+import {AdduserformComponent} from "./modal/adduserform/adduserform.component";
+import {ProductformComponent} from "./modal/productform/productform.component";
+import {ReportsComponent} from "./pages/reports/reports.component";
 
 @NgModule({
-  imports: [
-    BrowserAnimationsModule,
-    BrowserModule,
-    FormsModule,
-    HttpClientModule,
-    ComponentsModule,
-    NgbModule,
-    RouterModule,
-    AppRoutingModule,
-    MatSelectModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatSortModule,
-    MatProgressSpinnerModule,
-    MatButtonModule,
-    MatIconModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatDialogModule,
-    ReactiveFormsModule,
-    MatCheckboxModule,
-    MatListModule,
-    MatTooltipModule,
-  ],
+    imports: [
+        BrowserAnimationsModule,
+        BrowserModule,
+        FormsModule,
+        HttpClientModule,
+        ComponentsModule,
+        NgbModule,
+        RouterModule,
+        AppRoutingModule,
+        MatSelectModule,
+        MatTableModule,
+        MatPaginatorModule,
+        MatSortModule,
+        MatProgressSpinnerModule,
+        MatButtonModule,
+        MatIconModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatDialogModule,
+        ReactiveFormsModule,
+        MatCheckboxModule,
+        MatListModule,
+        MatTooltipModule,
+        MatRadioModule,
+        MatAutocompleteModule,
+    ],
   declarations: [
     AppComponent,
     AdminLayoutComponent,
     AuthLayoutComponent,
+    AdduserformComponent,
     ProductformComponent,
     CategoryformComponent,
     CompanyformComponent,
@@ -87,7 +94,8 @@ import {SaleListReturn} from "./modal/viewsalesform/sale-list-return";
     EditshoppingcartComponent,
     ProductHistoryComponent,
     AddProductFormComponent,
-    SaleListReturn
+    SaleListReturn,
+    ReportsComponent
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,

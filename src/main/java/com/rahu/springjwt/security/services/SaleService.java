@@ -348,4 +348,13 @@ public class SaleService {
     return Optional.ofNullable(bonus).orElse(0L);
   }
 
+
+  public ResponseEntity<?> findCustomerByMobileNumber(SaleRequestList productRequest) {
+    Optional<Customer> customerFound = customerRepository.findByMobileNumber(productRequest.getMobileNumber());
+    if (customerFound.isPresent()) {
+      return ResponseEntity.ok(customerFound);
+    }
+    return ResponseEntity.badRequest().body(new MessageResponse("Error: Customer not found!"));
+  }
+
 }
