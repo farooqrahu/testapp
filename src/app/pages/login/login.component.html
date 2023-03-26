@@ -1,72 +1,321 @@
-<div class="header pb-4 pt-3 pt-lg-4 d-flex align-items-center"
-     style="min-height: 300px; background-image: url(assets/img/theme/hardware1.jpg); background-size: cover; background-position: center top;">
-  <!-- Mask -->
-  <span class="mask bg-gradient-danger opacity-6"></span>
-  <div class="container">
-    <div class="header-body text-center mb-7">
-      <div class="row justify-content-center">
-        <div class="col-lg-5 col-md-6">
-          <h1 class="text-white">Habib Paints & Construction Material</h1>
-          <p class="text-lead text-light">Use your credentials to login or contact administrator to create new account.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="separator separator-bottom separator-skew zindex-100">
-    <svg x="0" y="0" viewBox="0 0 2560 100" preserveAspectRatio="none" version="1.1"
-      xmlns="http://www.w3.org/2000/svg">
-      <polygon class="fill-default" points="2560 0 2560 100 0 100"></polygon>
-    </svg>
-  </div>
-</div>
-<!-- Page content -->
-<div class="container mt--6 pb-3">
-  <div class="row justify-content-center">
-    <div class="col-lg-5 col-md-7">
-      <div class="card bg-secondary shadow border-0">
+<style>
+  ul {
+    list-style-type: none;
+    overflow: hidden;
+  }
 
-        <div class="card-body px-lg-5 py-lg-5">
-          <form *ngIf="!isLoggedIn" name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm"
-            novalidate>
-            <div class="form-group">
-              <label for="username">Username</label>
-              <input type="text" class="form-control" name="username" [(ngModel)]="form.username" required
-                #username="ngModel" />
-              <div class="alert alert-danger" role="alert" *ngIf="username.errors && f.submitted">
-                Username is required!
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="password">Password</label>
-              <input type="password" class="form-control" name="password" [(ngModel)]="form.password"
-                required minlength="6" #password="ngModel" />
-              <div class="alert alert-danger" role="alert" *ngIf="password.errors && f.submitted">
-                <div *ngIf="password.errors.required">Password is required</div>
-                <div *ngIf="password.errors.minlength">
-                  Password must be at least 6 characters
-                </div>
-              </div>
-            </div>
-            <div class="form-group">
-              <button class="btn btn-primary btn-block">
-                Login
-              </button>
-            </div>
-            <div class="form-group">
-              <div class="alert alert-danger" role="alert" *ngIf="f.submitted && isLoginFailed">
-                Login failed: {{ errorMessage }}
-              </div>
-            </div>
-            <div class="form-group">
-              <div class="alert" role="alert" *ngIf="tokenavailable">
-                {{ tokenmessage }}
-              </div>
-            </div>
-          </form>
+  li {
+    float: right;
+  }
 
-          <div class="alert alert-success" *ngIf="isLoggedIn">
-            Logged in.
+  li a {
+    color: #000;
+    display: block;
+    text-align: center;
+    padding: 10px 10px;
+    text-decoration: none;
+    font-size:14px;
+  }
+  li a:hover {
+    text-decoration: underline;
+  }
+  .grid{
+    height:23px;
+    position:relative;
+    bottom:4px;
+  }
+  .signbutton{
+    background-color: #4885ed;
+    color: #fff;
+    border:none;
+    border-radius:3px;
+    padding:7px 10px;
+    position:relative;
+    bottom:7px;
+    font-weight:bold;
+  }
+  .logo{
+    margin-top:200px;
+    margin-bottom:20px;
+  }
+  .bar{
+    margin:0 auto;
+    width:575px;
+    border-radius:30px;
+    border:1px solid #dcdcdc;
+  }
+  .bar:hover{
+    box-shadow: 1px 1px 8px 1px #dcdcdc;
+  }
+  .bar:focus-within{
+    box-shadow: 1px 1px 8px 1px #dcdcdc;
+    outline:none;
+  }
+  .searchbar{
+    height:45px;
+    border:none;
+    width:500px;
+    font-size:16px;
+    outline: none;
+
+  }
+  .voice{
+    height:29px;
+    position:relative;
+    bottom: 3px;
+    left:10px;
+  }
+  .buttons{
+  }
+  .button{
+    background-color: #f5f5f5;
+    border:none;
+    color:#707070;
+    font-size:15px;
+    padding: 10px 20px;
+    margin:5px;
+    border-radius:4px;
+    outline:none;
+  }
+  .button:hover{
+    border: 1px solid #c8c8c8;
+    padding: 9px 19px;
+    color:#808080;
+  }
+  .button:focus{
+    border:1px solid #4885ed;
+    padding: 9px 19px;
+  }
+
+
+</style>
+<div class="content" >
+  <div class="">
+    <div class="slider-box">
+      <div id="slider-wrapper">
+        <div id="jslider-container">
+          <div class="jslider_images">
+            <ul>
+              <li><a href="https://prio-soft.blogspot.com/"><img
+                src="https://static-01.daraz.pk/p/d49c09bd3cab5b4e6d9296de04beba20.jpg"
+                title="Sunset"/></a>A boat with beautiful sunset.
+              </li>
+              <li><a href="#"><img
+                src="https://techin.pk/price/assets/images/models/featured/xcell-view-in-pakistan.jpg?downsize=*:420&output-quality=80"
+                title="Rainbow"/></a></li>
+              <li><a href="#"><img
+                src="https://pisces.bbystatic.com/image2/BestBuy_US/images/products/6344/6344945_sd.jpg"
+                title="True Nature"/></a>Tree in field with blue sky.
+              </li>
+              <li><a href="#"><img
+                src="https://www.cnet.com/a/img/resize/bcae6ebae333efd053a1aad485a7bb54b6c2a584/hub/2021/10/23/b4e8daa4-d3c1-4f4c-9a15-d127246205d9/macbook-pro-2021-cnet-review-15.jpg?auto=webp&fit=crop&height=1200&width=1200"
+                title="Sunrise"/></a>Amaizing sunrise moment
+              </li>
+              <li><a href="#"><img
+                src="https://img.mvideo.ru/Pdb/30038907b.jpg"
+                title="CAR in HDR Nature"/></a></li>
+              <li><a href="#"><img
+                src="https://pisces.bbystatic.com/image2/BestBuy_US/images/products/6523/6523169_sd.jpg"
+                title="Sunshine"/></a></li>
+            </ul>
           </div>
         </div>
       </div>
     </div>
+
+    <!--hero banner section-->
+    <div  ng-controller="CategoryController as categoryControllerVm">
+      <div class="">
+        <div class="container">
+          <div class="row">
+            <div class="col-12 text-center">
+              <div class="tagline">
+                <h1>Window Shopping</h1>
+                <!--                        <h2>welcome visitors.</h2>-->
+              </div>
+              <div class="search_form">
+                <form class="row">
+                  <div class="form-group col-lg-12 ">
+                    <!--                                <input size="80" type="text" class="form-control" placeholder="What are you looking for?">-->
+                    <div class="bar">
+                      <input class="searchbar" type="text" title="Search" placeholder="What are you looking for?">
+                      <img class="voice" src="app/assets/img/search.png" title="Search" alt="">
+                    </div>
+                  </div>
+                  <!--                            <div  class="form-group col-lg-1 col-sm-12">-->
+                  <!--&lt;!&ndash;                                <select class="form-control" >&ndash;&gt;-->
+                  <!--&lt;!&ndash;                                    <option ng-repeat="cat in category track by $index"> {{cat.name}}</option>&ndash;&gt;-->
+                  <!--&lt;!&ndash;                                </select>&ndash;&gt;-->
+                  <!--                            </div>-->
+                  <!--                            <div class="form-group col-lg-5 col-sm-12">-->
+                  <!--&lt;!&ndash;                                <button type="submit" class="custom-button">Search</button>&ndash;&gt;-->
+                  <!--                                <div class="buttons">-->
+                  <!--                                    <button class="custom-button" type="button">Search</button>-->
+                  <!--                                </div>-->
+                  <!--                            </div>-->
+                </form>
+              </div>
+              <div class="popular_searches" ng-controller="SearchTagsController as searchTagsControllerVm" >
+                <div ng-if="searchTags.size>0">Popular Searches:
+<!--                  <a ng-repeat="tags in searchTags track by $index" href="#">{{tags.name}}</a>-->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--Category section-->
+      <div class="category-container">
+        <div class="container">
+          <h2 class="text-center styleh2 karma"><a class="greens" href="#">Categories</a></h2>
+          <div  class="cat-icons">
+            <a ng-repeat="cat in category  track by $index" href="#">
+              <div ng-class="cat.icon">
+<!--                <span  class="text-icon">{{cat.name}}</span>-->
+              </div>
+            </a>
+            <!--  <a href="#">
+                  <div class="mainicon icon maida-phone">
+                      <span class="text-icon">Phones</span>
+                  </div>
+              </a>-->
+            <!--
+            <a href="#">
+                <div class="mainicon icon maida-briefcase">
+                    <span class="text-icon">Job</span>
+                </div>
+            </a>
+            <a href="#">
+                <div class="mainicon icon maida-t-shirt">
+                    <span class="text-icon">Garments</span>
+                </div>
+            </a>
+            <a href="#">
+                <div class="mainicon icon maida-car-1">
+                    <span class="text-icon">Cars</span>
+                </div>
+            </a>
+            <a href="#">
+                <div class="mainicon icon maida-calculator">
+                    <span class="text-icon">Auditors</span>
+                </div>
+            </a>
+            <a href="#">
+                <div class="mainicon icon maida-zoo">
+                    <span class="text-icon">Animals</span>
+                </div>
+            </a>
+            <a href="#">
+                <div class="mainicon icon maida-town-hall">
+                    <span class="text-icon">Finance</span>
+                </div>
+            </a>
+            <a href="#">
+                <div class="mainicon icon maida-art-gallery">
+                    <span class="text-icon">Art</span>
+                </div>
+            </a>
+            <a href="#">
+                <div class="mainicon icon maida-fast-food">
+                    <span class="text-icon">Food</span>
+                </div>
+            </a>
+            <a href="#">
+                <div class="mainicon icon maida-bar">
+                    <span class="text-icon">Club</span>
+                </div>
+            </a>
+            <a href="#">
+                <div class="mainicon icon maida-delivery-transport-2">
+                    <span class="text-icon">Logistics</span>
+                </div>
+            </a>
+            <a href="#">
+                <div class="mainicon icon maida-display">
+                    <span class="text-icon">Electronics</span>
+                </div>
+            </a>
+            <a href="#">
+                <div class="mainicon icon maida-cup">
+                    <span class="text-icon">Cafe</span>
+                </div>
+            </a>
+            <a href="#">
+                <div class="mainicon icon maida-case-medic">
+                    <span class="text-icon">Doctors</span>
+                </div>
+            </a>
+            <a href="#">
+                <div class="mainicon">
+                    <i class="fa fa-film" aria-hidden="true"></i>
+                    <span class="text-icon">Entertainment</span>
+                </div>
+            </a>
+            <a href="#">
+                <div class="mainicon icon maida-soccer">
+                    <span class="text-icon">Games</span>
+                </div>
+            </a>
+
+            <a href="#">
+                <div class="mainicon icon" data-icon="F">
+                    <span class="text-icon">Support</span>
+                </div>
+            </a>
+            <a href="#">
+                <div class="mainicon">
+                    <i class="fa fa-book" aria-hidden="true"></i>
+                    <span class="text-icon">Books</span>
+                </div>
+            </a>
+            <a href="#">
+                <div class="mainicon">
+                    <i class="fa fa-child" aria-hidden="true"></i>
+                    <span class="text-icon">Child Care</span>
+                </div>
+            </a>-->
+            <div class="clearfix"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--Post section-->
+  <div class="post-section" ng-controller="ProductController as productControllerVm">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <h2 class="styleh2 karma text-center">Latest Ads</h2>
+        </div>
+        <div  ng-repeat="prod in product  track by $index" class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-12 margin_10px">
+          <div class="post-box">
+            <div class="thumbnail-holder">
+<!--              <a href="#product?id={{prod.id}}">-->
+<!--                <img ng-src="app/assets/img/{{prod.titleImagePath}}"  alt="iphone">-->
+<!--              </a>-->
+            </div>
+            <div class="post-box-content">
+<!--              <h3><a ui-sref="product">{{prod.name}}</a></h3>-->
+
+              <div class="post-category">
+<!--                <a href="#"> <i class="fa fa-list-alt"></i> {{prod.category.name}}</a>-->
+              </div>
+              <div class="post-location">
+<!--                <a href="#"> <i class="fa fa-location-arrow"></i> {{prod.company.name}}</a>-->
+              </div>
+              <div class="post-meta">
+<!--                <i class="fa fa-dollar"></i>{{prod.price}}-->
+              </div>
+              <div class="clearfix"></div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-12 margin_10px">
+          <div class="text-center">
+            <a href="#" class="custom-button">Load More</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
