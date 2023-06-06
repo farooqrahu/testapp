@@ -207,15 +207,20 @@ public class ProductService {
     if (productRequest.getPrice() == null || productRequest.getPrice() <= 0)
       return ResponseEntity.badRequest().body(new MessageResponse("Error: price must not be empty, zero or negative"));
     Optional<Product> prodFound=productRepository.findById(productRequest.getId());
-    if(prodFound.isPresent()){
-      User user=userDetailsServiceImpl.getUser();
-      ProductHistory productHistory= ProductHistory.builder().quantityItem(prodFound.get().getQuantityItem())
+    Product product=null;
+    if(prodFound.isPresent()) {
+      User user = userDetailsServiceImpl.getUser();
+      ProductHistory productHistory = ProductHistory.builder().quantityItem(prodFound.get().getQuantityItem())
         .quantityBundle(prodFound.get().getQuantityBundle()).extraQuantity(prodFound.get().getExtraQuantity()).quantity(prodFound.get().getQuantity())
         .price(prodFound.get().getPrice()).product(prodFound.get()).category(prodFound.get().getCategory()).company(prodFound.get().getCompany()).name(prodFound.get().getName()).description(prodFound.get().getDescription())
         .updatedByUser(user).build();
       productHistoryRepository.save(productHistory);
+      product = new Product(productRequest);
+      product.setCreatedAt(prodFound.get().getCreatedAt());
+      product.setUpdatedAt(prodFound.get().getUpdatedAt());
+    }else{
+      product = new Product(productRequest);
     }
-    Product product = new Product(productRequest);
 // ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 //    Document document = new Document(new Rectangle(new RectangleReadOnly(400.0F, 240.0F)));
     String fileName = product.getName().toLowerCase(Locale.ROOT).trim() + ".png";
@@ -303,6 +308,7 @@ public class ProductService {
     }
     product.setFiles(fileDB);
     productRepository.save(product);
+
     return ResponseEntity.ok(new MessageResponse("product updated successfully!"));
   }
 

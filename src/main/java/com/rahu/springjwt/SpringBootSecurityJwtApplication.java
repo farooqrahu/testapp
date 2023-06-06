@@ -74,6 +74,7 @@ public class SpringBootSecurityJwtApplication {
   CommandLineRunner init(RoleRepository RoleRepository, UserRepository userRepository,
                          ProductRepository productRepository, CategoryRepository categoryRepository, ProductService productService) {
     return args -> {
+      System.out.println(""+encoder.encode("Admin@123"));
 
       if(userRepository.findByEmailIgnoreCase("farahu2008@gmail.com").isEmpty()){
 
