@@ -11,8 +11,8 @@ import java.util.List;
 
 @Repository
 public interface ProductOrderRepository extends JpaRepository<ProductOrder, Long> {
-  @Query("select p from ProductOrder p where p.isReturned=false")
+  @Query("select p from ProductOrder p")
   List<ProductOrder> findAllByReturnedIsFalse();
-  @Query("select p from ProductOrder p where p.isReturned=false")
+  @Query("select p from ProductOrder p")
   Page<ProductOrder> findAllByReturnedIsFalse(Pageable pageable);
 }

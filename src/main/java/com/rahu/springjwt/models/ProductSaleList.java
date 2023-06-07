@@ -11,8 +11,8 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "productsales")
-public class ProductSale {
+@Table(name = "productsalelist")
+public class ProductSaleList {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,15 +20,12 @@ public class ProductSale {
   @Nullable
   @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
   private Product product;
-  private Long quantity;
-  private Long extra;
-  private Long bundle;
-  private Long quantityReturn;
-  private Long extraReturn;
-  private Long bundleReturn;
+  private Long totalQuantitySale;
+  private Long extraSale;
+  private Long bundleSale;
+  private String detail;
   @Column(columnDefinition = "boolean default false")
   private boolean isReturned = false;
-  private String detail;
   @Nullable
   @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
   private ProductOrder productOrder;

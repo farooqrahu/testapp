@@ -4,6 +4,7 @@ import lombok.*;
 import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Setter
 @Getter
@@ -18,13 +19,14 @@ public class ProductReturn {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
   @Nullable
-  @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
-  private Product product;
-  private Long quantity;
+  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  private Customer customer;
+  private Long invoiceNo;
+  private Double grandTotal;
+  private Long grandTotalQtReturn;
   private String detail;
-  @Nullable
-  @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
-  private ProductOrder productOrder;
+  @OneToMany(mappedBy = "productReturn")
+  private List<ProductReturnList> productReturnList;
 
 
 }

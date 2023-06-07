@@ -1,5 +1,6 @@
 package com.rahu.springjwt.controllers;
 
+import com.rahu.springjwt.payload.request.CompanyRequest;
 import com.rahu.springjwt.payload.request.LoginRequest;
 import com.rahu.springjwt.payload.request.SignupRequest;
 import com.rahu.springjwt.payload.request.UpdateRequest;
@@ -83,5 +84,8 @@ public class AuthController {
 //    System.out.println("Document Generated...!!!!!!");
 //  }
 
-
+  @PostMapping("/getAllRoles")
+  public ResponseEntity<?> getAllRoles() {
+    return userDetailsServiceImpl.getAllRoles();
+  }
 }

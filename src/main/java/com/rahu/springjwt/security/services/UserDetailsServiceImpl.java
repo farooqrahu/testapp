@@ -1,14 +1,11 @@
 package com.rahu.springjwt.security.services;
 
-import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
-
 import com.rahu.springjwt.models.*;
 import com.rahu.springjwt.payload.request.LoginRequest;
 import com.rahu.springjwt.payload.request.SignupRequest;
 import com.rahu.springjwt.payload.request.UpdateRequest;
 import com.rahu.springjwt.payload.response.MessageResponse;
+import com.rahu.springjwt.payload.response.RoleResponse;
 import com.rahu.springjwt.payload.response.UserListResponse;
 import com.rahu.springjwt.payload.response.UserResponse;
 import com.rahu.springjwt.repository.ConfirmationTokenRepository;
@@ -17,8 +14,6 @@ import com.rahu.springjwt.repository.RoleRepository;
 import com.rahu.springjwt.repository.UserRepository;
 import com.rahu.springjwt.security.CustomAuthenticationProvider;
 import com.rahu.springjwt.security.jwt.JwtUtils;
-
-import com.rahu.springjwt.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +31,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -317,5 +316,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
       userNotFound();
     if (!isAdmin() || !Objects.equals(user.get().getId(), userid))
       notAuthorizedError();
+  }
+  public ResponseEntity<?> getAllRoles() {
+    userDetailsServiceImpl.checkAdmin();
+    List<Role> roles = roleRepository.findAll();
+    return ResponseEntity.ok(new RoleResponse(roles));
   }
 }

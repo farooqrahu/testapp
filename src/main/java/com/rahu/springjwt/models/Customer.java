@@ -19,9 +19,12 @@ public class Customer {
   private Long id;
 
   @NotBlank
-  @Column(unique = true)
+  @Column()
   @Size(max = 20)
   private String name;
+  @NotBlank
+  @Column(unique = true)
+  @Size(max = 11)
   private String mobileNumber;
   private String address;
 
