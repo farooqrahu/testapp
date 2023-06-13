@@ -1,5 +1,6 @@
 package com.rahu.springjwt.security.services;
 
+import com.rahu.springjwt.dto.DashboardDto;
 import com.rahu.springjwt.dto.ProductOrderInvoiceDto;
 import com.rahu.springjwt.models.*;
 import com.rahu.springjwt.payload.request.ProductRequest;
@@ -8,6 +9,7 @@ import com.rahu.springjwt.payload.request.SaleRequestList;
 import com.rahu.springjwt.payload.response.MessageResponse;
 import com.rahu.springjwt.payload.response.ProductResponse;
 import com.rahu.springjwt.repository.*;
+import com.rahu.springjwt.util.Utility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +21,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
-import java.util.Comparator;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -65,7 +69,8 @@ public class SaleService {
   public ResponseEntity<?> submitSaleOrder(@Valid SaleRequestList productRequest) {
     userDetailsServiceImpl.checkAdmin();
     if (!productRequest.getData().isEmpty()) {
-      ProductOrder productOrder = productOrderRepository.save(ProductOrder.builder().id(0L).invoiceNo(System.currentTimeMillis()).build());
+      Long invoiceNo = productOrderRepository.findMaxInvoiceNo();
+      ProductOrder productOrder = productOrderRepository.save(ProductOrder.builder().id(0L).invoiceNo(invoiceNo == null ? 1 : invoiceNo + 1).build());
       AtomicReference<Float> grandTotal = new AtomicReference<>(0f);
       productRequest.getData().forEach(saleRequest -> {
         Optional<Product> product = productRepository.findById(saleRequest.getProductId());
@@ -138,11 +143,11 @@ public class SaleService {
     Pageable paging = checkPaging(productRequest);
     if (paging == null) {
       List<ProductOrderInvoiceDto> list = productOrderRepository.findAllByReturnedIsFalse().stream().map(ProductOrderInvoiceDto::factoryProductOrderInvoice).filter(Objects::nonNull).collect(Collectors.toList());
-      list.sort(Comparator.comparing(ProductOrderInvoiceDto::getCreatedAt).reversed());
+//      list.sort(Comparator.comparing(ProductOrderInvoiceDto::getCreatedAt).reversed());
       return ResponseEntity.ok(new ProductResponse(list, ""));
     } else {
       List<ProductOrderInvoiceDto> list = productOrderRepository.findAllByReturnedIsFalse(paging).stream().map(ProductOrderInvoiceDto::factoryProductOrderInvoice).filter(Objects::nonNull).collect(Collectors.toList());
-      list.sort(Comparator.comparing(ProductOrderInvoiceDto::getCreatedAt).reversed());
+//      list.sort(Comparator.comparing(ProductOrderInvoiceDto::getCreatedAt).reversed());
       return ResponseEntity.ok(new ProductResponse(list, ""));
     }
 
@@ -169,8 +174,8 @@ public class SaleService {
       ProductReturn productReturnFound = productReturn.orElseGet(() -> ProductReturn.builder().id(0L).invoiceNo(productOrder.get().getInvoiceNo()).customer(productOrder.get().getCustomer()).grandTotalQtReturn(productReturnRequest.getGrandTotalQtReturn()).build());
       productReturnFound.setGrandTotal(productReturnRequest.getGrandTotal());
       ProductReturn productReturnSaved = returnRepository.save(productReturnFound);
-      AtomicLong quantitySold= new AtomicLong();
-      AtomicLong quantityReturned= new AtomicLong();
+      AtomicLong quantitySold = new AtomicLong();
+      AtomicLong quantityReturned = new AtomicLong();
 
       productReturnRequest.getData().forEach(returnRequest -> {
         Optional<ProductSaleList> productSold = productSaleRepository.findById(returnRequest.getId());
@@ -222,9 +227,9 @@ public class SaleService {
                     productSold.get().setExtraSale(extraReturned);
                   }
                 } else if (extraReturned <= productSold.get().getExtraSale()) {
-                  productSold.get().setExtraSale(productSold.get().getExtraSale()-extraReturned);
-                }else{
-                  productSold.get().setExtraSale(productSold.get().getExtraSale()+productSold.get().getProduct().getQuantityItem()-extraReturned);
+                  productSold.get().setExtraSale(productSold.get().getExtraSale() - extraReturned);
+                } else {
+                  productSold.get().setExtraSale(productSold.get().getExtraSale() + productSold.get().getProduct().getQuantityItem() - extraReturned);
                   productSold.get().setBundleSale(productSold.get().getBundleSale() - 1);
 
                   System.out.println("new cond");
@@ -242,7 +247,7 @@ public class SaleService {
         }
         quantitySold.set(productSold.get().getTotalQuantitySale());
       });
-      if (quantitySold.get()<=0) {
+      if (quantitySold.get() <= 0) {
         productOrder.get().setReturned(Boolean.TRUE);
       }
       productOrder.get().setGrandTotal(productReturnRequest.getGrandTotal());
@@ -357,4 +362,32 @@ public class SaleService {
     return ResponseEntity.badRequest().body(new MessageResponse("Error: Customer not found!"));
   }
 
+  public DashboardDto totalSales() {
+//    String strDate=Utility.formatDate(new Date(),"yyyy-MM-dd");
+//    LocalDateTime dateTimeFrom=Utility.parseStringToLocalDateTime(strDate);
+//    LocalDateTime dateTimeTo=Utility.parseStringToLocalDateTime(strDate);
+    LocalDateTime dateTimeFrom=LocalDateTime.now().minusDays(1);
+    LocalDateTime dateTimeTo=LocalDateTime.now().plusDays(1);
+
+    List<ProductOrder> list = productOrderRepository.findAllByNotReturned(Timestamp.valueOf(dateTimeFrom),Timestamp.valueOf(dateTimeTo));
+    DashboardDto dashboardDto = new DashboardDto();
+    AtomicReference<Double> totalAmount = new AtomicReference<>(0.0);
+    list.forEach(productOrder -> {
+      Double grandTotal = productOrder.getGrandTotal() == null ? 0 : productOrder.getGrandTotal();
+      totalAmount.updateAndGet(v -> v + grandTotal);
+    });
+    dashboardDto.setTotalSales(list.size());
+    dashboardDto.setTotalAmount(totalAmount.get());
+
+    List<ProductOrder> list2 = productOrderRepository.findAllByNotReturned();
+    AtomicReference<Double> grandAmount = new AtomicReference<>(0.0);
+    list2.forEach(productOrder -> {
+      Double grandTotal = productOrder.getGrandTotal() == null ? 0 : productOrder.getGrandTotal();
+      grandAmount.updateAndGet(v -> v + grandTotal);
+    });
+    dashboardDto.setGrandSales(list2.size());
+    dashboardDto.setGrandAmount(grandAmount.get());
+
+    return dashboardDto;
+  }
 }

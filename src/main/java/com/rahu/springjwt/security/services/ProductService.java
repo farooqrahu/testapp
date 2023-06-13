@@ -85,7 +85,7 @@ public class ProductService {
 
   public Pageable checkPaging(ProductRequest productRequest) {
     if (productRequest.getPagesize() > 0 && productRequest.getPagenumber() >= 0) {
-      if (productRequest.getSortdirection() == "desc") {
+      if (productRequest.getSortdirection().equals("desc")) {
         return PageRequest.of(productRequest.getPagenumber(), productRequest.getPagesize(),
           Sort.by(productRequest.getSort()).descending());
       } else {
@@ -99,7 +99,7 @@ public class ProductService {
   public ResponseEntity<?> findAllProducts(ProductRequest productRequest) {
     Pageable paging = checkPaging(productRequest);
     if (paging == null)
-      return ResponseEntity.ok(new ProductResponse(productRepository.findAll().stream().map(ProductDto::factoryProduct).collect(Collectors.toList())));
+      return ResponseEntity.ok(new ProductResponse(productRepository.findAllByCreateDate().stream().map(ProductDto::factoryProduct).collect(Collectors.toList())));
     return ResponseEntity.ok(new ProductResponse(productRepository.findAll(paging).stream().map(ProductDto::factoryProduct).collect(Collectors.toList())));
   }
 
@@ -268,7 +268,7 @@ public class ProductService {
 
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     BitmapCanvasProvider canvas = new BitmapCanvasProvider(baos, "image/x-png", 300, BufferedImage.TYPE_BYTE_BINARY, false, 0);
-    code128.generateBarcode(canvas, "RS: "+ new  DecimalFormat("#.##").format(product.getPrice()));
+    code128.generateBarcode(canvas, product.getName().toUpperCase(Locale.ROOT)+" :RS: "+ new  DecimalFormat("#.##").format(product.getPrice()));
     canvas.finish();
 
 //write to png file

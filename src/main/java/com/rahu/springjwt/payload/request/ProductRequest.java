@@ -13,8 +13,8 @@ public class ProductRequest {
   private String description;
   private Float price;
   private boolean images;
-  private String sort = "id";
-  private String sortdirection = "asc";
+  private String sort = "createdAt";
+  private String sortdirection = "desc";
   private int pagesize = 0;
   private int pagenumber = 0;
   private Long quantityItem;

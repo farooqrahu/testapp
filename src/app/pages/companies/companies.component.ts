@@ -20,8 +20,7 @@ import {MatTableExporterDirective} from "mat-table-exporter";
 })
 export class CompaniesComponent implements OnInit, AfterViewInit {
   columnsToDisplay = ["id", 'name', "price","quantity", "description", "category", "action"];
-  categorycolumnsToDisplay = ["id", 'name', "action"];
-  companycolumnsToDisplay = ["id", 'name', "action"];
+  companycolumnsToDisplay = ["id", 'name','createdAt', "action"];
 
   dataSource: MatTableDataSource<Product> = null;
   @ViewChild("exporter") exporter! : MatTableExporterDirective;

@@ -20,8 +20,8 @@ import {AddProductFormComponent} from "../../modal/addproductform/addproductform
   styleUrls: ['./sales.component.scss']
 })
 export class SalesComponent implements OnInit, AfterViewInit {
-  columnsToDisplay = ["id", 'name', "price", "quantity", "description", "category", "action"];
-  companycolumnsToDisplay = ["id", 'name', "category", "company", "quantity", "action"];
+  columnsToDisplay = ["id", 'name', "price", "quantity", "description", "category",'createdAt', "action"];
+  companycolumnsToDisplay = ["id", 'name', "category", "company", "quantity",'createdAt', "action"];
   // saleList =Sale[] = [];
   dataSource: MatTableDataSource<Product> = null;
   salesdatasource: MatTableDataSource<Sale> = null;

@@ -164,7 +164,7 @@ export class ProductsComponent implements OnInit, AfterViewInit {
   }
   viewDialog(product?: Product): void {
     const dialogRef = this.dialog.open(BarcodeComponent, {
-      width: '820px',
+      width: '920px',
       data: {
         id: product.id, file: product.file
       }

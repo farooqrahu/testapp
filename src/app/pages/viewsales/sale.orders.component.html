@@ -29,7 +29,7 @@
           </mat-paginator>
         </div>
         <div class="table-responsive">
-          <table mat-table [dataSource]="saleOrdersdatasource" matSort matSortActive="id" matSortDirection="desc" matSort
+          <table mat-table [dataSource]="saleOrdersdatasource" matSort matSortActive="createdAt" matSortDirection="desc" matSort
                  class="mat-elevation-z8 demo-table">
             <ng-container matColumnDef="id">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>No.</th>
