@@ -1,7 +1,7 @@
 import { Role } from './models/role.model';
 import { Component, OnInit } from '@angular/core';
 import { TokenStorageService } from './_services/token-storage.service';
-import { Router } from "@angular/router";
+import {NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router, RouterEvent} from "@angular/router";
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -23,8 +23,29 @@ export class AppComponent implements OnInit {
   country: string;
   job: string;
   description: string;
-  constructor(private tokenStorageService: TokenStorageService, private router: Router) { }
+  public showOverlay = true;
+  constructor(private tokenStorageService: TokenStorageService, private router: Router) {
+    router.events.subscribe((event: RouterEvent) => {
+      this.navigationInterceptor(event)
+    })
+  }
+  // Shows and hides the loading spinner during RouterEvent changes
+  navigationInterceptor(event: RouterEvent): void {
+    if (event instanceof NavigationStart) {
+      this.showOverlay = true;
+    }
+    if (event instanceof NavigationEnd) {
+      this.showOverlay = false;
+    }
 
+    // Set loading state to false in both of the below events to hide the spinner in case a request fails
+    if (event instanceof NavigationCancel) {
+      this.showOverlay = false;
+    }
+    if (event instanceof NavigationError) {
+      this.showOverlay = false;
+    }
+  }
   ngOnInit(): void {
     this.isLoggedIn = !!this.tokenStorageService.getToken();
 

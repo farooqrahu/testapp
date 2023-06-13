@@ -18,8 +18,8 @@
         <div class="card-header bg-transparent border-0">
           <h3 class="mb-0">Orders</h3>
         </div>
-        <div>
-          Search
+        <div style="margin-left:1%">
+
           <mat-form-field>
             <input matInput (change)="loadproductresults()" #productsearch type="text"
                    (keyup)="doFilter($event.target.value,'product')" placeholder="Search">

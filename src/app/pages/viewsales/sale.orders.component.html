@@ -16,20 +16,20 @@
     <div class="col">
       <div class="card shadow">
         <div class="card-header bg-transparent border-0">
-          <h3 class="mb-0">Orders</h3>
+          <h3 class="mb-0">View Sales</h3>
         </div>
-        <div>
-          Search
+        <div style="margin-left:1%">
           <mat-form-field>
             <input matInput (change)="loadproductresults()" #productsearch type="text"
                    (keyup)="doFilter($event.target.value,'saleOrders')" placeholder="Search">
           </mat-form-field>
-<!--          <button class="mat-button mat-raised-button mat-primary" (click)="submitOrder()" mat-button>Submit Order</button>-->
+          <!--          <button class="mat-button mat-raised-button mat-primary" (click)="submitOrder()" mat-button>Submit Order</button>-->
           <mat-paginator [pageSize]="10" [pageSizeOptions]="[2, 4, 6, 10, 20]">
           </mat-paginator>
         </div>
         <div class="table-responsive">
-          <table mat-table [dataSource]="saleOrdersdatasource" matSort matSortActive="createdAt" matSortDirection="desc" matSort
+          <table mat-table [dataSource]="saleOrdersdatasource" matSort matSortActive="createdAt" matSortDirection="desc"
+                 matSort
                  class="mat-elevation-z8 demo-table">
             <ng-container matColumnDef="id">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>No.</th>
@@ -54,9 +54,13 @@
             <ng-container matColumnDef="action">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Actions</th>
               <td mat-cell *matCellDef="let saleOrders">
-                <button  [disabled]="saleOrders.returned"  mat-button class="mat-button mat-raised-button mat-primary"  (click)="openDialog(saleOrders)">Return</button>
-                &nbsp;<button  mat-button  class="mat-button mat-raised-button mat-raised-button" (click)="printDialog(saleOrders)">View Invoice <span class="material-icons">receipt</span></button>
-<!--                <button  mat-button (click)="deleteCompany(saleOrders,$event)">Delete</button>-->
+                <button [disabled]="saleOrders.returned" mat-button class="mat-button mat-raised-button mat-primary"
+                        (click)="openDialog(saleOrders)">Return
+                </button>
+                &nbsp;<button mat-button class="mat-button mat-raised-button mat-raised-button"
+                              (click)="printDialog(saleOrders)">View Invoice <span class="material-icons">receipt</span>
+              </button>
+                <!--                <button  mat-button (click)="deleteCompany(saleOrders,$event)">Delete</button>-->
               </td>
             </ng-container>
             <tr mat-header-row *matHeaderRowDef="companycolumnsToDisplay"></tr>

@@ -77,12 +77,11 @@ export class CompaniesComponent implements OnInit, AfterViewInit {
   messagebox(body: string, title?: string) {
     if (title === undefined)
       title = "Notice"
-    const dialogRef = this.dialog.open(MessageboxComponent, {
-      width: '350px',
-      data: {
-        title: title, body: body
-      }
-    });
+    Swal.fire(
+      title,
+      body,
+      'success'
+    )
   }
 
 

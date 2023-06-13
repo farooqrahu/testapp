@@ -9,6 +9,7 @@ import {TokenStorageService} from 'src/app/_services/token-storage.service';
 import {MatDialog} from '@angular/material/dialog';
 import {MatPaginator} from '@angular/material/paginator';
 import {MessageboxComponent} from 'src/app/modal/messagebox/messagebox.component';
+import Swal from "sweetalert2";
 
 @Component({
   selector: 'app-shopping-carts',
@@ -78,12 +79,11 @@ export class ShoppingCartsComponent implements OnInit {
   messagebox(body: string, title?: string) {
     if (title === undefined)
       title = "Notice"
-    const dialogRef = this.dialog.open(MessageboxComponent, {
-      width: '350px',
-      data: {
-        title: title, body: body
-      }
-    });
+    Swal.fire(
+      title,
+      body,
+      'success'
+    )
   }
   viewshoppingcart(shoppingcart: any) {
     const dialogRef = this.dialog.open(InvoiceComponent, {
