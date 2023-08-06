@@ -9,7 +9,7 @@
     <div class="col-md-6 col-6">
       <mat-form-field appearance="fill">
         <mat-label>Product Name</mat-label>
-        <input matInput   [(ngModel)]="data.name" cdkFocusInitial required>
+        <input matInput   minlength="2" maxlength="25" [(ngModel)]="data.name" cdkFocusInitial required>
       </mat-form-field>
 
       <section class="example-section">
@@ -17,7 +17,7 @@
       </section>
       <mat-form-field appearance="fill">
         <mat-label>Quantity Item - Sheet</mat-label>
-        <input [disabled]="data.enableTQ" type="number" matInput (change)="validate(data);calculateQty(data)" [(ngModel)]="data.quantityItem" required>
+        <input  [disabled]="data.enableTQ" type="number" matInput (change)="validate(data);calculateQty(data);validate(data)" [(ngModel)]="data.quantityItem" required>
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Quantity Bundle</mat-label>
@@ -41,7 +41,7 @@
 
       <mat-form-field appearance="fill">
         <mat-label>Product Description</mat-label>
-        <textarea matInput  [(ngModel)]="data.description" cdkTextareaAutosize
+        <textarea  minlength="10" maxlength="100" matInput  [(ngModel)]="data.description" cdkTextareaAutosize
                   #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="5" cdkAutosizeMaxRows="20"></textarea>
       </mat-form-field>
       <mat-form-field appearance="fill">

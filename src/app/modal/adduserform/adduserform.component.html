@@ -20,7 +20,30 @@
       </div>
     </div>
   </mat-form-field>
-
+  <mat-form-field appearance="fill">
+    <mat-label>Full Name</mat-label>
+    <input matInput [(ngModel)]="form.name" required minlength="3"
+           maxlength="20" #name="ngModel"/>
+    <div class="alert-danger" *ngIf="name.errors && f.submitted">
+      <div *ngIf="name.errors.required">Full Name is required</div>
+      <div *ngIf="name.errors.minlength">
+        Minimum 3 characters in Full Name
+      </div>
+      <div *ngIf="username.errors.maxlength">
+        Maximum 20 characters in Username
+      </div>
+    </div>
+  </mat-form-field>
+  <br/>
+  <mat-form-field appearance="fill">
+    <mat-label>Select Role</mat-label>
+    <mat-select id="role" [(ngModel)]="form.role.id" required
+                #role="ngModel">
+      <mat-option *ngFor="let role of roles" [value]="role.id">
+        {{role.name}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
   <mat-form-field appearance="fill">
     <mat-label>Email</mat-label>
     <input matInput [(ngModel)]="form.email" required email
@@ -32,15 +55,7 @@
       </div>
     </div>
   </mat-form-field>
-  <mat-form-field appearance="fill">
-    <mat-label>Select Role</mat-label>
-    <mat-select id="role" [(ngModel)]="form.role.id" required
-                #role="ngModel">
-      <mat-option *ngFor="let role of roles" [value]="role.id">
-        {{role.name.replace("_"," ")}}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
+
 <br/>
   <mat-form-field appearance="fill">
     <mat-label>Password</mat-label>

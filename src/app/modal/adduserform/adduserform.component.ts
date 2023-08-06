@@ -14,6 +14,7 @@ import {Product} from "../../models/product.model";
 export class AdduserformComponent implements OnInit {
   form: any = {
     username: null,
+    name: null,
     email: null,
     password: null,
     password2: null,
@@ -51,9 +52,9 @@ export class AdduserformComponent implements OnInit {
 
   onSubmit(): void {
     console.log("submit")
-    const {username, email, password} = this.form;
+    const {username,name, email, password,role} = this.form;
     debugger;
-    this.userService.register(username, email, password).subscribe(
+    this.userService.register(username, name,email, password,role.id).subscribe(
       data => {
         (data);
         this.isSuccessful = true;
@@ -63,7 +64,8 @@ export class AdduserformComponent implements OnInit {
           'New Account created successfully!',
           'success'
         )
-        this.router.navigate(['/users']);
+        // this.router.navigate(['/users']);
+        this.dialogRef.close();
       },
       err => {
         this.errorMessage = err.error.message;

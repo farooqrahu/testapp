@@ -138,10 +138,10 @@ export class SalesInvoiceComponent implements OnInit {
       rightme:
           {
             alignment: 'right'
-          },'html-table':{alignment:'center'},'html-th':{color:'green'},'html-h5':{color:'blue', alignment:'center'}},
+          },'html-table':{alignment:'center'},'html-h1':{ alignment:'center'}},
       pageOrientation: 'portrait', pageMargins: [40,60,40,30],
-      footer: function (currentPage, pageCount) {return {table: { widths: [ "*"],body: [[{text: 'Page: ' + currentPage.toString() + ' of ' + pageCount, alignment: 'center'}]]},};},
-
+      // footer: function (currentPage, pageCount) {return {table: { widths: [ "*"],body: [[{text: 'Page: ' + currentPage.toString() + ' of ' + pageCount, alignment: 'center'}]]},};},
+    //
     };
     pdfMake.createPdf(documentDefinition).open();
   }
@@ -171,4 +171,8 @@ export class SalesInvoiceComponent implements OnInit {
       img.src = url;
     });
   }
+  printPos(){
+
+  }
+
 }

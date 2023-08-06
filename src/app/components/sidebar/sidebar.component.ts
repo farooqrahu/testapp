@@ -24,9 +24,15 @@ export var adminROUTES: RouteInfo[] = [
   // { path: '/shopping-carts', title: 'Shopping Carts', icon: 'ni-bullet-list-67 text-red', class: '' },
   { path: '/reports', title: 'Reports', icon: 'ni-bullet-list-67 text-red', class: '' },
 ];
-export var ROUTES: RouteInfo[] = [
+export var SALES_MAN_ROUT: RouteInfo[] = [
   { path: '/sales', title: 'Create Sales', icon: 'ni-bullet-list-67 text-red', class: '' },
   { path: '/sale-orders', title: 'View Sales', icon: 'ni-bullet-list-67 text-red', class: '' },
+
+];
+export var ROUTES: RouteInfo[] = [
+  { path: '/products', title: 'Products', icon: 'ni-bullet-list-67 text-red', class: '' },
+  { path: '/categories', title: 'Categories', icon: 'ni-bullet-list-67 text-red', class: '' },
+  { path: '/companies', title: 'Companies', icon: 'ni-bullet-list-67 text-red', class: '' },
 
 ];
 
@@ -48,11 +54,14 @@ export class SidebarComponent implements OnInit {
     this.islogged = this.tokenStorage.getUser() != null;
     this.loadImage();
     if (this.islogged)
-      if (this.tokenStorage.isAdmin())
+      if (this.tokenStorage.isAdmin()){
         this.menuItems = adminROUTES.filter(menuItem => menuItem);
-      else
+      }
+      else if (this.tokenStorage.isSalesMan()) {
+        this.menuItems = SALES_MAN_ROUT.filter(menuItem => menuItem);
+      }else  if (this.tokenStorage.isDEO()) {
         this.menuItems = ROUTES.filter(menuItem => menuItem);
-
+      }
     else (this.logout())
     this.router.events.subscribe((event) => {
       this.isCollapsed = true;

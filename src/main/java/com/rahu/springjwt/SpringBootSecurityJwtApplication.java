@@ -79,8 +79,8 @@ public class SpringBootSecurityJwtApplication {
 
 
       Role r1 = new Role(ERole.ROLE_ADMIN);
-      Role r2 = new Role(ERole.ROLE_MODERATOR);
-      Role r3 = new Role(ERole.ROLE_USER);
+      Role r2 = new Role(ERole.ROLE_SALES_MAN);
+      Role r3 = new Role(ERole.ROLE_DEO);
 
       RoleRepository.save(r1);
       RoleRepository.save(r2);

@@ -41,6 +41,9 @@ export class CompaniesComponent implements OnInit, AfterViewInit {
     return new Array(i);
   }
   ngOnInit() {
+    if (!(this.token.isAdmin() || this.token.isDEO())) {
+      this.token.signOut();
+    }
     this.getAllCompanies();
   }
 

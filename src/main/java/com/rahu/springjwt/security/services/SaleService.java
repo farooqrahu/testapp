@@ -22,7 +22,9 @@ import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -366,18 +368,32 @@ public class SaleService {
 //    String strDate=Utility.formatDate(new Date(),"yyyy-MM-dd");
 //    LocalDateTime dateTimeFrom=Utility.parseStringToLocalDateTime(strDate);
 //    LocalDateTime dateTimeTo=Utility.parseStringToLocalDateTime(strDate);
-    LocalDateTime dateTimeFrom=LocalDateTime.now().minusDays(1);
-    LocalDateTime dateTimeTo=LocalDateTime.now().plusDays(1);
+    LocalDate dateTimeFrom=LocalDate.now();
+    LocalDate dateTimeTo=LocalDate.now().plusDays(1);
+    //default time zone
+    ZoneId defaultZoneId = ZoneId.systemDefault();
 
-    List<ProductOrder> list = productOrderRepository.findAllByNotReturned(Timestamp.valueOf(dateTimeFrom),Timestamp.valueOf(dateTimeTo));
+    List<ProductOrder> list = productOrderRepository.findAllByNotReturned(Date.from(dateTimeFrom.atStartOfDay(defaultZoneId).toInstant()),Date.from(dateTimeTo.atStartOfDay(defaultZoneId).toInstant()));
     DashboardDto dashboardDto = new DashboardDto();
-    AtomicReference<Double> totalAmount = new AtomicReference<>(0.0);
+    AtomicReference<Double> todayAmount = new AtomicReference<>(0.0);
+    AtomicReference<Double> todayReturnAmount = new AtomicReference<>(0.0);
+    AtomicReference<Long> todaySaleCount = new AtomicReference<>(0L);
+    AtomicReference<Long> todayReturnCount = new AtomicReference<>(0L);
     list.forEach(productOrder -> {
-      Double grandTotal = productOrder.getGrandTotal() == null ? 0 : productOrder.getGrandTotal();
-      totalAmount.updateAndGet(v -> v + grandTotal);
+      Double totalAmount = productOrder.getGrandTotal() == null ? 0 : productOrder.getGrandTotal();
+      if(!productOrder.isReturned()){
+        todayAmount.updateAndGet(v -> v + totalAmount);
+        todaySaleCount.updateAndGet(v -> v +1);
+      }else{
+        todayReturnAmount.updateAndGet(v -> v + totalAmount);
+        todayReturnCount.updateAndGet(v -> v +1);
+      }
     });
-    dashboardDto.setTotalSales(list.size());
-    dashboardDto.setTotalAmount(totalAmount.get());
+    dashboardDto.setTodaySaleCount(todaySaleCount.get());
+    dashboardDto.setTodayAmount(todayAmount.get());
+
+    dashboardDto.setTodayReturnCount(todayReturnCount.get());
+    dashboardDto.setTodayReturnAmount(todayReturnAmount.get());
 
     List<ProductOrder> list2 = productOrderRepository.findAllByNotReturned();
     AtomicReference<Double> grandAmount = new AtomicReference<>(0.0);
@@ -385,8 +401,8 @@ public class SaleService {
       Double grandTotal = productOrder.getGrandTotal() == null ? 0 : productOrder.getGrandTotal();
       grandAmount.updateAndGet(v -> v + grandTotal);
     });
-    dashboardDto.setGrandSales(list2.size());
-    dashboardDto.setGrandAmount(grandAmount.get());
+    dashboardDto.setTotalSaleCount((long)list2.size());
+    dashboardDto.setTotalAmount(grandAmount.get());
 
     return dashboardDto;
   }

@@ -57,9 +57,9 @@
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Username</th>
               <td mat-cell *matCellDef="let user">{{user.username}}</td>
             </ng-container>
-            <ng-container matColumnDef="fullname">
+            <ng-container matColumnDef="name">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Full name</th>
-              <td mat-cell *matCellDef="let user">{{user.surname}} {{user.name}}</td>
+              <td mat-cell *matCellDef="let user">{{user.name}} </td>
             </ng-container>
             <ng-container matColumnDef="email">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
@@ -79,11 +79,11 @@
                     <li *ngIf="role.name=='ROLE_ADMIN'">
                       Admin,
                     </li>
-                    <li *ngIf="role.name=='ROLE_MODERATOR'">
-                      Mod,
+                    <li *ngIf="role.name=='ROLE_DEO'">
+                      DEO,
                     </li>
-                    <li *ngIf="role.name=='ROLE_USER'">
-                      User
+                    <li *ngIf="role.name=='ROLE_SALES_MAN'">
+                      SalesMan
                     </li>
                   </ul>
                 </div>

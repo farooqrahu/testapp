@@ -16,7 +16,7 @@ import {AdduserformComponent} from "../../modal/adduserform/adduserform.componen
   styleUrls: ['./users.component.css']
 })
 export class UsersComponent implements OnInit {
-  columnsToDisplay = ["id", "username", "fullname", "email", "status", "roles", "action"];
+  columnsToDisplay = ["id", "username", "name", "email", "status", "roles", "action"];
   users: User[] = null;
   dataSource: MatTableDataSource<User> = null;
   @ViewChild(MatSort) sort: MatSort;
@@ -93,14 +93,16 @@ export class UsersComponent implements OnInit {
       width: '530px',
     });
     dialogRef.afterClosed().subscribe(res => {
-      if (JSON.stringify(user) != JSON.stringify(res)) {
-        if (user.id != res.id)
-          console.log("error")
-        else {
+      console.log("user registered!")
+      // if (JSON.stringify(user) != JSON.stringify(res)) {
+      //   if (user.id != res.id)
+      //     console.log("error")
+      //   else {
+          this.getAllUsers();
           // this.updateProduct(res)
           // this.refreshproduct()
-        }
-      }
+        // }
+      // }
 
 
 

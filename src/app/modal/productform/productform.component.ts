@@ -67,6 +67,20 @@ export class ProductformComponent implements OnInit {
       this.errors += "Price must not be zero or negative. "
     if (this.data.name == null || this.data.name == "")
       this.errors += "product name must not be empty\n"
+    let qtyItem = Number(data.quantityItem) || 0;
+    let bundle = Number(this.data.quantityBundle) || 0;
+    if(qtyItem>10000000){
+      this.errors+= "qtyItem can not exceed 50\n"
+    }
+    if(bundle>10000){
+      this.errors+= "Bundle can not exceed 50\n"
+    }
+    if(data.enableTQ){
+      let total = Number(this.data.quantity) || 0;
+      if(total>10000000){
+        this.errors+= "Total quantity can not exceed 10000\n"
+      }
+    }
     return (this.errors == "")
   }
   save(data: any): any {

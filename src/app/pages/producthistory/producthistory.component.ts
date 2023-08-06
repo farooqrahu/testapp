@@ -82,6 +82,9 @@ export class ProductHistoryComponent implements OnInit, AfterViewInit {
     )
   }
   ngOnInit() {
+    if (!(this.token.isAdmin() || this.token.isDEO())) {
+      this.token.signOut();
+    }
     this.refreshproduct();
   }
 

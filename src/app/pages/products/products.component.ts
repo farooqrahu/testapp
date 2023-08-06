@@ -99,6 +99,9 @@ export class ProductsComponent implements OnInit, AfterViewInit {
     )
   }
   ngOnInit() {
+    if (!(this.token.isAdmin() || this.token.isDEO())) {
+      this.token.signOut();
+    }
      // this.productsearch.nativeElement=""
     this.refreshproduct();
     this.getAllCompanies();

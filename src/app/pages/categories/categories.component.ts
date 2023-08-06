@@ -45,6 +45,9 @@ export class CategoriesComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+    if (!(this.token.isAdmin() || this.token.isDEO())) {
+      this.token.signOut();
+    }
     this.getAllCategories();
   }
 

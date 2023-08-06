@@ -32,13 +32,15 @@ export class UserService {
   getAllRoles(): Observable<any> {
     return this.http.post(AUTH_API + 'getAllRoles', {}, httpOptions);
   }
-  register(username: string, email: string, password: string): Observable<any> {
-    debugger;
-    console.log("submit nser")
+  register(username: string,name: string, email: string, password: string,roleId: any): Observable<any> {
+    // debugger;
+    console.log("role.id"+roleId)
     return this.http.post(AUTH_API + 'register', {
       username,
+      name,
       email,
-      password
+      password,
+      roleId
     }, httpOptions);
   }
 }

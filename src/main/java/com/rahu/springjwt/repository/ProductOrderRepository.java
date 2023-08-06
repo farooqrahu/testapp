@@ -9,7 +9,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -23,10 +25,10 @@ public interface ProductOrderRepository extends JpaRepository<ProductOrder, Long
   @Query("select max(p.invoiceNo) from ProductOrder p ")
   Long findMaxInvoiceNo();
 
-  @Query("select o from ProductOrder o where o.isReturned=false and o.createdAt between ?1 and ?2")
-  List<ProductOrder> findAllByNotReturned(Timestamp createdAt, Timestamp at);
+  @Query("select o from ProductOrder o where o.createdAt between ?1 and ?2")
+  List<ProductOrder> findAllByNotReturned(Date startDate, Date endDate);
 
-  @Query("select o from ProductOrder o where o.isReturned=false")
+  @Query("select o from ProductOrder o ")
   List<ProductOrder> findAllByNotReturned();
 
 }

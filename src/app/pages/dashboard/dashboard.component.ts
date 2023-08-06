@@ -26,10 +26,13 @@ export class DashboardComponent implements OnInit {
   public salesChart;
   public clicked: boolean = true;
   public clicked1: boolean = false;
-  public totalSales=0;
+  public todaySaleCount=0;
+  public todayAmount=0;
+  public todayReturnCount=0;
+  public todayReturnAmount=0;
+
+  public totalSaleCount=0;
   public totalAmount=0;
-  public grandSales=0;
-  public grandAmount=0;
   public params;
   public currentDate=new Date();
   constructor(public dashboardService: DashboardService, private token: TokenStorageService
@@ -73,10 +76,14 @@ export class DashboardComponent implements OnInit {
         // console.log("dashboardService")
         // console.log(data)
           this.params =  JSON.parse(data);
-        this.totalSales=this.params.totalSales;
-        this.totalAmount=this.params.totalAmount;
-        this.grandSales=this.params.grandSales;
-        this.grandAmount=this.params.grandAmount;
+        this.todaySaleCount=this.params.todaySaleCount;
+        this.todayAmount=this.params.todayAmount;
+
+        this.todayReturnCount=this.params.todayReturnCount;
+        this.todayReturnAmount=this.params.todayReturnAmount;
+
+        this.totalSaleCount=this.params.totalSaleCount;
+        this.totalAmount = this.params.totalAmount;
       },
       err => {
         (err);

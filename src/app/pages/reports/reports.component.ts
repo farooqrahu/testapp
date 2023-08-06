@@ -73,6 +73,9 @@ export class ReportsComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+    if (!(this.token.isAdmin())) {
+      this.token.signOut();
+    }
     this.refreshproduct();
   }
 

@@ -29,6 +29,9 @@ public dialog: MatDialog
   constructor(private authService: AuthService,private router: Router,   private tokenStorage: TokenStorageService) { }
 
   ngOnInit(): void {
+    if (!(this.tokenStorage.isAdmin())) {
+      this.tokenStorage.signOut();
+    }
     // if(this.tokenStorage.getUser()!=null)
     // this.router.navigate(['/user-profile']);
   // this.getAllRoles();

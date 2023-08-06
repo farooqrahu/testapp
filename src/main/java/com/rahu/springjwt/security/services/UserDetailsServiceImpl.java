@@ -154,10 +154,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
       return ResponseEntity.badRequest()
           .body(new MessageResponse("Error: Password must not be empty or less than 6 characters"));
 
-    User user = new User(signUpRequest.getUsername(), signUpRequest.getEmail(),
+    User user = new User(signUpRequest.getUsername(),signUpRequest.getName(), signUpRequest.getEmail(),
         encoder.encode(signUpRequest.getPassword()));
     Set<Role> roles = new HashSet<>();
-    Role userRole = roleRepository.findByName(ERole.ROLE_USER).get();
+    Role userRole = roleRepository.findById(signUpRequest.getRoleId()).get();
     roles.add(userRole);
     user.setRoles(roles);
     user.setStatus("Activated");
