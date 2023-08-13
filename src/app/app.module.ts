@@ -45,6 +45,7 @@ import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {AdduserformComponent} from "./modal/adduserform/adduserform.component";
 import {ProductformComponent} from "./modal/productform/productform.component";
 import {ReportsComponent} from "./pages/reports/reports.component";
+import {PosReceiptComponent} from "./modal/posreciept/pos.receipt.component";
 
 @NgModule({
     imports: [
@@ -95,7 +96,8 @@ import {ReportsComponent} from "./pages/reports/reports.component";
     ProductHistoryComponent,
     AddProductFormComponent,
     SaleListReturn,
-    ReportsComponent
+    ReportsComponent,
+    PosReceiptComponent
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,

@@ -17,13 +17,13 @@ import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import htmlToPdfmake from 'html-to-pdfmake';
-import {PosReceiptComponent} from "../posreciept/pos.receipt.component";
+import {SalesInvoiceComponent} from "../saleinvoice/sales-invoice.component";
 @Component({
-  selector: 'app-sales-invoice',
-  templateUrl: './sales-invoice.component.html',
-  styleUrls: ['./sales-invoice.component.css']
+  selector: 'pos-receipt-invoice',
+  templateUrl: './pos.receipt.component.html',
+  styleUrls: ['./pos.receipt.component.css']
 })
-export class SalesInvoiceComponent implements OnInit {
+export class PosReceiptComponent implements OnInit {
 
 
   sales: Sale[] = [];
@@ -174,37 +174,6 @@ export class SalesInvoiceComponent implements OnInit {
   }
   printPos(){
 
-  }
-
-  printPosDialog(saleOrders?: SaleOrders): void {
-    if ( saleOrders === undefined)
-      saleOrders = new SaleOrders(0, "","","",  0,0,0, null, null, null,null,null)
-    const dialogRef = this.dialog.open(PosReceiptComponent, {
-      data: {
-        id: saleOrders.id,
-        customerName:saleOrders.customerName,
-        mobileNumber:saleOrders.mobileNumber,
-        invoiceNo:saleOrders.invoiceNo,
-        grandTotal:saleOrders.grandTotal,
-        totalQuantity:saleOrders.totalQuantity,
-        createdAt: saleOrders.createdAt,
-        productSales:saleOrders.productSales,
-      }
-    });
-    let printElement = document.getElementById("invoice-POS");
-    var printWindow = window.open('', 'PRINT');
-    printWindow.document.write(document.documentElement.innerHTML);
-    setTimeout(() => { // Needed for large documents
-      printWindow.document.body.style.margin = '0 0';
-      printWindow.document.body.innerHTML = printElement.outerHTML;
-      printWindow.document.close(); // necessary for IE >= 10
-      printWindow.focus(); // necessary for IE >= 10*/
-      printWindow.print();
-      printWindow.close();
-    }, 1000)
-    dialogRef.afterClosed().subscribe(res => {
-      // console.log(res);
-    });
   }
 
 }
