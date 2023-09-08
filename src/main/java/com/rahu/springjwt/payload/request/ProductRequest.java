@@ -3,8 +3,12 @@ package com.rahu.springjwt.payload.request;
 import com.rahu.springjwt.models.Category;
 import com.rahu.springjwt.models.Company;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Data
+@Getter
+@Setter
 public class ProductRequest {
   private Long id;
   private Category category;
@@ -22,6 +26,7 @@ public class ProductRequest {
   private Long extraQuantity;
   private Long quantity;
   private boolean enableTQ;
+  private boolean wareHouseProduct;
   private boolean outOfStock;
 
 }

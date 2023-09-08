@@ -4,6 +4,7 @@ export class SaleOrders {
   constructor(
     public _id: number,
     public _customerName: string,
+    public _customerId: string,
     public _mobileNumber: string,
     public _name: string,
     public _invoiceNo:number,
@@ -110,5 +111,14 @@ export class SaleOrders {
 
   set productSales(value: ProductSales[]) {
     this._productSales = value;
+  }
+
+
+  get customerId(): string {
+    return this._customerId;
+  }
+
+  set customerId(value: string) {
+    this._customerId = value;
   }
 }

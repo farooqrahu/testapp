@@ -40,7 +40,7 @@ export class SaleformComponent implements OnInit {
   errors: String = "";
   customerName: String = "";
   isOldCustomer: boolean = false;
-  mobileNumber: String = "03";
+  mobileNumber: String = "";
   mobileNumberError: boolean;
   mobileNumberErrorText: String = "";
 
@@ -64,12 +64,16 @@ export class SaleformComponent implements OnInit {
   validateForm():boolean {
     if((this.customerName==undefined || this.customerName==="") && this.isOldCustomer){
     return false;
-    }else
-    if(this.mobileNumber==undefined || this.mobileNumber===""){
-    return false;
-    }else if(this.mobileNumber.length<11){
-      return false;
     }
+    if((this.customerName==undefined || this.customerName==="")){
+    return false;
+    }
+    // else
+    // if(this.mobileNumber==undefined || this.mobileNumber===""){
+    // return false;
+    // }else if(this.mobileNumber.length<11){
+    //   return false;
+    // }
 
     return true;
   }

@@ -14,6 +14,7 @@ export class Product {
     public extraQuantity: number,
     public quantity: number,
     public enableTQ: boolean,
+    public wareHouseProduct: boolean,
     public file: string,
     public createdAt: Date,
     public userName: string,

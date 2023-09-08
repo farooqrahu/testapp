@@ -13,6 +13,7 @@ export class ProductRequest {
     public extraQuantity: number,
     public quantity: number,
     public enableTQ: boolean,
+    public wareHouseProduct: boolean,
     public userQuantityBundle: number,
     public userExtraQuantity: number,
     public userTotalQuantity: number,
@@ -38,6 +39,7 @@ export class ProductRequest {
     this.extraQuantity = product.extraQuantity
     this.quantity = product.quantity
     this.enableTQ = product.enableTQ
+    this.wareHouseProduct = product.wareHouseProduct
     this.category = product.category
     this.company = product.company
     this.images = product.images

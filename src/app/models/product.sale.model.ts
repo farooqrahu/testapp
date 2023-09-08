@@ -16,6 +16,7 @@ export class ProductSales {
     public userTotalQuantity: number,
     public detail: string,
     public isReturn: boolean,
+    public wareHouseProduct: boolean,
   ) {
   }
 }

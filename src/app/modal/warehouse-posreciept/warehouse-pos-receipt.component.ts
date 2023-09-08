@@ -17,20 +17,18 @@ import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import htmlToPdfmake from 'html-to-pdfmake';
-import {PosReceiptComponent} from "../posreciept/pos.receipt.component";
-import {WarehousePosReceiptComponent} from "../warehouse-posreciept/warehouse-pos-receipt.component";
+import {SalesInvoiceComponent} from "../saleinvoice/sales-invoice.component";
 @Component({
-  selector: 'app-sales-invoice',
-  templateUrl: './sales-invoice.component.html',
-  styleUrls: ['./sales-invoice.component.css']
+  selector: 'warehouse-pos-receipt-invoice',
+  templateUrl: './warehouse-pos-receipt.component.html',
+  styleUrls: ['./warehouse-pos-receipt.css']
 })
-export class SalesInvoiceComponent implements OnInit {
+export class WarehousePosReceiptComponent implements OnInit {
 
 
   sales: Sale[] = [];
   productslength = 0;
   grandTotal = 0;
-  wareHouseProduct = false;
 
   ngAfterViewInit(): void {
   }
@@ -178,93 +176,4 @@ export class SalesInvoiceComponent implements OnInit {
 
   }
 
-  printPosDialog(saleOrders?: SaleOrders,wareHouseProduct?): void {
-    const result = saleOrders.productSales.filter((obj) => {
-      return obj.wareHouseProduct === true;
-
-    });
-    if(wareHouseProduct){
-      const dialogRef = this.dialog.open(WarehousePosReceiptComponent, {
-        data: {
-          id: saleOrders.id,
-          customerName:saleOrders.customerName,
-          mobileNumber:saleOrders.mobileNumber,
-          invoiceNo:saleOrders.invoiceNo+" - WareHouse",
-          grandTotal:saleOrders.grandTotal,
-          totalQuantity:saleOrders.totalQuantity,
-          createdAt: saleOrders.createdAt,
-          productSales:saleOrders.productSales,
-        }
-      });
-      dialogRef.afterClosed().subscribe(res => {
-        // console.log(res);
-        const dialogRef2 = this.dialog.open(PosReceiptComponent, {
-          data: {
-            id: saleOrders.id,
-            customerName:saleOrders.customerName,
-            mobileNumber:saleOrders.mobileNumber,
-            invoiceNo:saleOrders.invoiceNo,
-            grandTotal:saleOrders.grandTotal,
-            totalQuantity:saleOrders.totalQuantity,
-            createdAt: saleOrders.createdAt,
-            productSales:saleOrders.productSales,
-          }
-        });
-        setTimeout(() => { // Needed for large documents
-          var divContents = document.getElementById("invoice-POS").innerHTML;
-          var printWindow = window.open('', '', 'height=400,width=500');
-          // printWindow.document.querySelector("*").forEach(e => e.style.display="none");
-          printWindow.document.write('<html><head><title>Print DIV Content</title>');
-          printWindow.document.write('</head><body >');
-          printWindow.document.write(divContents);
-          printWindow.document.write('</body></html>');
-          printWindow.document.close();
-          printWindow.print();
-        }, 1000)
-
-        dialogRef2.afterClosed().subscribe(res => {
-          // console.log(res);
-        });
-
-      });
-    }else{
-      if ( saleOrders === undefined)
-        saleOrders = new SaleOrders(0, "","","","",  0,0,0, null, null, null,null,null)
-      const dialogRef = this.dialog.open(PosReceiptComponent, {
-        data: {
-          id: saleOrders.id,
-          customerName:saleOrders.customerName,
-          customerId:saleOrders.customerId,
-          mobileNumber:saleOrders.mobileNumber,
-          invoiceNo:saleOrders.invoiceNo,
-          grandTotal:saleOrders.grandTotal,
-          totalQuantity:saleOrders.totalQuantity,
-          createdAt: saleOrders.createdAt,
-          productSales:saleOrders.productSales,
-        }
-      });
-      dialogRef.afterClosed().subscribe(res => {
-        // console.log(res);
-      });
-
-    }
-    // let printElement = document.getElementById("invoice-POS");
-    // var printWindow = window.open('', 'PRINT');
-    // printWindow.document.write(document.documentElement.innerHTML);
-    setTimeout(() => { // Needed for large documents
-      var divContents = document.getElementById("invoice-POS").innerHTML;
-      var printWindow = window.open('', '', 'height=400,width=500');
-      // printWindow.document.querySelector("*").forEach(e => e.style.display="none");
-      printWindow.document.write('<html><head><title>Print DIV Content</title>');
-      printWindow.document.write('</head><body >');
-      printWindow.document.write(divContents);
-      printWindow.document.write('</body></html>');
-      printWindow.document.close();
-      printWindow.print();
-    }, 1000)
-  }
-
-  setWareHousePrint() {
-    this.wareHouseProduct=true;
-  }
 }

@@ -94,6 +94,7 @@ export class ProductformComponent implements OnInit {
   }
 
   clearQty(data: Product) {
+    console.log(this.data.wareHouseProduct)
     this.data.quantity = 0;
     this.data.extraQuantity = 0;
     this.data.quantityItem = 0;
@@ -106,4 +107,5 @@ export class ProductformComponent implements OnInit {
     this.data.quantityBundle=0;
     this.data.quantityItem=0;
   }
+
 }

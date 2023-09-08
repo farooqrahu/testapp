@@ -25,26 +25,28 @@
       <table>
         <tr class="tabletitle">
           <td class="item">Product</td>
+          <td class="item">Category</td>
           <td class="item">Quantity</td>
-          <td class="item">Price</td>
+<!--          <td class="item">Price</td>-->
         </tr>
         <tr class="service" *ngFor="let p of productOrderList.productSales">
           <td class="itemtext">{{p.product.name}}</td>
+          <td class="itemtext">{{p.product.category.name}}</td>
           <td class="tableitem"><p class="itemtext">{{p.totalQuantitySale}}</p></td>
-          <td class="tableitem"><p class="itemtext">{{p.product.price * p.totalQuantitySale | currency:'Rs:'}}</p></td>
+<!--          <td class="tableitem"><p class="itemtext">{{p.product.price * p.totalQuantitySale | currency:'Rs:'}}</p></td>-->
         </tr>
 
-        <tr class="tabletitle">
-          <td class="itemlabletext">Total Quantity</td>
-          <td></td>
-          <td class="tableitem">{{productOrderList.totalQuantity}}</td>
-        </tr>
+<!--        <tr class="tabletitle">-->
+<!--          <td class="itemlabletext">Total Quantity</td>-->
+<!--          <td></td>-->
+<!--          <td class="tableitem">{{productOrderList.totalQuantity}}</td>-->
+<!--        </tr>-->
 
-        <tr class="tabletitle">
-          <td class="itemlabletext">Total Amount</td>
-          <td></td>
-          <td class="tableitem">{{productOrderList.grandTotal | currency:'Rs:'}}</td>
-        </tr>
+<!--        <tr class="tabletitle">-->
+<!--          <td class="itemlabletext">Total Amount</td>-->
+<!--          <td></td>-->
+<!--          <td class="tableitem">{{productOrderList.grandTotal | currency:'Rs:'}}</td>-->
+<!--        </tr>-->
       </table>
     </div><!--End Table-->
 

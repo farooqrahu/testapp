@@ -32,6 +32,10 @@ public class Product extends BaseEntity{
 
   @Column(name = "out_of_stock",columnDefinition = "boolean default true")
   private Boolean outOfStock;
+
+  @Column(name = "warehouse_product",columnDefinition = "boolean default false")
+  private Boolean wareHouseProduct;
+
   @Nullable
   @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
   private Category category;
@@ -69,6 +73,7 @@ public class Product extends BaseEntity{
     this.quantityBundle= productRequest.getQuantityBundle();
     this.extraQuantity= productRequest.getExtraQuantity();
     this.enableTQ = productRequest.isEnableTQ();
+    this.wareHouseProduct = productRequest.isWareHouseProduct();
     if(productRequest.getQuantity()>0){
       this.quantity=productRequest.getQuantity();
     }else {

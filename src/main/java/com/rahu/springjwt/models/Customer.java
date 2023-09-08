@@ -25,6 +25,7 @@ public class Customer {
   @NotBlank
   @Column(unique = true)
   @Size(max = 11)
+  private String customerId;
   private String mobileNumber;
   private String address;
 

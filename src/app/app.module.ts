@@ -46,6 +46,7 @@ import {AdduserformComponent} from "./modal/adduserform/adduserform.component";
 import {ProductformComponent} from "./modal/productform/productform.component";
 import {ReportsComponent} from "./pages/reports/reports.component";
 import {PosReceiptComponent} from "./modal/posreciept/pos.receipt.component";
+import {WarehousePosReceiptComponent} from "./modal/warehouse-posreciept/warehouse-pos-receipt.component";
 
 @NgModule({
     imports: [
@@ -97,7 +98,8 @@ import {PosReceiptComponent} from "./modal/posreciept/pos.receipt.component";
     AddProductFormComponent,
     SaleListReturn,
     ReportsComponent,
-    PosReceiptComponent
+    PosReceiptComponent,
+    WarehousePosReceiptComponent
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,

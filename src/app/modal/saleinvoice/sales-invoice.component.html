@@ -17,9 +17,11 @@
       </div>
       <div class="col-md-3" >
         <p>Customer Name: {{productOrderList.customerName}} </p>
+        <p>Customer Id: {{productOrderList.customerId}} </p>
         <p>Mobile Number: {{productOrderList.mobileNumber}} </p>
         <p>Invoice No. {{productOrderList.invoiceNo}}</p>
         <p>Date. {{productOrderList.createdAt}}</p>
+        <p><mat-checkbox (change)="setWareHousePrint()" [(ngModel)]="wareHouseProduct" >Print WareHouse</mat-checkbox></p>
 
       </div>
     </div>
@@ -55,7 +57,7 @@
   </div>
 <!--</div>-->
 <!--&lt;!&ndash;<button mat-button (click)="printTest()" class="mat-button mat-raised-button mat-primary">Print  <span class="material-icons">print</span></button>&ndash;&gt;-->
-<button  class="btn btn-primary" (click)="printPosDialog(productOrderList)">Print</button>
+<button  class="btn btn-primary" (click)="printPosDialog(productOrderList,wareHouseProduct)">Print</button>
 
 
 <!--<!DOCTYPE html>-->
@@ -108,3 +110,4 @@
 <!--    <br>parzibyte.me/blog</p>-->
 <!--</div>-->
 <!--<button (click)="printPos()" id="btnPrint" class="hidden-print">Print</button>-->
+</div>

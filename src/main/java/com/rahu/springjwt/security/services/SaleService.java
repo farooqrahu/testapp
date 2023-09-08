@@ -19,16 +19,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.validation.Valid;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
@@ -122,11 +120,18 @@ public class SaleService {
         }
       });
       productOrder.setGrandTotal(productRequest.getGrandTotal());
-      Optional<Customer> customerFound = customerRepository.findByMobileNumber(productRequest.getMobileNumber());
-      if (customerFound.isPresent()) {
+      String mobile=null;
+      if(!"".equals(productRequest.getMobileNumber())){
+        mobile=productRequest.getMobileNumber();
+      }
+      Optional<Customer> customerFound = Optional.empty();
+      if(mobile!=null){
+        customerFound = customerRepository.findByMobileNumber(mobile);
+      }
+      if (customerFound!=null && customerFound.isPresent()) {
         productOrder.setCustomer(customerFound.get());
       } else {
-        Customer customer = Customer.builder().mobileNumber(productRequest.getMobileNumber()).name(productRequest.getCustomerName()).address(productRequest.getAddress()).build();
+        Customer customer = Customer.builder().customerId(productRequest.getCustomerName().toUpperCase(Locale.ROOT).substring(0,2)+""+productOrder.getInvoiceNo()).mobileNumber(mobile).name(productRequest.getCustomerName()).address(productRequest.getAddress()).build();
         productOrder.setCustomer(customer);
       }
       productOrderRepository.save(productOrder);

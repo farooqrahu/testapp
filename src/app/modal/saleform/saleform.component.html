@@ -30,7 +30,7 @@
         <div>
           <mat-form-field appearance="fill">
             <mat-label>Mobile:#</mat-label>
-            <input id="mobileNumber" matInput #input [(ngModel)]="mobileNumber" type="text" pattern="\d*" (change)="validateMobileNumber()" maxlength="11" minlength="11" required>
+            <input id="mobileNumber" matInput #input [(ngModel)]="mobileNumber" type="text" pattern="\d*" (change)="validateMobileNumber()" maxlength="11" minlength="11" >
 
             <mat-error>
               {{mobileNumberErrorText}}

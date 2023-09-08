@@ -49,7 +49,7 @@ export class ReportsComponent implements OnInit, AfterViewInit {
   loadproductresults(): void {
     this.paginator.page.subscribe(() => {
         const productrequest = new ProductRequest(0, this.productsearch.nativeElement.value,
-          this.productsearch.nativeElement.value, 0, 0, 0, 0, 0, false,0,0,0,null, null, false, 'name', 'asc', this.paginator.pageSize, this.paginator.getNumberOfPages())
+          this.productsearch.nativeElement.value, 0, 0, 0, 0, 0, false,false,0,0,0,null, null, false, 'name', 'asc', this.paginator.pageSize, this.paginator.getNumberOfPages())
         this.saleservice.findProduct(productrequest).subscribe(
           data => {
             debugger;
@@ -139,12 +139,13 @@ export class ReportsComponent implements OnInit, AfterViewInit {
   }
   printDialog(saleOrders?: SaleOrders): void {
     if (saleOrders === undefined)
-      saleOrders = new SaleOrders(0, "","","",  0,0,0, null, null, null,null,null)
+      saleOrders = new SaleOrders(0, "","","","",  0,0,0, null, null, null,null,null)
     const dialogRef = this.dialog.open(SalesInvoiceComponent, {
       width: '1120px', height: '600px',
       data: {
         id: saleOrders.id,
         customerName:saleOrders.customerName,
+        customerId:saleOrders.customerId,
         mobileNumber:saleOrders.mobileNumber,
         invoiceNo:saleOrders.invoiceNo,
         grandTotal:saleOrders.grandTotal,
