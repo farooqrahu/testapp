@@ -11,6 +11,11 @@ import * as printJS from "print-js";
 import * as es6printJS from "print-js";
 import * as XLSX from "xlsx";
 import {CustomerModel} from "../../models/Customer.model";
+import {Category} from "../../models/category.model";
+import {FormControl} from "@angular/forms";
+import {map, Observable, startWith} from "rxjs";
+import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
+import {MatOptionSelectionChange} from "@angular/material/core";
 
 @Component({
   selector: 'app-saleform',
@@ -38,21 +43,69 @@ export class SaleformComponent implements OnInit {
   customerList: CustomerModel[];
   invoice: Invoice;
   errors: String = "";
+
+  customerId: String = "";
   customerName: String = "";
   isOldCustomer: boolean = false;
   mobileNumber: String = "";
   mobileNumberError: boolean;
   mobileNumberErrorText: String = "";
+  customers: CustomerModel[];
+  filteredOptions: Observable<CustomerModel[]>;
+  myControl = new FormControl();
 
   constructor(
     public dialogRef: MatDialogRef<SaleformComponent>,
     @Inject(MAT_DIALOG_DATA) public productSaleList: Invoice, private saleService: SaleService, private productService: ProductService, public dialog: MatDialog) {
   }
 
+  ngOnInit() {
+    this.getAllCustomers();
+  }
+
+  private _filter(value: string): CustomerModel[] {
+    const filterValue = value.toLowerCase();
+    let data = this.customers.filter(option => option.name.toLowerCase().includes(filterValue));
+    if (data.length > 0) {
+      return data;
+    } else {
+      this.customerName = filterValue;
+      this.mobileNumber=null;
+      this.customerId=null;
+      this.isOldCustomer=false;
+
+    }
+  }
+
   onNoClick(): void {
     this.dialogRef.close();
   }
 
+  getAllCustomers(): any {
+    this.saleService.getAllCustomers().subscribe(
+      data => {
+        this.customers = data;
+        this.filteredOptions = this.myControl.valueChanges
+          .pipe(
+            startWith(''),
+            map(value => this._filter(value))
+          );
+
+      },
+      err => {
+        (err);
+      }
+    );
+  }
+
+  setCustomer(event: MatOptionSelectionChange, customerModel: CustomerModel) {
+    if(event.source["_selected"] === true){
+      //your next set of action goes here
+      this.customerId=""+customerModel.id
+      this.mobileNumber=""+customerModel.mobileNumber
+      this.isOldCustomer=true;
+    }
+  }
   printTest() {
     console.log({
       node_module: printJS,
@@ -62,10 +115,7 @@ export class SaleformComponent implements OnInit {
   }
 
   validateForm():boolean {
-    if((this.customerName==undefined || this.customerName==="") && this.isOldCustomer){
-    return false;
-    }
-    if((this.customerName==undefined || this.customerName==="")){
+    if((this.customerName==undefined || this.customerId==="")){
     return false;
     }
     // else
@@ -80,9 +130,9 @@ export class SaleformComponent implements OnInit {
 
   submitOrder(): any {
     if (this.productSaleList._sales.length > 0) {
-    let isValid=this.validateForm();
-      if(isValid){
-        this.saleService.submitSaleOrder(this.productSaleList,this.customerName,this.mobileNumber).subscribe(
+      let isValid = this.validateForm();
+      if (isValid) {
+        this.saleService.submitSaleOrder(this.productSaleList, this.customerId,this.customerName, this.mobileNumber).subscribe(
           productSaleList => {
             this.swAlert(productSaleList.message, "Product Sale!");
             // this.exportAsExcelFile(this.productSaleList._sales,"receipt")
@@ -94,7 +144,7 @@ export class SaleformComponent implements OnInit {
           }
         );
 
-      }else{
+      } else {
         Swal.fire(
           'Product Sale!',
           'Please enter customer detail!',
@@ -122,16 +172,16 @@ export class SaleformComponent implements OnInit {
   }
 
 
-  ngOnInit() {
-    // let totalQuantity=0;
-    // let grandTotal=0;
-    // this.productSaleList._sales.forEach(value =>
-    // {totalQuantity=Number(totalQuantity)+Number(value.quantity)
-    //   grandTotal=grandTotal+(Number(value.price)*Number(value.quantity));
-    // })
-    // this.productSaleList.setTotalQuantity(totalQuantity);
-    // this.productSaleList.setGrandTotal(grandTotal);
-  }
+  // ngOnInit() {
+  // let totalQuantity=0;
+  // let grandTotal=0;
+  // this.productSaleList._sales.forEach(value =>
+  // {totalQuantity=Number(totalQuantity)+Number(value.quantity)
+  //   grandTotal=grandTotal+(Number(value.price)*Number(value.quantity));
+  // })
+  // this.productSaleList.setTotalQuantity(totalQuantity);
+  // this.productSaleList.setGrandTotal(grandTotal);
+  // }
 
 
   remove(product: Sale) {
@@ -149,21 +199,10 @@ export class SaleformComponent implements OnInit {
   }
 
   validateMobileNumber() {
-    if(this.mobileNumber.length<11){
-      this.mobileNumberErrorText='Invalid mobile Number!';
-    }else{
-      this.saleService.findCustomerByMobileNumber(this.mobileNumber).subscribe(
-        customer => {
-          this.customerName=customer.name;
-          this.isOldCustomer=true;
-        },
-        err => {
-          if(err.status==400)
-            // this.swAlert("Customer not found!", "Customer");
-          this.customerName="";
-          this.isOldCustomer=false;
-        }
-      );
+    if (this.mobileNumber.length < 11) {
+      this.mobileNumberErrorText = 'Invalid mobile Number!';
     }
   }
+
+
 }

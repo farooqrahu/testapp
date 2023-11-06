@@ -5,7 +5,6 @@ export class ProductSales {
     public id: number,
     public product: Product,
     public productId: number,
-    public productName: string,
     public extraSale: number,
     public bundleSale: number,
     public totalQuantitySale: number,

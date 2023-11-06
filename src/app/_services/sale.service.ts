@@ -8,6 +8,7 @@ import {SaleOrders} from "../models/sale.orders.model";
 import {Invoice} from "../models/invoice.model";
 
 const PRODUCT_SALE_API = 'http://localhost:8080/api/sale/';
+const CUSTOMER_API = 'http://localhost:8080/api/customer/';
 
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})
@@ -23,10 +24,10 @@ export class SaleService {
   constructor(private http: HttpClient, private token: TokenStorageService) {
   }
 
-  submitSaleOrder(productSaleList: Invoice,customerName?,mobileNumber?): Observable<any> {
+  submitSaleOrder(productSaleList: Invoice,customerId?,customerName?,mobileNumber?): Observable<any> {
     let data = productSaleList._sales;
     let grandTotal = productSaleList._grandTotal;
-    return this.http.post(PRODUCT_SALE_API + 'submitSaleOrder', {data,grandTotal,customerName,mobileNumber}, httpOptions);
+    return this.http.post(PRODUCT_SALE_API + 'submitSaleOrder', {data,grandTotal,customerId,customerName,mobileNumber}, httpOptions);
   }
   findProduct(productrequest: ProductRequest): Observable<any> {
 
@@ -45,6 +46,12 @@ export class SaleService {
 
   getAllOrders(): Observable<any> {
     return this.http.post(PRODUCT_SALE_API + 'findOrders', {}, httpOptions);
+  }
+  getAllCustomers(): Observable<any> {
+    return this.http.get(CUSTOMER_API + 'getAllCustomers');
+  }
+  findReturnOrdersByInvoiceNo(invoiceNo: number): Observable<any> {
+    return this.http.post(PRODUCT_SALE_API + 'findReturnOrdersByInvoiceNo', {invoiceNo}, httpOptions);
   }
 
   returnProductSale(saleOrders:SaleOrders): Observable<any> {

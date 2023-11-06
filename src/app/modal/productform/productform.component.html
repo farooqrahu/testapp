@@ -37,7 +37,12 @@
     </div>
     <div class="col-md-6 col-6">
       <mat-form-field appearance="fill">
-        <mat-label>Product Price</mat-label>
+        <mat-label>WholeSale Price</mat-label>
+        <input matInput type="number" [(ngModel)]="data.wholeSalePrice" required>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Retail Price</mat-label>
         <input matInput type="number" [(ngModel)]="data.price" required>
       </mat-form-field>
 

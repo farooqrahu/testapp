@@ -53,7 +53,7 @@ export class SalesComponent implements OnInit, AfterViewInit {
   loadproductresults(): void {
     this.paginator.page.subscribe(() => {
         const productrequest = new ProductRequest(0, this.productsearch.nativeElement.value,
-          this.productsearch.nativeElement.value, 0, 0, 0, 0, 0, false,false,0,0,0,null ,null, false, 'name', 'asc', this.paginator.pageSize, this.paginator.getNumberOfPages())
+          this.productsearch.nativeElement.value, 0,0, 0, 0, 0, 0, false,false,0,0,0,null ,null, false, 'name', 'asc', this.paginator.pageSize, this.paginator.getNumberOfPages())
         this.productservice.findProduct(productrequest).subscribe(
           data => {
             debugger;
@@ -126,7 +126,7 @@ export class SalesComponent implements OnInit, AfterViewInit {
 
   openDialog(product?: Product): void {
     if (product === undefined)
-      product = new Product(0, "", "", 0, null, null, false, 0, 0, 0, 0, false,false,"",null,"",0,0,0)
+      product = new Product(0, "", "", 0,0, null, null, false, 0, 0, 0, 0, false,false,"",null,"",0,0,0)
     const dialogRef = this.dialog.open(SaleformComponent, {
       width: '55px',
       data: {
@@ -134,6 +134,7 @@ export class SalesComponent implements OnInit, AfterViewInit {
         name: product.name,
         description: product.description,
         price: product.price,
+        wholeSalePrice: product.wholeSalePrice,
         category: product.category,
         company: product.company,
         quantityItem: product.quantityItem,

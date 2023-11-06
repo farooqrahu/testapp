@@ -32,6 +32,7 @@ export class DashboardComponent implements OnInit {
   public todayReturnAmount=0;
 
   public totalSaleCount=0;
+  public totalCustomers=0;
   public totalAmount=0;
   public params;
   public currentDate=new Date();
@@ -83,6 +84,7 @@ export class DashboardComponent implements OnInit {
         this.todayReturnAmount=this.params.todayReturnAmount;
 
         this.totalSaleCount=this.params.totalSaleCount;
+        this.totalCustomers=this.params.totalCustomers;
         this.totalAmount = this.params.totalAmount;
       },
       err => {

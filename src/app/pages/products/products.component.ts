@@ -25,7 +25,7 @@ import {AddProductFormComponent} from "../../modal/addproductform/addproductform
   styleUrls: ['./products.component.scss']
 })
 export class ProductsComponent implements OnInit, AfterViewInit {
-  columnsToDisplay = ["select","id", 'name', "price","quantityItem","quantityBundle","extraQuantity","quantity", "description", "category","company","outOfStock","createdAt", "action"];
+  columnsToDisplay = ["select","id", 'name', "price","wholeSalePrice","quantityItem","quantityBundle","extraQuantity","quantity", "description", "category","company","outOfStock","createdAt", "action"];
   @ViewChild("exporter") exporter! : MatTableExporterDirective;
   dataSource: MatTableDataSource<Product> = null;
   selection = new SelectionModel<Product>(true, []);
@@ -77,7 +77,7 @@ export class ProductsComponent implements OnInit, AfterViewInit {
   loadproductresults(): void {
     this.paginator.page.subscribe(() => {
       const productrequest = new ProductRequest( 0, this.productsearch.nativeElement.value,
-        this.productsearch.nativeElement.value, 0,0,0,0, 0,false,false,0,0,0,null, null, false, 'name', 'asc', this.paginator.pageSize, this.paginator.getNumberOfPages())
+        this.productsearch.nativeElement.value, 0,0,0,0,0, 0,false,false,0,0,0,null, null, false, 'name', 'asc', this.paginator.pageSize, this.paginator.getNumberOfPages())
       this.productservice.findProduct(productrequest).subscribe(
         data => {
           this.products = data.list;
@@ -142,12 +142,12 @@ export class ProductsComponent implements OnInit, AfterViewInit {
   }
   openDialog(product?: Product): void {
     if (product === undefined)
-      product = new Product(0, "", "", 0, this.categories[0],this.companies[0], false,0,0,0,0,false,false,"",null,"",0,0,0)
+      product = new Product(0, "", "", 0,0, this.categories[0],this.companies[0], false,0,0,0,0,false,false,"",null,"",0,0,0)
     const dialogRef = this.dialog.open(ProductformComponent, {
       width: '550px',
       data: {
         id: product.id, name: product.name, description: product.description,
-        price: product.price, category: product.category,company: product.company,quantityItem:product.quantityItem,quantityBundle:product.quantityBundle,extraQuantity:product.extraQuantity
+        price: product.price,wholeSalePrice: product.wholeSalePrice, category: product.category,company: product.company,quantityItem:product.quantityItem,quantityBundle:product.quantityBundle,extraQuantity:product.extraQuantity
 ,quantity:product.quantity,enableTQ:product.enableTQ,wareHouseProduct:product.wareHouseProduct
       }
     });

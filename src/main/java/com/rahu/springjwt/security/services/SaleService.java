@@ -2,6 +2,7 @@ package com.rahu.springjwt.security.services;
 
 import com.rahu.springjwt.dto.DashboardDto;
 import com.rahu.springjwt.dto.ProductOrderInvoiceDto;
+import com.rahu.springjwt.dto.ProductReturnDto;
 import com.rahu.springjwt.models.*;
 import com.rahu.springjwt.payload.request.ProductRequest;
 import com.rahu.springjwt.payload.request.SaleRequest;
@@ -9,7 +10,6 @@ import com.rahu.springjwt.payload.request.SaleRequestList;
 import com.rahu.springjwt.payload.response.MessageResponse;
 import com.rahu.springjwt.payload.response.ProductResponse;
 import com.rahu.springjwt.repository.*;
-import com.rahu.springjwt.util.Utility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,14 +17,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import javax.validation.Valid;
-import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
@@ -120,18 +118,18 @@ public class SaleService {
         }
       });
       productOrder.setGrandTotal(productRequest.getGrandTotal());
-      String mobile=null;
-      if(!"".equals(productRequest.getMobileNumber())){
-        mobile=productRequest.getMobileNumber();
+      Long customerId = null;
+      if (productRequest.getCustomerId()!=null && productRequest.getCustomerId()>0) {
+        customerId = productRequest.getCustomerId();
       }
       Optional<Customer> customerFound = Optional.empty();
-      if(mobile!=null){
-        customerFound = customerRepository.findByMobileNumber(mobile);
+      if (customerId != null) {
+        customerFound = customerRepository.findById(customerId);
       }
-      if (customerFound!=null && customerFound.isPresent()) {
+      if (customerFound.isPresent()) {
         productOrder.setCustomer(customerFound.get());
       } else {
-        Customer customer = Customer.builder().customerId(productRequest.getCustomerName().toUpperCase(Locale.ROOT).substring(0,2)+""+productOrder.getInvoiceNo()).mobileNumber(mobile).name(productRequest.getCustomerName()).address(productRequest.getAddress()).build();
+        Customer customer = Customer.builder().customerCode(productRequest.getCustomerName().toUpperCase(Locale.ROOT).substring(0, 2) + "" + productOrder.getInvoiceNo()).mobileNumber(productRequest.getMobileNumber()).name(productRequest.getCustomerName()).address(productRequest.getAddress()).build();
         productOrder.setCustomer(customer);
       }
       productOrderRepository.save(productOrder);
@@ -158,6 +156,15 @@ public class SaleService {
       return ResponseEntity.ok(new ProductResponse(list, ""));
     }
 
+  }
+
+  public ResponseEntity<?> findReturnOrdersByInvoiceNo(ProductRequest productRequest) {
+    Optional<ProductReturn> productReturn = returnRepository.findByInvoiceNo(productRequest.getInvoiceNo());
+    if (productReturn.isPresent()) {
+      ProductReturnDto productReturnDto = new ProductReturnDto().factoryProductReturn(productReturn.get());
+      return ResponseEntity.ok(productReturnDto);
+    } else
+      return ResponseEntity.ok(HttpEntity.EMPTY);
   }
 
   public Pageable checkPaging(ProductRequest productRequest) {
@@ -205,17 +212,22 @@ public class SaleService {
                   productSold.get().setTotalQuantitySale(totalQuantitySold - userTotalQuantity);
                   productSaleRepository.save(productSold.get());
                 }
-                ProductReturnList productReturnList = ProductReturnList.builder().id(0L).product(productSold.get().getProduct()).totalQuantityReturn(returnRequest.getUserTotalQuantity()).productReturn(productReturnSaved).build();
+                ProductReturnList productReturnList = ProductReturnList.builder().id(0L).product(productSold.get().getProduct().getId()).productName(productSold.get().getProduct().getName()).totalQuantityReturn(returnRequest.getUserTotalQuantity()).productReturn(productReturnSaved).build();
                 productReturnRepository.save(productReturnList);
               } else {
                 long bundleReturn = returnRequest.getUserQuantityBundle();
                 long extraReturn = returnRequest.getUserExtraQuantity();
-                if ((extraReturn + product.getExtraQuantity()) == productSold.get().getProduct().getQuantityItem()) {
+                if ((extraReturn + product.getExtraQuantity()) == Objects.requireNonNull(productSold.get().getProduct()).getQuantityItem()) {
+                  if ((extraReturn + product.getExtraQuantity()) == Objects.requireNonNull(productSold.get().getProduct()).getQuantityItem()) {
+                    product.setQuantityBundle(product.getQuantityBundle() + 1);
+                    product.setExtraQuantity((extraReturn + product.getExtraQuantity() - Objects.requireNonNull(productSold.get().getProduct()).getQuantityItem()));
+                  } else {
+                    product.setQuantityBundle(product.getQuantityBundle() + 1);
+                    product.setExtraQuantity(0L);
+                  }
+                } else if ((extraReturn + product.getExtraQuantity()) > Objects.requireNonNull(productSold.get().getProduct()).getQuantityItem()) {
                   product.setQuantityBundle(product.getQuantityBundle() + 1);
-                  product.setExtraQuantity(0L);
-                } else if ((extraReturn + product.getExtraQuantity()) > productSold.get().getProduct().getQuantityItem()) {
-                  product.setQuantityBundle(product.getQuantityBundle() + 1);
-                  product.setExtraQuantity((extraReturn + product.getExtraQuantity() - productSold.get().getProduct().getQuantityItem()));
+                  product.setExtraQuantity((extraReturn + product.getExtraQuantity() - Objects.requireNonNull(productSold.get().getProduct()).getQuantityItem()));
                 } else {
                   product.setExtraQuantity(product.getExtraQuantity() + extraReturn);
                 }
@@ -226,26 +238,52 @@ public class SaleService {
                   product.setOutOfStock(Boolean.FALSE);
                 }
                 productRepository.save(Objects.requireNonNull(product));
+//1+sold=10
+//                if ((extraReturn + productSold.get().getExtraSale()) == Objects.requireNonNull(productSold.get().getProduct()).getQuantityItem()) {
+//                  productSold.get().setBundleSale(productSold.get().getBundleSale() - 1);
+//                  productSold.get().setExtraSale(0L);
+//                }
+//                //5+sold = 11 >10
+//                else if ((extraReturn + productSold.get().getExtraSale()) > Objects.requireNonNull(productSold.get().getProduct()).getQuantityItem()) {
+//                  productSold.get().setBundleSale(productSold.get().getBundleSale() - 1);
+//                  productSold.get().setExtraSale(extraReturn-Objects.requireNonNull(productSold.get().getProduct()).getQuantityItem());
+//                } else {
+//                  productSold.get().setExtraSale(productSold.get().getExtraSale() + extraReturn);
+//                }
+//                productSold.get().setBundleSale(productSold.get().getBundleSale() + bundleReturn);
+//                productSold.get().setTotalQuantitySale(zeroIfNull(productSold.get().getTotalQuantitySale()) + returnRequest.getUserTotalQuantity());
 
-                long bundleReturned = returnRequest.getUserQuantityBundle();
-                long extraReturned = returnRequest.getUserExtraQuantity();
-                if (productSold.get().getExtraSale() <= 0) {
-                  if (extraReturned > 0) {
-                    productSold.get().setExtraSale(extraReturned);
-                  }
-                } else if (extraReturned <= productSold.get().getExtraSale()) {
-                  productSold.get().setExtraSale(productSold.get().getExtraSale() - extraReturned);
-                } else {
-                  productSold.get().setExtraSale(productSold.get().getExtraSale() + productSold.get().getProduct().getQuantityItem() - extraReturned);
-                  productSold.get().setBundleSale(productSold.get().getBundleSale() - 1);
+//
+//                if (extraReturned > product.getQuantityItem()) {
+//
+//                } else if (extraReturned > product.getQuantityItem()) {
+//
+//                }
+//
+//
+//                if (productSold.get().getExtraSale() <= 0) {
+//                  if (extraReturned > 0) {
+//                    productSold.get().setExtraSale(extraReturned);
+//                  }
+//                } else if (extraReturned <= productSold.get().getExtraSale()) {
+//                  productSold.get().setExtraSale(productSold.get().getExtraSale() - extraReturned);
+//                } else {
+//                  productSold.get().setExtraSale(productSold.get().getExtraSale() + productSold.get().getProduct().getQuantityItem() - extraReturned);
+//                  productSold.get().setBundleSale(productSold.get().getBundleSale() - 1);
 
-                  System.out.println("new cond");
-                }
-                productSold.get().setBundleSale(productSold.get().getBundleSale() - bundleReturned);
-                productSold.get().setTotalQuantitySale(zeroIfNull(productSold.get().getTotalQuantitySale()) - returnRequest.getUserTotalQuantity());
+                System.out.println("new cond");
+//                }
+//                productSold.get().setBundleSale(productSold.get().getBundleSale() - bundleReturned);
+//                productSold.get().setTotalQuantitySale(zeroIfNull(productSold.get().getTotalQuantitySale()) - returnRequest.getUserTotalQuantity());
 
                 productSaleRepository.save(productSold.get());
-                ProductReturnList productReturnList = ProductReturnList.builder().id(0L).product(productSold.get().getProduct()).bundleReturn(bundleReturned).extraReturn(extraReturn).totalQuantityReturn(returnRequest.getUserTotalQuantity()).productReturn(productReturnSaved).build();
+                ProductReturnList productReturnList = ProductReturnList.builder().id(0L).
+                  product(productSold.get().getProduct().getId()).
+                  productName(productSold.get().getProduct().getName()).
+                  bundleReturn(bundleReturn).
+                  extraReturn(extraReturn).
+                  totalQuantityReturn(returnRequest.getUserTotalQuantity()).
+                  productReturn(productReturnSaved).build();
                 productReturnRepository.save(productReturnList);
 
               }
@@ -254,9 +292,33 @@ public class SaleService {
         }
         quantitySold.set(productSold.get().getTotalQuantitySale());
       });
-      if (quantitySold.get() <= 0) {
+
+      long sold = productOrder.get().getProductSaleLists().stream().map(ProductSaleList::getTotalQuantitySale).mapToLong(Long::longValue).sum();
+      long curruntReturns = productReturnRequest.getData().stream().map(SaleRequest::getUserTotalQuantity).mapToLong(Long::longValue).sum();
+      long oldReturns=0;
+      if(productReturnSaved.getProductReturnList()!=null)
+       oldReturns = productReturnSaved.getProductReturnList().stream().map(ProductReturnList::getTotalQuantityReturn).mapToLong(Long::longValue).sum();
+      if ((curruntReturns+oldReturns) >= sold ) {
         productOrder.get().setReturned(Boolean.TRUE);
       }
+
+
+      //      List<ProductSaleList> productSaleList = productOrder.get().getProductSaleLists();
+//      List<ProductReturnList> productReturnList = productReturnSaved.getProductReturnList();
+//      long soldItems = productSaleList.stream().map(ProductSaleList::getTotalQuantitySale).mapToLong(Long::longValue).sum();
+//      if (productReturnList!=null && productReturnList.size() > 0) {
+//        long returnItems = productReturnList.stream().map(ProductReturnList::getTotalQuantityReturn).mapToLong(Long::longValue).sum();
+//        if (soldItems == returnItems) {
+//          productOrder.get().setReturned(Boolean.TRUE);
+//        }
+//
+//      }
+
+
+      //      long soldItems = productSaleList.stream().map(ProductSaleList::getTotalQuantitySale).mapToLong(Long::longValue).sum();
+//      if (soldItems <= 0) {
+//        productOrder.get().setReturned(Boolean.TRUE);
+//      }
       productOrder.get().setGrandTotal(productReturnRequest.getGrandTotal());
       productOrderRepository.save(productOrder.get());
 
@@ -372,30 +434,32 @@ public class SaleService {
   public DashboardDto totalSales() {
 //    String strDate=Utility.formatDate(new Date(),"yyyy-MM-dd");
 //    LocalDateTime dateTimeFrom=Utility.parseStringToLocalDateTime(strDate);
-//    LocalDateTime dateTimeTo=Utility.parseStringToLocalDateTime(strDate);
-    LocalDate dateTimeFrom=LocalDate.now();
-    LocalDate dateTimeTo=LocalDate.now().plusDays(1);
+//    LocalDateTime dateTimeTo=Utility.parseStringToLocalDateTime(sthrDate);
+    LocalDate dateTimeFrom = LocalDate.now();
+    LocalDate dateTimeTo = LocalDate.now().plusDays(1);
     //default time zone
     ZoneId defaultZoneId = ZoneId.systemDefault();
 
-    List<ProductOrder> list = productOrderRepository.findAllByNotReturned(Date.from(dateTimeFrom.atStartOfDay(defaultZoneId).toInstant()),Date.from(dateTimeTo.atStartOfDay(defaultZoneId).toInstant()));
+    List<ProductOrder> list = productOrderRepository.findAllByNotReturned(Date.from(dateTimeFrom.atStartOfDay(defaultZoneId).toInstant()), Date.from(dateTimeTo.atStartOfDay(defaultZoneId).toInstant()));
     DashboardDto dashboardDto = new DashboardDto();
+    List<Customer> all = customerRepository.findAll();
     AtomicReference<Double> todayAmount = new AtomicReference<>(0.0);
     AtomicReference<Double> todayReturnAmount = new AtomicReference<>(0.0);
     AtomicReference<Long> todaySaleCount = new AtomicReference<>(0L);
     AtomicReference<Long> todayReturnCount = new AtomicReference<>(0L);
     list.forEach(productOrder -> {
       Double totalAmount = productOrder.getGrandTotal() == null ? 0 : productOrder.getGrandTotal();
-      if(!productOrder.isReturned()){
+      if (!productOrder.isReturned()) {
         todayAmount.updateAndGet(v -> v + totalAmount);
-        todaySaleCount.updateAndGet(v -> v +1);
-      }else{
+        todaySaleCount.updateAndGet(v -> v + 1);
+      } else {
         todayReturnAmount.updateAndGet(v -> v + totalAmount);
-        todayReturnCount.updateAndGet(v -> v +1);
+        todayReturnCount.updateAndGet(v -> v + 1);
       }
     });
     dashboardDto.setTodaySaleCount(todaySaleCount.get());
     dashboardDto.setTodayAmount(todayAmount.get());
+    dashboardDto.setTotalCustomers((long) all.size());
 
     dashboardDto.setTodayReturnCount(todayReturnCount.get());
     dashboardDto.setTodayReturnAmount(todayReturnAmount.get());
@@ -406,7 +470,7 @@ public class SaleService {
       Double grandTotal = productOrder.getGrandTotal() == null ? 0 : productOrder.getGrandTotal();
       grandAmount.updateAndGet(v -> v + grandTotal);
     });
-    dashboardDto.setTotalSaleCount((long)list2.size());
+    dashboardDto.setTotalSaleCount((long) list2.size());
     dashboardDto.setTotalAmount(grandAmount.get());
 
     return dashboardDto;

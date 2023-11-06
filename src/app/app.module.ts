@@ -47,6 +47,7 @@ import {ProductformComponent} from "./modal/productform/productform.component";
 import {ReportsComponent} from "./pages/reports/reports.component";
 import {PosReceiptComponent} from "./modal/posreciept/pos.receipt.component";
 import {WarehousePosReceiptComponent} from "./modal/warehouse-posreciept/warehouse-pos-receipt.component";
+import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 
 @NgModule({
     imports: [
@@ -74,6 +75,7 @@ import {WarehousePosReceiptComponent} from "./modal/warehouse-posreciept/warehou
         MatTooltipModule,
         MatRadioModule,
         MatAutocompleteModule,
+        MatSlideToggleModule,
     ],
   declarations: [
     AppComponent,

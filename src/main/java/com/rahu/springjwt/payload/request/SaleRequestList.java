@@ -14,6 +14,7 @@ public class SaleRequestList implements Serializable {
  private List<SaleRequest> data;
   private Double grandTotal;
   private Long grandTotalQtReturn;
+  private Long customerId;
   private String customerName;
   private String mobileNumber;
   private String address;

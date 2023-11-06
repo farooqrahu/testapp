@@ -23,6 +23,7 @@ public class Product extends BaseEntity{
   @Nullable
   private String description = "";
   private Float price;
+  private Float wholeSalePrice;
   private Long quantityItem;
   private Long quantityBundle;
   private Long extraQuantity;
@@ -66,6 +67,7 @@ public class Product extends BaseEntity{
     this.name = productRequest.getName();
     this.description = productRequest.getDescription();
     this.price = productRequest.getPrice();
+    this.wholeSalePrice = productRequest.getWholeSalePrice();
     this.category = productRequest.getCategory();
     this.company = productRequest.getCompany();
     this.images = productRequest.isImages();

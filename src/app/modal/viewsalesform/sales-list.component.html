@@ -1,6 +1,6 @@
 <div id="print" class="print">
   <h3 mat-dialog-title>Product Return
-    <button  class="float-right"   mat-button (click)="onNoClick()">&times;</button>
+    <button class="float-right" mat-button (click)="onNoClick()">&times;</button>
   </h3>
   <div mat-dialog-content>
     <!-- Logo -->
@@ -8,69 +8,120 @@
       <div class="col-md-2 ">
         <span><img width="149px" src="/assets/img/brand/logo2.jpg" alt="homepage" class="dark-logo"/></span>
       </div>
-      <div class="col-md-7" >
+      <div class="col-md-7">
         <p style="font-weight: bold;font-size: 18px;color: red"> Habib Paint House Bandhi Road,Moro, Sindh </p>
         <p> <span
-          style="font-size: 14px;color: black;font-weight: bold">Mobile No. (021)00000000 Cell No. 0300-0000001</span></p>
+          style="font-size: 14px;color: black;font-weight: bold">Mobile No. (021)00000000 Cell No. 0300-0000001</span>
+        </p>
 
       </div>
-      <div class="col-md-3" >
-        <p>Customer Name: {{productOrderList.customerName}} </p>
-        <p>Customer Id: {{productOrderList.customerId}} </p>
-        <p>Mobile Number: {{productOrderList.mobileNumber}} </p>
-        <p>&nbsp;Invoice No. {{productOrderList.invoiceNo}}</p>
-        <p>&nbsp;Date. {{productOrderList.createdAt}}</p>
+      <div class="col-md-3">
+        <p>Customer Name: {{productSales.customerName}} </p>
+        <p>Customer Id: {{productSales.customerId}} </p>
+        <p>Mobile Number: {{productSales.mobileNumber}} </p>
+        <p>&nbsp;Invoice No. {{productSales.invoiceNo}}</p>
+        <p>&nbsp;Date. {{productSales.createdAt}}</p>
 
       </div>
     </div>
 
     <div class="table-responsive">
-    <table style="width:100%;border: #cdd1d3 solid 2px" id="receipt" class="table align-items-center table-striped table-bordered table-flush" aria-label="order">
-      <thead class="thead-light">
-      <tr>
-        <th>Product</th>
-        <th>Bundle</th>
-        <th>Extra</th>
-        <th>Quantity</th>
-        <th>Enter Bundles</th>
-        <th>Enter Extra</th>
-        <th>Enter Quantity</th>
-        <!--        <th>Item Price</th>-->
-        <!--        <th>Sub Total</th>-->
-      </tr>
-      </thead>
-      <tbody>
-      <tr *ngFor="let p of productOrderList.productSales">
-        <td>{{p.product.name}}</td>
-        <td>{{p.bundleSale}}</td>
-        <td>{{p.extraSale}}</td>
-        <td>{{p.totalQuantitySale}}</td>
-        <td>
-          <mat-form-field>
-            <input matInput [disabled]="p.product.enableTQ" [(ngModel)]="p.userQuantityBundle" (change)="validateBundle(p,p.product);calculateRetQty(p,p.product)" (click)="validateBundle(p,p.product);calculateRetQty(p,p.product)"
-                   (focusin)="validateBundle(p,p.product);calculateRetQty(p,p.product)" (focusout)="validateBundle(p,p.product);calculateRetQty(p,p.product)" required>
-          </mat-form-field>
-        </td>
-        <td>
-          <mat-form-field>
-            <input matInput [disabled]="p.product.enableTQ" [(ngModel)]="p.userExtraQuantity" (ngModelChange)="validateExt(p,p.product);calculateRetQty(p,p.product)" (click)="validateExt(p,p.product);calculateRetQty(p,p.product)"
-                   (focusin)="validateExt(p,p.product);calculateRetQty(p,p.product)"  (focusout)="validateExt(p,p.product);calculateRetQty(p,p.product)" required>
-          </mat-form-field>
-        </td>
-        <td >
-          <mat-form-field>
-            <input matInput  [disabled]="p.extraSale-p.extraReturn>0" [(ngModel)]="p.userTotalQuantity" (change)="validateTotal(p,p.product)" (click)="validateTotal(p,p.product)"
-                   (focus)="validateTotal(p,p.product)"  required>
-          </mat-form-field>
-        </td>
-      </tr>
+      <mat-slide-toggle checked="true" (click)="toggle()">{{buttonName}}!</mat-slide-toggle>
+      <table *ngIf="show" style="width:100%;border: #5ef50f solid 2px" id="receipt"
+             class="table align-items-center table-bordered table-flush" aria-label="order">
+        <thead class="thead-light">
+        <tr>
+          <th>Product</th>
+          <th>Bundle</th>
+          <th>Extra</th>
+          <th>Quantity</th>
+          <!--        <th>Item Price</th>-->
+          <!--        <th>Sub Total</th>-->
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let p of productSales.productReturnList">
+          <td>{{p.productName}}</td>
+          <td>{{p.bundleReturn}}</td>
+          <td>{{p.extraReturn}}</td>
+          <td>{{p.totalQuantityReturn}}</td>
+        </tr>
+        <tr class="table table-dark">
+          <td></td>
+          <td></td>
+          <td>Total Quantity Returned</td>
+          <td>{{productSales.totalQuantityReturn}}</td>
 
-      </tbody>
+        </tr>
+        </tbody>
 
-    </table>
+      </table>
+
+      <table style="width:100%;border: #cdd1d3 solid 2px" id="receipt2"
+             class="table align-items-center table-striped table-bordered table-flush" aria-label="order">
+        <thead class="thead-light">
+        <tr>
+          <th>Product</th>
+          <th>Bundle</th>
+          <th>Extra</th>
+          <th>Quantity</th>
+          <th>Enter Bundles</th>
+          <th>Enter Extra</th>
+          <th>Enter Quantity</th>
+          <!--        <th>Item Price</th>-->
+          <!--        <th>Sub Total</th>-->
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let p of productSales.productSales">
+          <td>{{p.product.name}}</td>
+          <td>{{p.bundleSale}}</td>
+          <td>{{p.extraSale}}</td>
+          <td>{{p.totalQuantitySale}}</td>
+          <td>
+            <mat-form-field>
+              <input matInput [disabled]="p.product.enableTQ" [(ngModel)]="p.userQuantityBundle"
+                     (change)="validateBundle(p,p.product);calculateRetQty(p,p.product)"
+                     (click)="validateBundle(p,p.product);calculateRetQty(p,p.product)"
+                     (focusin)="validateBundle(p,p.product);calculateRetQty(p,p.product)"
+                     (focusout)="validateBundle(p,p.product);calculateRetQty(p,p.product)" required>
+            </mat-form-field>
+          </td>
+          <td>
+            <mat-form-field>
+              <input matInput [disabled]="p.product.enableTQ" [(ngModel)]="p.userExtraQuantity"
+                     (ngModelChange)="validateExt(p,p.product);calculateRetQty(p,p.product)"
+                     (click)="validateExt(p,p.product);calculateRetQty(p,p.product)"
+                     (focusin)="validateExt(p,p.product);calculateRetQty(p,p.product)"
+                     (focusout)="validateExt(p,p.product);calculateRetQty(p,p.product)" required>
+            </mat-form-field>
+          </td>
+          <td>
+            <mat-form-field>
+              <input matInput [disabled]="p.extraSale-p.extraReturn>0" [(ngModel)]="p.userTotalQuantity"
+                     (change)="validateTotal(p,p.product)" (click)="validateTotal(p,p.product)"
+                     (focus)="validateTotal(p,p.product)" required>
+            </mat-form-field>
+          </td>
+        </tr>
+        <tr class="table table-borderless table-dark">
+          <th></th>
+          <td></td>
+          <th>Total Products</th>
+          <td>{{productSales.totalQuantity}}</td>
+
+        </tr>
+
+
+        </tbody>
+
+      </table>
+
     </div>
+
+
   </div>
 </div>
-  <button mat-button class="mat-button mat-raised-button mat-primary" (click)="returnProductSale();">Return</button>
+<button mat-button [disabled]="disabledBtn" class="mat-button mat-raised-button mat-primary" (click)="returnProductSale();">Return</button>
 <!--  <button mat-button (click)="printTest()" class="mat-button  mat-warn">Print</button>-->
 

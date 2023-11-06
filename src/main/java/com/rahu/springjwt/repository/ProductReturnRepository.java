@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ProductReturnRepository extends JpaRepository<ProductReturnList, Long> {
-  ProductReturnList findByProductReturnId(Long id);
+//  ProductReturnList findByProductReturnId(Long id);
 }

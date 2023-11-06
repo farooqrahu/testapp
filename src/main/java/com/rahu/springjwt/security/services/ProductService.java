@@ -215,7 +215,7 @@ public class ProductService {
       User user=userDetailsServiceImpl.getUser();
       ProductHistory productHistory= ProductHistory.builder().quantityItem(prodFound.get().getQuantityItem())
         .quantityBundle(prodFound.get().getQuantityBundle()).extraQuantity(prodFound.get().getExtraQuantity()).quantity(prodFound.get().getQuantity())
-        .price(prodFound.get().getPrice()).product(prodFound.get()).category(prodFound.get().getCategory()).company(prodFound.get().getCompany()).name(prodFound.get().getName()).description(prodFound.get().getDescription())
+        .price(prodFound.get().getPrice()).wholeSalePrice(prodFound.get().getWholeSalePrice()).product(prodFound.get()).category(prodFound.get().getCategory()).company(prodFound.get().getCompany()).name(prodFound.get().getName()).description(prodFound.get().getDescription())
         .updatedByUser(user).build();
       productHistoryRepository.save(productHistory);
     }

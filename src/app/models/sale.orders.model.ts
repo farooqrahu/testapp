@@ -10,16 +10,20 @@ export class SaleOrders {
     public _invoiceNo:number,
     public _grandTotal:number,
     public _totalQuantity:number,
+    public _totalQuantityReturn:number,
     public _productId:number,
     public _price:number,
     public _createdAt:Date,
     public _quantity:number,
     public _productSales:ProductSales[],
+    public _productReturnList:ProductSales[],
   ) { }
 
   get id(): number {
     return this._id;
   }
+
+
 
   set id(value: number) {
     this._id = value;
@@ -120,5 +124,23 @@ export class SaleOrders {
 
   set customerId(value: string) {
     this._customerId = value;
+  }
+
+
+  get totalQuantityReturn(): number {
+    return this._totalQuantityReturn;
+  }
+
+  set totalQuantityReturn(value: number) {
+    this._totalQuantityReturn = value;
+  }
+
+
+  get productReturnList(): ProductSales[] {
+    return this._productReturnList;
+  }
+
+  set productReturnList(value: ProductSales[]) {
+    this._productReturnList = value;
   }
 }

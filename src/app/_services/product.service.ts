@@ -31,7 +31,7 @@ export class ProductService {
       catchError(() => of(false)));
   }
 
-  productrequest: ProductRequest = new ProductRequest(0, '', '', 0, 0,0,0,0, false,false,0,0,0,null,null, false);
+  productrequest: ProductRequest = new ProductRequest(0, '', '',0, 0, 0,0,0,0, false,false,0,0,0,null,null, false);
 
   updateProduct(product: Product): Observable<any> {
 
@@ -41,6 +41,7 @@ export class ProductService {
     var company = this.productrequest.company;
     var name = this.productrequest.name;
     var price = this.productrequest.price;
+    var wholeSalePrice = this.productrequest.wholeSalePrice;
     var quantityItem = this.productrequest.quantityItem;
     var quantityBundle = this.productrequest.quantityBundle;
     var extraQuantity = this.productrequest.extraQuantity;
@@ -50,7 +51,7 @@ export class ProductService {
     var wareHouseProduct =this.productrequest.wareHouseProduct;
 
     return this.http.post(PRODUCT_API + 'updateProduct', {//productrequest
-      id, category,company, price, name, description, quantityItem,quantityBundle,extraQuantity,quantity
+      id, category,company, price,wholeSalePrice, name, description, quantityItem,quantityBundle,extraQuantity,quantity
     ,enableTQ,wareHouseProduct
     }, httpOptions);
   }

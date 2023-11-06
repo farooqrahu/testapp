@@ -64,16 +64,18 @@ export class ProductformComponent implements OnInit {
     // data = data.price.replace(/,/g, '.')
     this.errors = "";
     if (this.data.price <= 0)
-      this.errors += "Price must not be zero or negative. "
+      this.errors += "Price must not be zero. "
+    if (this.data.wholeSalePrice <= 0)
+      this.errors += "WholeSale Price must not be zero. "
     if (this.data.name == null || this.data.name == "")
-      this.errors += "product name must not be empty\n"
+      this.errors += "Product name must not be empty\n"
     let qtyItem = Number(data.quantityItem) || 0;
     let bundle = Number(this.data.quantityBundle) || 0;
     if(qtyItem>10000000){
-      this.errors+= "qtyItem can not exceed 50\n"
+      this.errors+= " QtyItem limit reached\n"
     }
     if(bundle>10000){
-      this.errors+= "Bundle can not exceed 50\n"
+      this.errors+= "Bundle limit reached \n"
     }
     if(data.enableTQ){
       let total = Number(this.data.quantity) || 0;

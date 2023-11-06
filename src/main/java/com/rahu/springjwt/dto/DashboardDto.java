@@ -10,6 +10,7 @@ import lombok.Setter;
 public class DashboardDto {
   private Long id;
   private Long todaySaleCount;
+  private Long totalCustomers;
   private Double todayAmount;
   private Long todayReturnCount;
   private Double todayReturnAmount;

@@ -179,8 +179,9 @@ export class SalesInvoiceComponent implements OnInit {
   }
 
   printPosDialog(saleOrders?: SaleOrders,wareHouseProduct?): void {
+    debugger
     const result = saleOrders.productSales.filter((obj) => {
-      return obj.wareHouseProduct === true;
+      return obj.product.wareHouseProduct === true;
 
     });
     if(wareHouseProduct){
@@ -193,7 +194,7 @@ export class SalesInvoiceComponent implements OnInit {
           grandTotal:saleOrders.grandTotal,
           totalQuantity:saleOrders.totalQuantity,
           createdAt: saleOrders.createdAt,
-          productSales:saleOrders.productSales,
+          productSales:result,
         }
       });
       dialogRef.afterClosed().subscribe(res => {
@@ -228,8 +229,8 @@ export class SalesInvoiceComponent implements OnInit {
 
       });
     }else{
-      if ( saleOrders === undefined)
-        saleOrders = new SaleOrders(0, "","","","",  0,0,0, null, null, null,null,null)
+      // if ( saleOrders === undefined)
+        // saleOrders = new SaleOrders(0, "","","","",  0,0,0, null, null, null,null,null)
       const dialogRef = this.dialog.open(PosReceiptComponent, {
         data: {
           id: saleOrders.id,

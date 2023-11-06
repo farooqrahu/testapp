@@ -33,7 +33,7 @@ public class ProductOrderInvoiceDto {
     if (productOrder.getCustomer() != null ) {
       customerName = productOrder.getCustomer().getName();
       mobileNumber = productOrder.getCustomer().getMobileNumber();
-      customerId = productOrder.getCustomer().getCustomerId();
+      customerId = productOrder.getCustomer().getCustomerCode();
     }
     long count = productOrder.getProductSaleLists().stream().mapToLong(ProductSaleList::getTotalQuantitySale).sum();
 //    List<ProductSaleDto> productSales = productOrder.getProductSales().stream().map(ProductSaleDto::factoryProductSale).filter(productSaleDto -> !productSaleDto.isReturned()).collect(Collectors.toList());

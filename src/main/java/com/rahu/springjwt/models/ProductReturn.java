@@ -1,5 +1,6 @@
 package com.rahu.springjwt.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 import org.springframework.lang.Nullable;
 
@@ -25,7 +26,8 @@ public class ProductReturn {
   private Double grandTotal;
   private Long grandTotalQtReturn;
   private String detail;
-  @OneToMany(mappedBy = "productReturn")
+  @OneToMany(mappedBy = "productReturn",fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+  @JsonBackReference
   private List<ProductReturnList> productReturnList;
 
 

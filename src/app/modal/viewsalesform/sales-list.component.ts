@@ -24,12 +24,16 @@ export class SalesListComponent implements OnInit {
 
   sales: Sale[] = [];
   productslength = 0;
-  grandTotal=0;
-  ngAfterViewInit(): void {}
+  grandTotal = 0;
+  disabledBtn=false;
+  ngAfterViewInit(): void {
+  }
 
   @ViewChild(MatSort) sort: MatSort | any;
   @ViewChild(MatPaginator) paginator: MatPaginator | any;
   @ViewChild('productsearch') productsearch: ElementRef | any;
+  public show: boolean = true;
+  public buttonName: any = 'Hide Product Returned';
 
   counter(i: number) {
     return new Array(i);
@@ -42,12 +46,13 @@ export class SalesListComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<SalesListComponent>,
-    @Inject(MAT_DIALOG_DATA) public productOrderList: SaleOrders, private saleService: SaleService, private productService: ProductService, public dialog: MatDialog) {
+    @Inject(MAT_DIALOG_DATA) public productSales: SaleOrders, private saleService: SaleService, private productService: ProductService, public dialog: MatDialog) {
   }
 
   onNoClick(): void {
     this.dialogRef.close();
   }
+
   printTest() {
     console.log({
       node_module: printJS,
@@ -62,31 +67,41 @@ export class SalesListComponent implements OnInit {
   //   }
   // }
 
-  calculateRetQty(p: ProductSales,product: Product) {
-    debugger;
-    if(p.userExtraQuantity>0){
-      p.userTotalQuantity = Number(p.userExtraQuantity) + (Number(product.quantityItem) * Number(p.userQuantityBundle) || 0 ) || 0;
-    }else {
+  calculateRetQty(p: ProductSales, product: Product) {
+    if (Number(Number(p.userExtraQuantity)) > 0) {
+      p.userTotalQuantity = Number(Number(p.userExtraQuantity)) + (Number(product.quantityItem) * Number(p.userQuantityBundle) || 0) || 0;
+    } else {
       p.userTotalQuantity = (Number(product.quantityItem) * Number(p.userQuantityBundle) || 0) || 0;
     }
+    if (this.productSales.totalQuantityReturn > this.productSales.totalQuantity) {
+      p.userExtraQuantity = 0;
+      p.userQuantityBundle = 0;
+      p.userTotalQuantity = 0;
+      this.disabledBtn=true;
+    }
+
   }
 
   validateTotal(p: ProductSales, product: Product) {
-    if (p.userTotalQuantity > p.totalQuantitySale) {
+    debugger
+    if ((Number(p.userTotalQuantity)) > Number(p.totalQuantitySale)) {
+      p.userExtraQuantity = 0;
+      p.userQuantityBundle = 0;
       p.userTotalQuantity = 0;
     }
   }
 
   validateExt(p: ProductSales, product: Product) {
-    if (p.userExtraQuantity >= 10 || p.userTotalQuantity>p.totalQuantitySale) {
-      p.userExtraQuantity = 0;
+    debugger
+    if (Number(p.userExtraQuantity) > p.extraSale || (Number(p.userTotalQuantity) + Number(this.productSales.totalQuantityReturn) || 0) > this.productSales.totalQuantity) {
       p.userQuantityBundle = 0;
+      p.userExtraQuantity = 0;
       p.userTotalQuantity = 0;
     }
   }
 
   validateBundle(p: ProductSales, product: Product) {
-    if (p.userQuantityBundle > p.bundleSale || p.userTotalQuantity>p.totalQuantitySale) {
+    if (Number(p.userQuantityBundle) > p.bundleSale || (Number(p.userTotalQuantity) + Number(this.productSales.totalQuantityReturn) || 0) > this.productSales.totalQuantity) {
       p.userQuantityBundle = 0;
       p.userExtraQuantity = 0;
       p.userTotalQuantity = 0;
@@ -94,9 +109,11 @@ export class SalesListComponent implements OnInit {
 
   }
 
-  returnProductSale(): any{
+  returnProductSale(): any {
+
+
 // console.log("return qu");
-//     console.log(this.productOrderList);
+//     console.log(this.productSales);
     Swal.fire({
       title: 'Are you sure?',
       text: "You want to return this!",
@@ -107,7 +124,7 @@ export class SalesListComponent implements OnInit {
       confirmButtonText: 'Yes, Return it!'
     }).then((result) => {
       if (result.isConfirmed) {
-        this.saleService.returnProductSale(this.productOrderList).subscribe(
+        this.saleService.returnProductSale(this.productSales).subscribe(
           productSaleList => {
             this.swAlert("Product Returned Successfully", "Product Sale!");
             // this.exportAsExcelFile(this.productSaleList._sales,"receipt")
@@ -119,9 +136,6 @@ export class SalesListComponent implements OnInit {
         );
       }
     })
-
-
-
 
 
   }
@@ -150,6 +164,7 @@ export class SalesListComponent implements OnInit {
     const workbook: XLSX.WorkBook = {Sheets: {'data': worksheet}, SheetNames: ['data']};
     XLSX.writeFile(workbook, this.toExportFileName(excelFileName));
   }
+
   swAlert(body: string, title?: string) {
     Swal.fire(
       title,
@@ -160,14 +175,18 @@ export class SalesListComponent implements OnInit {
 
 
   ngOnInit() {
+    console.log("invoiceNo")
+    console.log(this.productSales.invoiceNo);
+
+
     // let totalQuantity=0;
     // let grandTotal=0;
     // this.productSaleList._sales.forEach(value =>
     // {totalQuantity=Number(totalQuantity)+Number(value.quantity)
     //   grandTotal=grandTotal+(Number(value.price)*Number(value.quantity));
     // })
-  // this.productSaleList.setTotalQuantity(totalQuantity);
-  // this.productSaleList.setGrandTotal(grandTotal);
+    // this.productSaleList.setTotalQuantity(totalQuantity);
+    // this.productSaleList.setGrandTotal(grandTotal);
   }
 
   //
@@ -184,4 +203,16 @@ export class SalesListComponent implements OnInit {
   //   console.log(this.productSaleList);
   //
   // }
+
+
+  toggle() {
+    this.show = !this.show;
+
+    // Change the name of the button.
+    if (this.show)
+      this.buttonName = "Hide Product Returned";
+    else
+    this.buttonName = "Show Product Returned";
+  }
+
 }

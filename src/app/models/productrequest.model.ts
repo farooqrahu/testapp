@@ -8,6 +8,7 @@ export class ProductRequest {
     public name: string,
     public description: string,
     public price: number,
+    public wholeSalePrice: number,
     public quantityItem: number,
     public quantityBundle: number,
     public extraQuantity: number,
@@ -34,6 +35,7 @@ export class ProductRequest {
     this.name = product.name
     this.description = product.description
     this.price = product.price
+    this.wholeSalePrice = product.wholeSalePrice
     this.quantityItem = product.quantityItem
     this.quantityBundle = product.quantityBundle
     this.extraQuantity = product.extraQuantity

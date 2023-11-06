@@ -49,7 +49,7 @@ export class SaleOrdersComponent implements OnInit, AfterViewInit {
   loadproductresults(): void {
     this.paginator.page.subscribe(() => {
         const productrequest = new ProductRequest(0, this.productsearch.nativeElement.value,
-          this.productsearch.nativeElement.value, 0, 0, 0, 0, 0, false,false,0,0,0,null, null, false, 'name', 'asc', this.paginator.pageSize, this.paginator.getNumberOfPages())
+          this.productsearch.nativeElement.value, 0, 0,0, 0, 0, 0, false,false,0,0,0,null, null, false, 'name', 'asc', this.paginator.pageSize, this.paginator.getNumberOfPages())
         this.saleservice.findProduct(productrequest).subscribe(
           data => {
             debugger;
@@ -117,29 +117,50 @@ export class SaleOrdersComponent implements OnInit, AfterViewInit {
 
 
   openDialog(saleOrders?: SaleOrders): void {
-    console.log(saleOrders)
+    // console.log(saleOrders)
+
     // if (saleOrders === undefined)
     //   saleOrders = new SaleOrders(0, "","","",  0,0,0,null, null, null,null,null)
-    const dialogRef = this.dialog.open(SalesListComponent, {
-      width: '1220px', height: '600px',
-      data: {
-        id: saleOrders.id,
-        customerName:saleOrders.customerName,
-        mobileNumber:saleOrders.mobileNumber,
-        invoiceNo:saleOrders.invoiceNo,
-        grandTotal:saleOrders.grandTotal,
-        createdAt: saleOrders.createdAt,
-        productSales:saleOrders.productSales,
-      }
-    });
-    dialogRef.afterClosed().subscribe(res => {
-      // console.log(res);
+
+    this.saleservice.findReturnOrdersByInvoiceNo(saleOrders.invoiceNo).subscribe(
+      data => {
+        console.log(data);
+        // this.saleOrders = data.productOrderInvoiceDtos
+        // console.log("this is te");
+        // this.productslength = data.totalitems;
+        // this.saleOrdersdatasource = new MatTableDataSource(this.saleOrders);
+        // console.log(this.saleOrders);
+        const dialogRef = this.dialog.open(SalesListComponent, {
+          width: '1220px', height: '600px',
+          data: {
+            id: saleOrders.id,
+            customerName:saleOrders.customerName,
+            mobileNumber:saleOrders.mobileNumber,
+            invoiceNo:saleOrders.invoiceNo,
+            totalQuantity:saleOrders.totalQuantity,
+            grandTotal:saleOrders.grandTotal,
+            createdAt: saleOrders.createdAt,
+            productSales:saleOrders.productSales,
+            productReturnList:data.productReturnList,
+            totalQuantityReturn:data.totalQuantityReturn,
+
+          }
+        });
+        dialogRef.afterClosed().subscribe(res => {
+          // console.log(res);
           this.refreshproduct()
-    });
+        });
+      },
+      err => {
+        (err);
+      }
+    );
+
+
   }
   printDialog(saleOrders?: SaleOrders): void {
-    if (saleOrders === undefined)
-      saleOrders = new SaleOrders(0, "","","","",  0,0,0, null, null, null,null,null)
+    // if (saleOrders === undefined)
+      // saleOrders = new SaleOrders(0, "","","","",  0,0,0, null, null, null,null,null)
     const dialogRef = this.dialog.open(SalesInvoiceComponent, {
       width: '1120px', height: '600px',
       data: {

@@ -14,8 +14,10 @@ public class ProductRequest {
   private Category category;
   private Company company;
   private String name;
+  private Long invoiceNo;
   private String description;
   private Float price;
+  private Float wholeSalePrice;
   private boolean images;
   private String sort = "createdAt";
   private String sortdirection = "desc";
