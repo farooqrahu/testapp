@@ -73,11 +73,14 @@ export class SalesListComponent implements OnInit {
     } else {
       p.userTotalQuantity = (Number(product.quantityItem) * Number(p.userQuantityBundle) || 0) || 0;
     }
-    if (this.productSales.totalQuantityReturn > this.productSales.totalQuantity) {
+    if ( p.userTotalQuantity > this.productSales.totalQuantity) {
       p.userExtraQuantity = 0;
       p.userQuantityBundle = 0;
       p.userTotalQuantity = 0;
       this.disabledBtn=true;
+    }else {
+      this.disabledBtn=false;
+
     }
 
   }
@@ -93,7 +96,8 @@ export class SalesListComponent implements OnInit {
 
   validateExt(p: ProductSales, product: Product) {
     debugger
-    if (Number(p.userExtraQuantity) > p.extraSale || (Number(p.userTotalQuantity) + Number(this.productSales.totalQuantityReturn) || 0) > this.productSales.totalQuantity) {
+
+    if (Number(p.userExtraQuantity) >= p.product.quantityItem) {
       p.userQuantityBundle = 0;
       p.userExtraQuantity = 0;
       p.userTotalQuantity = 0;

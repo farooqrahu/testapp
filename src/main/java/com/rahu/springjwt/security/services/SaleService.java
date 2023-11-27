@@ -188,8 +188,8 @@ public class SaleService {
       ProductReturn productReturnFound = productReturn.orElseGet(() -> ProductReturn.builder().id(0L).invoiceNo(productOrder.get().getInvoiceNo()).customer(productOrder.get().getCustomer()).grandTotalQtReturn(productReturnRequest.getGrandTotalQtReturn()).build());
       productReturnFound.setGrandTotal(productReturnRequest.getGrandTotal());
       ProductReturn productReturnSaved = returnRepository.save(productReturnFound);
-      AtomicLong quantitySold = new AtomicLong();
-      AtomicLong quantityReturned = new AtomicLong();
+      AtomicLong quantitySold = new AtomicLong(0);
+      AtomicLong quantityReturned = new AtomicLong(0);
 
       productReturnRequest.getData().forEach(returnRequest -> {
         Optional<ProductSaleList> productSold = productSaleRepository.findById(returnRequest.getId());
@@ -209,11 +209,12 @@ public class SaleService {
                     product.setOutOfStock(Boolean.TRUE);
                   }
                   productRepository.save(Objects.requireNonNull(product));
-                  productSold.get().setTotalQuantitySale(totalQuantitySold - userTotalQuantity);
-                  productSaleRepository.save(productSold.get());
+//                  productSold.get().setTotalQuantitySale(totalQuantitySold - userTotalQuantity);
+//                  productSaleRepository.save(productSold.get());
                 }
                 ProductReturnList productReturnList = ProductReturnList.builder().id(0L).product(productSold.get().getProduct().getId()).productName(productSold.get().getProduct().getName()).totalQuantityReturn(returnRequest.getUserTotalQuantity()).productReturn(productReturnSaved).build();
                 productReturnRepository.save(productReturnList);
+
               } else {
                 long bundleReturn = returnRequest.getUserQuantityBundle();
                 long extraReturn = returnRequest.getUserExtraQuantity();
@@ -276,7 +277,10 @@ public class SaleService {
 //                productSold.get().setBundleSale(productSold.get().getBundleSale() - bundleReturned);
 //                productSold.get().setTotalQuantitySale(zeroIfNull(productSold.get().getTotalQuantitySale()) - returnRequest.getUserTotalQuantity());
 
-                productSaleRepository.save(productSold.get());
+//                quantitySold.set(productSold.get().getTotalQuantitySale());
+//                quantityReturned.set(returnRequest.getUserTotalQuantity());
+
+
                 ProductReturnList productReturnList = ProductReturnList.builder().id(0L).
                   product(productSold.get().getProduct().getId()).
                   productName(productSold.get().getProduct().getName()).
@@ -290,29 +294,19 @@ public class SaleService {
             }
           }
         }
-        quantitySold.set(productSold.get().getTotalQuantitySale());
       });
 
       long sold = productOrder.get().getProductSaleLists().stream().map(ProductSaleList::getTotalQuantitySale).mapToLong(Long::longValue).sum();
+
       long curruntReturns = productReturnRequest.getData().stream().map(SaleRequest::getUserTotalQuantity).mapToLong(Long::longValue).sum();
       long oldReturns=0;
-      if(productReturnSaved.getProductReturnList()!=null)
+      if(productReturnSaved.getProductReturnList()!=null && productReturnSaved.getProductReturnList().size()>0)
        oldReturns = productReturnSaved.getProductReturnList().stream().map(ProductReturnList::getTotalQuantityReturn).mapToLong(Long::longValue).sum();
       if ((curruntReturns+oldReturns) >= sold ) {
         productOrder.get().setReturned(Boolean.TRUE);
       }
 
 
-      //      List<ProductSaleList> productSaleList = productOrder.get().getProductSaleLists();
-//      List<ProductReturnList> productReturnList = productReturnSaved.getProductReturnList();
-//      long soldItems = productSaleList.stream().map(ProductSaleList::getTotalQuantitySale).mapToLong(Long::longValue).sum();
-//      if (productReturnList!=null && productReturnList.size() > 0) {
-//        long returnItems = productReturnList.stream().map(ProductReturnList::getTotalQuantityReturn).mapToLong(Long::longValue).sum();
-//        if (soldItems == returnItems) {
-//          productOrder.get().setReturned(Boolean.TRUE);
-//        }
-//
-//      }
 
 
       //      long soldItems = productSaleList.stream().map(ProductSaleList::getTotalQuantitySale).mapToLong(Long::longValue).sum();

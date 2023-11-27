@@ -18,3 +18,16 @@ td.mat-footer-cell:first-of-type {
 .icon-display {
   transform: scale(0.7);
 }
+
+.mat-column-name {
+  flex: none;
+  width: 100px;
+}
+.mat-column-wholeSalePrice {
+  flex: none;
+  width: 100px;
+}
+.mat-column-price {
+  flex: none;
+  width: 110px;
+}

@@ -24,8 +24,6 @@ public class ProductSaleList {
   private Long extraSale;
   private Long bundleSale;
   private String detail;
-  @Column(columnDefinition = "boolean default false")
-  private boolean isReturned = false;
   @Nullable
   @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
   private ProductOrder productOrder;

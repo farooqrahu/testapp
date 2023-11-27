@@ -22,7 +22,7 @@ public class ProductSaleDto {
   private boolean isReturned = false;
 
   public static ProductSaleDto factoryProductSale(ProductSaleList productSaleList) {
-    return ProductSaleDto.builder().id(productSaleList.getId()).extraSale(productSaleList.getExtraSale()).bundleSale(productSaleList.getBundleSale()).totalQuantitySale(productSaleList.getTotalQuantitySale()).isReturned(productSaleList.isReturned()).product(ProductDto.factoryProduct(productSaleList.getProduct())).build();
+    return ProductSaleDto.builder().id(productSaleList.getId()).extraSale(productSaleList.getExtraSale()).bundleSale(productSaleList.getBundleSale()).totalQuantitySale(productSaleList.getTotalQuantitySale()).product(ProductDto.factoryProduct(productSaleList.getProduct())).build();
   }
 
 
