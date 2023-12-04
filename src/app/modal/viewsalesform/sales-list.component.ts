@@ -68,6 +68,7 @@ export class SalesListComponent implements OnInit {
   // }
 
   calculateRetQty(p: ProductSales, product: Product) {
+    debugger
     if (Number(Number(p.userExtraQuantity)) > 0) {
       p.userTotalQuantity = Number(Number(p.userExtraQuantity)) + (Number(product.quantityItem) * Number(p.userQuantityBundle) || 0) || 0;
     } else {
@@ -95,9 +96,7 @@ export class SalesListComponent implements OnInit {
   }
 
   validateExt(p: ProductSales, product: Product) {
-    debugger
-
-    if (Number(p.userExtraQuantity) >= p.product.quantityItem) {
+    if (Number(p.userExtraQuantity) >= p.product.quantityItem || (Number(product.quantityItem) * Number(p.userQuantityBundle) || 0) > this.productSales.totalQuantity) {
       p.userQuantityBundle = 0;
       p.userExtraQuantity = 0;
       p.userTotalQuantity = 0;
@@ -105,7 +104,8 @@ export class SalesListComponent implements OnInit {
   }
 
   validateBundle(p: ProductSales, product: Product) {
-    if (Number(p.userQuantityBundle) > p.bundleSale || (Number(p.userTotalQuantity) + Number(this.productSales.totalQuantityReturn) || 0) > this.productSales.totalQuantity) {
+debugger
+    if (Number(p.userQuantityBundle) > p.bundleSale || (Number(product.quantityItem) * Number(p.userQuantityBundle) || 0) > this.productSales.totalQuantity) {
       p.userQuantityBundle = 0;
       p.userExtraQuantity = 0;
       p.userTotalQuantity = 0;

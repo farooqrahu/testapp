@@ -239,6 +239,84 @@ public class SaleService {
                   product.setOutOfStock(Boolean.FALSE);
                 }
                 productRepository.save(Objects.requireNonNull(product));
+//                27-11-2023
+                if (bundleReturn > 0 && extraReturn>0) {
+                  if(bundleReturn==productSold.get().getBundleSale() && extraReturn== productSold.get().getExtraSale()){
+                    productSold.get().setBundleSale(0L);
+                    productSold.get().setExtraSale(0L);
+                  }else{
+                      if(extraReturn < productSold.get().getExtraSale()){
+                        productSold.get().setBundleSale(productSold.get().getBundleSale() - bundleReturn);
+                        productSold.get().setExtraSale(productSold.get().getExtraSale()-extraReturn);
+                      }else{
+                        if ((extraReturn + productSold.get().getExtraSale()) > Objects.requireNonNull(productSold.get().getProduct()).getQuantityItem()) {
+                          if(productSold.get().getBundleSale()>0){
+                            productSold.get().setBundleSale(productSold.get().getBundleSale() - 1);
+                          }
+                          productSold.get().setExtraSale(((extraReturn + productSold.get().getExtraSale()) - Objects.requireNonNull(productSold.get().getProduct()).getQuantityItem()));
+
+                        }
+                      }
+                  }
+
+//                  if ((extraReturn + productSold.get().getExtraSale()) >= Objects.requireNonNull(productSold.get().getProduct()).getQuantityItem()) {
+//
+//                    if ((extraReturn + productSold.get().getExtraSale()) > Objects.requireNonNull(productSold.get().getProduct()).getQuantityItem()) {
+//                      productSold.get().setBundleSale(productSold.get().getBundleSale() - 1);
+//                      productSold.get().setExtraSale(((extraReturn + productSold.get().getExtraSale()) - Objects.requireNonNull(productSold.get().getProduct()).getQuantityItem()));
+//                    } else {
+//                      if (productSold.get().getBundleSale() > 0)
+//                        productSold.get().setBundleSale(productSold.get().getBundleSale() - 1);
+//                      productSold.get().setExtraSale(extraReturn);
+//                    }
+//
+//                  }
+                }else if(bundleReturn>0){
+                  if(bundleReturn==productSold.get().getBundleSale()) {
+                    productSold.get().setBundleSale(0L);
+                  }else{
+                    if(productSold.get().getBundleSale()>0){
+                      productSold.get().setBundleSale(productSold.get().getBundleSale()-bundleReturn);
+                    }else{
+                      productSold.get().setBundleSale(0L);
+                    }
+                  }
+                }else if(extraReturn>0){
+                  if(extraReturn==productSold.get().getExtraSale()) {
+                  productSold.get().setExtraSale(0L);
+                  }else{
+                    if(productSold.get().getExtraSale()>0){
+                      if(extraReturn>productSold.get().getExtraSale()){
+                        productSold.get().setBundleSale(productSold.get().getBundleSale() - 1);
+                        long totalExt=(extraReturn + productSold.get().getExtraSale());
+                        if(totalExt>=productSold.get().getProduct().getQuantityItem()){
+                          productSold.get().setExtraSale((totalExt - Objects.requireNonNull(productSold.get().getProduct()).getQuantityItem()));
+                        }  else
+                        {
+                          long rettt=Objects.requireNonNull(productSold.get().getProduct()).getQuantityItem()- ( extraReturn- productSold.get().getExtraSale()  );
+                          productSold.get().setExtraSale(rettt);
+                        }
+                      }else{
+                        productSold.get().setExtraSale(productSold.get().getExtraSale()-extraReturn);
+                      }
+                  }else{
+                        productSold.get().setExtraSale(extraReturn);
+
+                    }
+                }
+                }
+
+//                else if ((extraReturn + productSold.get().getExtraSale()) > Objects.requireNonNull(productSold.get().getProduct()).getQuantityItem()) {
+//                  if(productSold.get().getBundleSale()>0)
+//                  productSold.get().setBundleSale(productSold.get().getBundleSale() - 1);
+//                  productSold.get().setExtraSale((extraReturn + productSold.get().getExtraSale() - Objects.requireNonNull(productSold.get().getProduct()).getQuantityItem()));
+//                } else {
+//                  productSold.get().setExtraSale(productSold.get().getExtraSale() - extraReturn);
+//                }
+//                if(productSold.get().getBundleSale()>0)
+//                productSold.get().setBundleSale(productSold.get().getBundleSale() - bundleReturn);
+                productSold.get().setTotalQuantitySale(zeroIfNull(productSold.get().getTotalQuantitySale()) - returnRequest.getUserTotalQuantity());
+
 //1+sold=10
 //                if ((extraReturn + productSold.get().getExtraSale()) == Objects.requireNonNull(productSold.get().getProduct()).getQuantityItem()) {
 //                  productSold.get().setBundleSale(productSold.get().getBundleSale() - 1);
@@ -296,15 +374,15 @@ public class SaleService {
         }
       });
 
-      long sold = productOrder.get().getProductSaleLists().stream().map(ProductSaleList::getTotalQuantitySale).mapToLong(Long::longValue).sum();
+//      long sold = productOrder.get().getProductSaleLists().stream().map(ProductSaleList::getTotalQuantitySale).mapToLong(Long::longValue).sum();
 
-      long curruntReturns = productReturnRequest.getData().stream().map(SaleRequest::getUserTotalQuantity).mapToLong(Long::longValue).sum();
-      long oldReturns=0;
-      if(productReturnSaved.getProductReturnList()!=null && productReturnSaved.getProductReturnList().size()>0)
-       oldReturns = productReturnSaved.getProductReturnList().stream().map(ProductReturnList::getTotalQuantityReturn).mapToLong(Long::longValue).sum();
-      if ((curruntReturns+oldReturns) >= sold ) {
-        productOrder.get().setReturned(Boolean.TRUE);
-      }
+//      long curruntReturns = productReturnRequest.getData().stream().map(SaleRequest::getUserTotalQuantity).mapToLong(Long::longValue).sum();
+//      long oldReturns=0;
+//      if(productReturnSaved.getProductReturnList()!=null && productReturnSaved.getProductReturnList().size()>0)
+//       oldReturns = productReturnSaved.getProductReturnList().stream().map(ProductReturnList::getTotalQuantityReturn).mapToLong(Long::longValue).sum();
+//      if ((curruntReturns+oldReturns) >= sold ) {
+//        productOrder.get().setReturned(Boolean.TRUE);
+//      }
 
 
 
