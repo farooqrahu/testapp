@@ -75,9 +75,12 @@ export class ProductsComponent implements OnInit, AfterViewInit {
     return new Array(i);
   }
   loadproductresults(): void {
-    this.paginator.page.subscribe(() => {
+    console.log("pagiggggggggggggggg")
+    // this.paginator.page.subscribe(() => {
       const productrequest = new ProductRequest( 0, this.productsearch.nativeElement.value,
         this.productsearch.nativeElement.value, 0,0,0,0,0, 0,false,false,0,0,0,null, null, false, 'name', 'asc', this.paginator.pageSize, this.paginator.getNumberOfPages())
+console.log("pagiggggggggggggggg")
+        console.log(productrequest)
       this.productservice.findProduct(productrequest).subscribe(
         data => {
           this.products = data.list;
@@ -92,10 +95,10 @@ export class ProductsComponent implements OnInit, AfterViewInit {
         err => {
           (err);
         }
-      );
+      // );
 
 
-    }
+    // }
     )
   }
   ngOnInit() {
@@ -142,7 +145,7 @@ export class ProductsComponent implements OnInit, AfterViewInit {
   }
   openDialog(product?: Product): void {
     if (product === undefined)
-      product = new Product(0, "", "", 0,0, this.categories[0],this.companies[0], false,0,0,0,0,false,false,"",null,"",0,0,0)
+      product = new Product(0, "", "", 0,0, this.categories[0],this.companies[0], false,0,0,0,0,false,false,"",null,"",0,0,0,10,0)
     const dialogRef = this.dialog.open(ProductformComponent, {
       width: '550px',
       data: {

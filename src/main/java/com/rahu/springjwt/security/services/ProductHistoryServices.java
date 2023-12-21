@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
 import java.util.stream.Collectors;
 @Service
 public class ProductHistoryServices {
@@ -23,44 +24,40 @@ public class ProductHistoryServices {
     if (productRequest.getCategory() != null && productRequest.getName() != null) {
       return findByNameContainingAndCategory(productRequest);
     } else {
-      if (productRequest.getName() != null) {
-        return findByNameContaining(productRequest);
-      } else {
+//      if (productRequest.getName() != null) {
+//        return findByNameContaining(productRequest);
+//      } else {
         return findAllProducts(productRequest);
       }
-    }
+//    }
   }
 
   public ResponseEntity<?> findAllProducts(ProductRequest productRequest) {
     Pageable paging = checkPaging(productRequest);
-    if (paging == null)
-      return ResponseEntity.ok(new ProductHistoryResponse(productHistoryRepository.findAll().stream().map(ProductHistoryDto::factoryProduct).collect(Collectors.toList())));
-    return ResponseEntity.ok(new ProductHistoryResponse(productHistoryRepository.findAll(paging).stream().map(ProductHistoryDto::factoryProduct).collect(Collectors.toList())));
+//    if (paging == null)
+//      return ResponseEntity.ok(new ProductHistoryResponse(productHistoryRepository.findAll().stream().map(ProductHistoryDto::factoryProduct).collect(Collectors.toList())));
+    return ResponseEntity.ok(new ProductHistoryResponse(productHistoryRepository.findAll(paging)));
   }
 
   public ResponseEntity<?> findByNameContaining(ProductRequest productRequest) {
     Pageable paging = checkPaging(productRequest);
-    if (paging == null)
-      return ResponseEntity.ok(new ProductHistoryResponse(productHistoryRepository.findByNameContaining(productRequest.getName()).stream().map(ProductHistoryDto::factoryProduct).collect(Collectors.toList())));
-    else
-      return ResponseEntity
-        .ok(new ProductHistoryResponse(productHistoryRepository.findByNameContaining(productRequest.getName(), paging).stream().map(ProductHistoryDto::factoryProduct).collect(Collectors.toList())));
+//    if (paging == null)
+//      return ResponseEntity.ok(new ProductHistoryResponse(productHistoryRepository.findByNameContaining(productRequest.getName()).stream().map(ProductHistoryDto::factoryProduct).collect(Collectors.toList())));
+//    else
+//      return ResponseEntity
+//        .ok(new ProductHistoryResponse(productHistoryRepository.findByNameContaining(productRequest.getName(), paging).stream().map(ProductHistoryDto::factoryProduct).collect(Collectors.toList())));
+  return null;
   }
 
   public ResponseEntity<?> findByNameContainingAndCategory(ProductRequest productRequest) {
     Pageable paging = checkPaging(productRequest);
-
-
-    if (paging == null)
-      return ResponseEntity.ok(new ProductHistoryResponse(
-        productHistoryRepository.findByNameContainingAndCategoryName(productRequest.getName(), productRequest.getCategory().getName()).stream().map(ProductHistoryDto::factoryProduct).collect(Collectors.toList())));
-    else
       return ResponseEntity.ok(new ProductHistoryResponse(productHistoryRepository
-        .findByNameContainingAndCategory(productRequest.getName(), productRequest.getCategory(), paging).stream().map(ProductHistoryDto::factoryProduct).collect(Collectors.toList())));
+        .findByNameContainingAndCategory(productRequest.getName(), productRequest.getCategory(), paging)));
+//return null;return ResponseEntity.ok(new ProductHistoryResponse(productHistoryRepository.findAll(paging)));
   }
   public Pageable checkPaging(ProductRequest productRequest) {
     if (productRequest.getPagesize() > 0 && productRequest.getPagenumber() >= 0) {
-      if (productRequest.getSortdirection() == "desc") {
+      if (Objects.equals(productRequest.getSortdirection(), "desc")) {
         return PageRequest.of(productRequest.getPagenumber(), productRequest.getPagesize(),
           Sort.by(productRequest.getSort()).descending());
       } else {

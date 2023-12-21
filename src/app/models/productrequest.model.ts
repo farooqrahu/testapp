@@ -22,9 +22,9 @@ export class ProductRequest {
     public company: Company,
     public images: boolean,
     private sort: string = "id",
-    private sortdirection: string = "asc",
-    private pagesize: number = 10,
-    private pagenumber: number = 0
+    public sortdirection: string = "asc",
+    public pagesize: number = 10,
+    public pagenumber: number = 0
   ) {
   }
 
@@ -45,5 +45,7 @@ export class ProductRequest {
     this.category = product.category
     this.company = product.company
     this.images = product.images
+    this.pagenumber=product.pagenumber
+    this.pagesize=product.pagesize
   }
 }

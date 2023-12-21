@@ -22,6 +22,8 @@ export class Product {
     public userQuantityBundle: number,
     public userExtraQuantity: number,
     public userTotalQuantity: number,
+    public pagesize: number,
+    public pagenumber: number
 
   ) { }
 

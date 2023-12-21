@@ -126,7 +126,7 @@ export class SalesComponent implements OnInit, AfterViewInit {
 
   openDialog(product?: Product): void {
     if (product === undefined)
-      product = new Product(0, "", "", 0,0, null, null, false, 0, 0, 0, 0, false,false,"",null,"",0,0,0)
+      product = new Product(0, "", "", 0,0, null, null, false, 0, 0, 0, 0, false,false,"",null,"",0,0,0,10,0)
     const dialogRef = this.dialog.open(SaleformComponent, {
       width: '55px',
       data: {

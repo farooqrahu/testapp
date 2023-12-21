@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
-import {MatPaginator} from '@angular/material/paginator';
+import {MatPaginator, PageEvent} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
 import {ProductService} from 'src/app/_services/product.service';
@@ -24,6 +24,7 @@ export class ProductHistoryComponent implements OnInit, AfterViewInit {
   dataSource: MatTableDataSource<Product> = null;
   products: Product[] = [];
   productslength = 0;
+  totalElements: number = 0;
   constructor(public productservice: ProductService, private token: TokenStorageService
     , public dialog: MatDialog
     // ,@Inject(DOCUMENT) document:Document
@@ -58,36 +59,55 @@ export class ProductHistoryComponent implements OnInit, AfterViewInit {
   }
 
   loadproductresults(): void {
-    this.paginator.page.subscribe(() => {
+      console.log(this.paginator.pageSize, this.paginator.getNumberOfPages())
         const productrequest = new ProductRequest( 0, this.productsearch.nativeElement.value,
-          this.productsearch.nativeElement.value,0, 0,0,0,0, 0,false,false,0,0,0,null, null, false, 'name', 'asc', this.paginator.pageSize, this.paginator.getNumberOfPages())
-        this.productservice.findProductHistory(productrequest).subscribe(
-          data => {
-            this.products = data.list;
-            // (this.products);
-            this.productslength = data.totalitems;
-            setTimeout(() => {
-              this.dataSource = new MatTableDataSource(this.products);
-              this.dataSource.sort = this.sort;
-              this.dataSource.paginator = this.paginator;
-            });
-          },
-          err => {
-            (err);
-          }
-        );
+          this.productsearch.nativeElement.value,0, 0,0,0,0, 0,false,false,0,0,0,this.productsearch.nativeElement.value, this.productsearch.nativeElement.value, false, 'name', 'asc', this.paginator.pageSize,  this.paginator.getNumberOfPages())
 
+    this.getProducts(productrequest);
 
-      }
-    )
+        // this.productservice.findProductHistory(productrequest).subscribe(
+        //   data => {
+        //     this.products = data.list;
+        //     // (this.products);
+        //     this.productslength = data.totalitems;
+        //     setTimeout(() => {
+        //       this.dataSource = new MatTableDataSource(this.products);
+        //       this.dataSource.sort = this.sort;
+        //       this.dataSource.paginator = this.paginator;
+        //     });
+        //   },
+        //   err => {
+        //     (err);
+        //   }
+
+    // )
   }
   ngOnInit() {
     if (!(this.token.isAdmin() || this.token.isDEO())) {
       this.token.signOut();
     }
-    this.refreshproduct();
-  }
+    // this.refreshproduct();
 
+    const productrequest = new ProductRequest( 0, "",
+      "",0, 0,0,0,0, 0,false,false,0,0,0,null, null, false, 'name', 'asc', 10,0)
+    this.getProducts(productrequest);
+  }
+  private getProducts(request) {
+    this.productservice.findProductHistory(request)
+      .subscribe(data => {
+          this.products = data['prodHisContent'];
+          this.totalElements = data['totalitems'];
+          this.dataSource = new MatTableDataSource(this.products);
+                this.dataSource.sort = this.sort;
+                this.dataSource.paginator = this.paginator;
+
+        }
+        , error => {
+        console.log("eeeeeeeeeeeeeeeeeeee")
+        console.log(error.error.message);
+        }
+      );
+  }
   refreshproduct() {
 
     this.productservice.getAllProductHistory().subscribe(
@@ -106,7 +126,16 @@ export class ProductHistoryComponent implements OnInit, AfterViewInit {
       }
     );
   }
+  nextPage(event: PageEvent) {
+    // const request = {};
+    // request['page'] = ;
+    // request['size'] = ;
 
+    const productrequest = new ProductRequest( 0, "",
+      "",0, 0,0,0,0, 0,false,false,0,0,0,null, null, false, 'name', 'asc', event.pageSize,event.pageIndex)
+
+    this.getProducts(productrequest);
+  }
   messagebox(body: string, title?: string) {
     if (title === undefined)
       title = "Notice"

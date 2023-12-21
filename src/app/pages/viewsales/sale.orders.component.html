@@ -20,7 +20,7 @@
         </div>
         <div style="margin-left:1%">
           <mat-form-field>
-            <input matInput (change)="loadproductresults()" #productsearch type="text"
+            <input matInput (change)="loadproductresults();" #productsearch type="text"
                    (keyup)="doFilter($event.target.value,'saleOrders')" placeholder="Search">
           </mat-form-field>
           <!--          <button class="mat-button mat-raised-button mat-primary" (click)="submitOrder()" mat-button>Submit Order</button>-->

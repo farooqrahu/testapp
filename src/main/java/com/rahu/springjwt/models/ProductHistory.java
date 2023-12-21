@@ -1,5 +1,6 @@
 package com.rahu.springjwt.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -41,6 +42,7 @@ public class ProductHistory extends BaseEntity{
   private Company company;
   @Nullable
   @OneToOne(fetch = FetchType.LAZY)
+  @JsonIgnore
   private Product product;
 
   public ProductHistory() {

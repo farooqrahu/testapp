@@ -46,15 +46,15 @@ export class SaleOrdersComponent implements OnInit, AfterViewInit {
     return new Array(i);
   }
 
+
   loadproductresults(): void {
     this.paginator.page.subscribe(() => {
-        const productrequest = new ProductRequest(0, this.productsearch.nativeElement.value,
-          this.productsearch.nativeElement.value, 0, 0,0, 0, 0, 0, false,false,0,0,0,null, null, false, 'name', 'asc', this.paginator.pageSize, this.paginator.getNumberOfPages())
+        const productrequest = new ProductRequest( 0, this.productsearch.nativeElement.value,
+          this.productsearch.nativeElement.value, 0,0,0,0,0, 0,false,false,0,0,0,null, null, false, 'name', 'asc', this.paginator.pageSize, this.paginator.getNumberOfPages())
         this.saleservice.findProduct(productrequest).subscribe(
           data => {
-            debugger;
-            this.saleOrders = data.productOrderInvoiceDtos;
-            console.log(this.saleOrders);
+            this.saleOrders = data.list;
+            // (this.products);
             this.productslength = data.totalitems;
             setTimeout(() => {
               this.saleOrdersdatasource = new MatTableDataSource(this.saleOrders);
@@ -71,6 +71,31 @@ export class SaleOrdersComponent implements OnInit, AfterViewInit {
       }
     )
   }
+  // loadproductresults(): void {
+  //   this.paginator.page.subscribe(() => {
+  //       const productrequest = new ProductRequest(0, this.productsearch.nativeElement.value,
+  //         this.productsearch.nativeElement.value, 0, 0,0, 0, 0, 0, false,false,0,0,0,null, null, false, 'name', 'asc', this.paginator.pageSize, this.paginator.getNumberOfPages())
+  //       this.saleservice.findProduct(productrequest).subscribe(
+  //         data => {
+  //           debugger;
+  //           this.saleOrders = data.productOrderInvoiceDtos;
+  //           console.log(this.saleOrders);
+  //           this.productslength = data.totalitems;
+  //           setTimeout(() => {
+  //             this.saleOrdersdatasource = new MatTableDataSource(this.saleOrders);
+  //             this.saleOrdersdatasource.sort = this.sort;
+  //             this.saleOrdersdatasource.paginator = this.paginator;
+  //           });
+  //         },
+  //         err => {
+  //           (err);
+  //         }
+  //       );
+  //
+  //
+  //     }
+  //   )
+  // }
 
   ngOnInit() {
     this.refreshproduct();

@@ -39,7 +39,8 @@ export class SaleService {
     var description = productrequest.description;
     console.log(productrequest)
 
-    return this.http.post(PRODUCT_SALE_API + 'findOrders', {
+    return this.http.post(PRODUCT_SALE_API + 'findProduct', {
+
       id, category, price, name, description, quantity
     }, httpOptions);
   }

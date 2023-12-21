@@ -78,10 +78,10 @@ export class ProductService {
   }
 
   findProduct(productrequest: ProductRequest): Observable<any> {
-
+    console.log("dfdsfsf")
     var id = productrequest.id;
     var category = productrequest.category.name;
-    var name = productrequest.name;
+    // var name = productrequest.name;
     var price = productrequest.price;
     var quantity = productrequest.quantity;
     var description = productrequest.description;
@@ -96,16 +96,18 @@ export class ProductService {
   findProductHistory(productrequest: ProductRequest): Observable<any> {
 
     var id = productrequest.id;
-    var category = productrequest.category.name;
+    // var category = productrequest.category.name;
     var name = productrequest.name;
     var price = productrequest.price;
     var quantity = productrequest.quantity;
     var description = productrequest.description;
+    var pagenumber = productrequest.pagenumber;
+    var pagesize = productrequest.pagesize;
     console.log(productrequest)
 
     return this.http.post(PRODUCT_API + 'findProductHistory', {
 
-      id, category, price, name, description, quantity
+      id, price, name, description, quantity,pagenumber,pagesize
     }, httpOptions);
   }
 
