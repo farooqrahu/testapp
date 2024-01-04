@@ -94,7 +94,7 @@ export class ProductService {
   }
 
   findProductHistory(productrequest: ProductRequest): Observable<any> {
-
+debugger;
     var id = productrequest.id;
     // var category = productrequest.category.name;
     var name = productrequest.name;

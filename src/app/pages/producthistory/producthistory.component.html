@@ -13,7 +13,7 @@
               <div class="row">
                 <div class="col">
                   <h5 class="card-title text-uppercase text-muted mb-0">Products History</h5>
-                  <span class="h2 font-weight-bold mb-0">{{products.length}}</span>
+                  <span class="h2 font-weight-bold mb-0">{{totalElements}}</span>
                 </div>
                 <div class="col-auto">
                   <div class="icon icon-shape bg-danger text-white rounded-circle shadow">
@@ -50,7 +50,8 @@
           <button (click)="loadproductresults()" mat-button>Search</button>
 <!--          <mat-paginator [pageSize]="10" [pageSizeOptions]="[10,20,30,40]">-->
 <!--          </mat-paginator>-->
-          <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="5" [length]="totalElements" (page)="nextPage($event)"> </mat-paginator>
+          <mat-paginator [pageSizeOptions]="[ 10, 25, 100]" [pageSize]="10" [length]="totalElements" (page)="nextPage($event)"> </mat-paginator>
+
         </div>
         <div class="table-responsive">
           <table mat-table [dataSource]="dataSource" matSort matSortActive="createdAt" matSortDirection="desc"

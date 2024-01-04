@@ -33,6 +33,9 @@ export class ProductHistoryComponent implements OnInit, AfterViewInit {
   }
   @ViewChild(MatSort) sort: MatSort | any;
   @ViewChild(MatPaginator) paginator: MatPaginator | any;
+  @ViewChild(MatPaginator) set matPaginator(paginator: MatPaginator) {
+       this.dataSource.paginator = paginator;
+     }
   @ViewChild('productsearch') productsearch: ElementRef  | any;
   counter(i: number) {
     return new Array(i);
@@ -61,7 +64,7 @@ export class ProductHistoryComponent implements OnInit, AfterViewInit {
   loadproductresults(): void {
       console.log(this.paginator.pageSize, this.paginator.getNumberOfPages())
         const productrequest = new ProductRequest( 0, this.productsearch.nativeElement.value,
-          this.productsearch.nativeElement.value,0, 0,0,0,0, 0,false,false,0,0,0,this.productsearch.nativeElement.value, this.productsearch.nativeElement.value, false, 'name', 'asc', this.paginator.pageSize,  this.paginator.getNumberOfPages())
+          this.productsearch.nativeElement.value,0, 0,0,0,0, 0,false,false,0,0,0,this.productsearch.nativeElement.value, this.productsearch.nativeElement.value, false, 'name', 'asc', this.paginator.pageSize,  0)
 
     this.getProducts(productrequest);
 
@@ -98,8 +101,10 @@ export class ProductHistoryComponent implements OnInit, AfterViewInit {
           this.products = data['prodHisContent'];
           this.totalElements = data['totalitems'];
           this.dataSource = new MatTableDataSource(this.products);
-                this.dataSource.sort = this.sort;
-                this.dataSource.paginator = this.paginator;
+          // setTimeout(() => {
+            this.dataSource.sort = this.sort;
+            // this.dataSource.paginator = this.paginator;
+          // });
 
         }
         , error => {
@@ -108,29 +113,28 @@ export class ProductHistoryComponent implements OnInit, AfterViewInit {
         }
       );
   }
-  refreshproduct() {
-
-    this.productservice.getAllProductHistory().subscribe(
-      data => {
-        this.products = data.list;
-        (this.products.length);
-        this.productslength = data.totalitems;
-        this.dataSource = new MatTableDataSource(this.products);
-        setTimeout(() => {
-          this.dataSource.sort = this.sort;
-          this.dataSource.paginator = this.paginator;
-        });
-      },
-      err => {
-        (err);
-      }
-    );
-  }
+  // refreshproduct() {
+  //
+  //   this.productservice.getAllProductHistory().subscribe(
+  //     data => {
+  //       this.products = data.list;
+  //       (this.products.length);
+  //       this.productslength = data.totalitems;
+  //       this.dataSource = new MatTableDataSource(this.products);
+  //       setTimeout(() => {
+  //         this.dataSource.sort = this.sort;
+  //         this.dataSource.paginator = this.paginator;
+  //       });
+  //     },
+  //     err => {
+  //       (err);
+  //     }
+  //   );
+  // }
   nextPage(event: PageEvent) {
     // const request = {};
     // request['page'] = ;
     // request['size'] = ;
-
     const productrequest = new ProductRequest( 0, "",
       "",0, 0,0,0,0, 0,false,false,0,0,0,null, null, false, 'name', 'asc', event.pageSize,event.pageIndex)
 

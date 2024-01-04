@@ -23,7 +23,7 @@ public interface ProductHistoryRepository extends PagingAndSortingRepository<Pro
 
   List<ProductHistory> findByNameContainingAndCategoryName(String name, String category);
 
-  Page<ProductHistory> findByNameContainingAndCategory(String name, Category Category, Pageable pageable);
+  Page<ProductHistory> findByNameContainingOrCategory(String name, Category Category, Pageable pageable);
 
   void delete(ProductHistory product);
 }

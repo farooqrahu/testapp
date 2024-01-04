@@ -21,7 +21,7 @@ public class ProductHistoryServices {
 
 
   public ResponseEntity<?> findProductHistory(ProductRequest productRequest) {
-    if (productRequest.getCategory() != null && productRequest.getName() != null) {
+    if (productRequest.getCategory() != null || productRequest.getName() != null) {
       return findByNameContainingAndCategory(productRequest);
     } else {
 //      if (productRequest.getName() != null) {
@@ -52,7 +52,7 @@ public class ProductHistoryServices {
   public ResponseEntity<?> findByNameContainingAndCategory(ProductRequest productRequest) {
     Pageable paging = checkPaging(productRequest);
       return ResponseEntity.ok(new ProductHistoryResponse(productHistoryRepository
-        .findByNameContainingAndCategory(productRequest.getName(), productRequest.getCategory(), paging)));
+        .findByNameContainingOrCategory(productRequest.getName(), productRequest.getCategory(), paging)));
 //return null;return ResponseEntity.ok(new ProductHistoryResponse(productHistoryRepository.findAll(paging)));
   }
   public Pageable checkPaging(ProductRequest productRequest) {
