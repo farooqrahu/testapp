@@ -25,7 +25,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
   List<Product> findByNameContainingAndCategoryNameAndOutOfStock(String name, String category, Boolean outOfStock);
 
-  Page<Product> findByNameContainingAndCategory(String name, Category Category, Pageable pageable);
+  @Query("select p from Product p where  p.category.name like %:categoryName% order by p.createdAt")
+  Page<Product> findProductByCategoryName(String categoryName, Pageable pageable);
 
   Page<Product> findByNameContainingAndCategoryAndOutOfStock(String name, Category Category, Boolean outOfStock, Pageable pageable);
 

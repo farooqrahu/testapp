@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -146,15 +147,11 @@ public class SaleService {
 //  }
   public ResponseEntity<?> findOrders(ProductRequest productRequest) {
     Pageable paging = checkPaging(productRequest);
-    if (paging == null) {
-      List<ProductOrderInvoiceDto> list = productOrderRepository.findAllByReturnedIsFalse().stream().map(ProductOrderInvoiceDto::factoryProductOrderInvoice).filter(Objects::nonNull).collect(Collectors.toList());
-//      list.sort(Comparator.comparing(ProductOrderInvoiceDto::getCreatedAt).reversed());
-      return ResponseEntity.ok(new ProductResponse(list, ""));
-    } else {
-      List<ProductOrderInvoiceDto> list = productOrderRepository.findAllByReturnedIsFalse(paging).stream().map(ProductOrderInvoiceDto::factoryProductOrderInvoice).filter(Objects::nonNull).collect(Collectors.toList());
-//      list.sort(Comparator.comparing(ProductOrderInvoiceDto::getCreatedAt).reversed());
-      return ResponseEntity.ok(new ProductResponse(list, ""));
-    }
+//      List<ProductOrderInvoiceDto> list = productOrderRepository.findAllByReturnedIsFalse(paging).stream().map(ProductOrderInvoiceDto::factoryProductOrderInvoice).filter(Objects::nonNull).collect(Collectors.toList());
+    Page<ProductOrder> productOrderPage = productOrderRepository.findAllByReturnedIsFalse(paging);
+    //      list.sort(Comparator.comparing(ProductOrderInvoiceDto::getCreatedAt).reversed());
+//    return ResponseEntity.ok(new ProductResponse(productRepository.findAll(paging)));
+    return ResponseEntity.ok(new ProductOrderInvoiceDto(productOrderPage));
 
   }
 
@@ -209,8 +206,8 @@ public class SaleService {
                     product.setOutOfStock(Boolean.TRUE);
                   }
                   productRepository.save(Objects.requireNonNull(product));
-//                  productSold.get().setTotalQuantitySale(totalQuantitySold - userTotalQuantity);
-//                  productSaleRepository.save(productSold.get());
+                  productSold.get().setTotalQuantitySale(totalQuantitySold - userTotalQuantity);
+                  productSaleRepository.save(productSold.get());
                 }
                 ProductReturnList productReturnList = ProductReturnList.builder().id(0L).product(productSold.get().getProduct().getId()).productName(productSold.get().getProduct().getName()).totalQuantityReturn(returnRequest.getUserTotalQuantity()).productReturn(productReturnSaved).build();
                 productReturnRepository.save(productReturnList);

@@ -78,18 +78,23 @@ export class ProductService {
   }
 
   findProduct(productrequest: ProductRequest): Observable<any> {
-    console.log("dfdsfsf")
+    console.log("productrequest")
+    debugger;
+    console.log(productrequest)
     var id = productrequest.id;
-    var category = productrequest.category.name;
-    // var name = productrequest.name;
+    var category = productrequest.category;
+    var name = productrequest.name;
     var price = productrequest.price;
     var quantity = productrequest.quantity;
     var description = productrequest.description;
+    var pagenumber = productrequest.pagenumber;
+    var pagesize = productrequest.pagesize;
+
     console.log(productrequest)
 
     return this.http.post(PRODUCT_API + 'findProduct', {
 
-      id, category, price, name, description, quantity
+      id, price, name,category, description, quantity,pagenumber,pagesize
     }, httpOptions);
   }
 
@@ -120,8 +125,14 @@ debugger;
     return this.http.post(PRODUCT_API + 'findProduct', {}, httpOptions);
   }
 
-  findProductOutOfStock(outOfStock :boolean): Observable<any> {
-    return this.http.post(PRODUCT_API + 'findProductOutOfStock', {outOfStock}, httpOptions);
+  findProductOutOfStock(productrequest: ProductRequest): Observable<any> {
+    // var category = productrequest.category.name;
+    var name = productrequest.name;
+    var pagenumber = productrequest.pagenumber;
+    var pagesize = productrequest.pagesize;
+    console.log(productrequest)
+
+    return this.http.post(PRODUCT_API + 'findProductOutOfStock', {name,pagenumber,pagesize}, httpOptions);
   }
 
   getAllProductHistory(): Observable<any> {

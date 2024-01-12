@@ -45,8 +45,12 @@ export class SaleService {
     }, httpOptions);
   }
 
-  getAllOrders(): Observable<any> {
-    return this.http.post(PRODUCT_SALE_API + 'findOrders', {}, httpOptions);
+  getAllOrders(productrequest: ProductRequest): Observable<any> {
+    var name = productrequest.name;
+    var pagenumber = productrequest.pagenumber;
+    var pagesize = productrequest.pagesize;
+
+    return this.http.post(PRODUCT_SALE_API + 'findOrders', {pagenumber,pagesize,name}, httpOptions);
   }
   getAllCustomers(): Observable<any> {
     return this.http.get(CUSTOMER_API + 'getAllCustomers');

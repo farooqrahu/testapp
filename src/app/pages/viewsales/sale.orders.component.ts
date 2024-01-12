@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
-import {MatPaginator} from '@angular/material/paginator';
+import {MatPaginator, PageEvent} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
 import {MessageboxComponent} from 'src/app/modal/messagebox/messagebox.component';
@@ -14,6 +14,7 @@ import {SaleService} from "../../_services/sale.service";
 import {SaleOrders} from "../../models/sale.orders.model";
 import {SalesListComponent} from "../../modal/viewsalesform/sales-list.component";
 import {SalesInvoiceComponent} from "../../modal/saleinvoice/sales-invoice.component";
+import {Category} from "../../models/category.model";
 
 @Component({
   selector: 'app-sales',
@@ -26,6 +27,7 @@ export class SaleOrdersComponent implements OnInit, AfterViewInit {
   saleOrdersdatasource: MatTableDataSource<SaleOrders> = null;
   saleOrders: SaleOrders[] = [];
   sales: Sale[] = [];
+  totalElements: number = 0;
   // invoices: Invoice[] = [];
    invoice: Invoice=new Invoice([],0,0);
   productslength = 0;
@@ -39,83 +41,50 @@ export class SaleOrdersComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {}
 
   @ViewChild(MatSort) sort: MatSort | any;
-  @ViewChild(MatPaginator) paginator: MatPaginator | any;
+  @ViewChild(MatPaginator, { read: true }) paginator: MatPaginator;
   @ViewChild('productsearch') productsearch: ElementRef | any;
 
   counter(i: number) {
     return new Array(i);
   }
 
-
-  loadproductresults(): void {
-    this.paginator.page.subscribe(() => {
-        const productrequest = new ProductRequest( 0, this.productsearch.nativeElement.value,
-          this.productsearch.nativeElement.value, 0,0,0,0,0, 0,false,false,0,0,0,null, null, false, 'name', 'asc', this.paginator.pageSize, this.paginator.getNumberOfPages())
-        this.saleservice.findProduct(productrequest).subscribe(
-          data => {
-            this.saleOrders = data.list;
-            // (this.products);
-            this.productslength = data.totalitems;
-            setTimeout(() => {
-              this.saleOrdersdatasource = new MatTableDataSource(this.saleOrders);
-              this.saleOrdersdatasource.sort = this.sort;
-              this.saleOrdersdatasource.paginator = this.paginator;
-            });
-          },
-          err => {
-            (err);
-          }
-        );
-
-
-      }
-    )
+  nextPage(event: PageEvent) {
+    // const request = {};
+    // request['page'] = ;
+    // request['size'] = ;
+    const productrequest = new ProductRequest( 0, "",
+      "", 0,0,0,0,0, 0,false,false,
+      0,0,0,null, null, false, 'name', 'asc', event.pageSize, event.pageIndex)
+    this.getAllOrders(productrequest);
   }
-  // loadproductresults(): void {
-  //   this.paginator.page.subscribe(() => {
-  //       const productrequest = new ProductRequest(0, this.productsearch.nativeElement.value,
-  //         this.productsearch.nativeElement.value, 0, 0,0, 0, 0, 0, false,false,0,0,0,null, null, false, 'name', 'asc', this.paginator.pageSize, this.paginator.getNumberOfPages())
-  //       this.saleservice.findProduct(productrequest).subscribe(
-  //         data => {
-  //           debugger;
-  //           this.saleOrders = data.productOrderInvoiceDtos;
-  //           console.log(this.saleOrders);
-  //           this.productslength = data.totalitems;
-  //           setTimeout(() => {
-  //             this.saleOrdersdatasource = new MatTableDataSource(this.saleOrders);
-  //             this.saleOrdersdatasource.sort = this.sort;
-  //             this.saleOrdersdatasource.paginator = this.paginator;
-  //           });
-  //         },
-  //         err => {
-  //           (err);
-  //         }
-  //       );
-  //
-  //
-  //     }
-  //   )
-  // }
+
+  private getAllOrders(request) {
+    this.saleservice.getAllOrders(request)
+      .subscribe(data => {
+          this.saleOrders = data['saleOrders'];
+          this.totalElements = data['totalitems'];
+          this.saleOrdersdatasource = new MatTableDataSource(this.saleOrders);
+          this.saleOrdersdatasource.sort = this.sort;
+        }
+        , error => {
+          console.log(error.error.message);
+        }
+      );
+  }
+  loadproductresults(): void {
+    const category: Category = new Category(0,'');
+    const productrequest = new ProductRequest(0, this.productsearch.nativeElement.value,
+      this.productsearch.nativeElement.value, 0, 0, 0, 0, 0, 0, false, false, 0, 0, 0,
+      category,
+      this.productsearch.nativeElement.value, false, 'name', 'asc', 10, 0)
+    debugger;
+    this.getAllOrders(productrequest);
+  }
 
   ngOnInit() {
-    this.refreshproduct();
-  }
-
-  refreshproduct() {
-
-    this.saleservice.getAllOrders().subscribe(
-      data => {
-        console.log(data);
-        this.saleOrders = data.productOrderInvoiceDtos
-          console.log("this is te");
-        this.productslength = data.totalitems;
-        this.saleOrdersdatasource = new MatTableDataSource(this.saleOrders);
-        console.log(this.saleOrders);
-      },
-      err => {
-        (err);
-      }
-    );
+    const productrequest = new ProductRequest(0, "",
+      "", 0, 0, 0, 0, 0, 0, false, false, 0, 0, 0, null, null, false, 'name', 'asc', 10, 0)
+    this.getAllOrders(productrequest);
   }
 
   public doFilter = (value: string, type: string) => {
@@ -173,7 +142,9 @@ export class SaleOrdersComponent implements OnInit, AfterViewInit {
         });
         dialogRef.afterClosed().subscribe(res => {
           // console.log(res);
-          this.refreshproduct()
+          const productrequest = new ProductRequest(0, "",
+            "", 0, 0, 0, 0, 0, 0, false, false, 0, 0, 0, null, null, false, 'name', 'desc', 10, 0);
+          this.getAllOrders(productrequest)
         });
       },
       err => {
@@ -202,66 +173,13 @@ export class SaleOrdersComponent implements OnInit, AfterViewInit {
     });
     dialogRef.afterClosed().subscribe(res => {
       // console.log(res);
-          this.refreshproduct()
+      const productrequest = new ProductRequest(0, "",
+        "", 0, 0, 0, 0, 0, 0, false, false, 0, 0, 0, null, null, false, 'name', 'desc', 10, 0);
+      this.getAllOrders(productrequest)
     });
   }
 
-  // addSale(sale: Sale): any {
-  //   this.saleservice.addSale(sale).subscribe(
-  //     data => {
-  //       this.messagebox(data.message);
-  //       this.getAllsales()
-  //     },
-  //     err => {
-  //       this.messagebox("Error adding category. make sure it does not already exist");
-  //     }
-  //   );
-  // }
-  // updateSale(sale: Sale): any {
-  //   this.saleservice.updateSale(sale).subscribe(
-  //     data => {
-  //       var objIndex = this.sales.findIndex((obj => obj.id == sale.id));
-  //       this.sales[objIndex] = sale
-  //       this.salesdatasource = new MatTableDataSource(this.sales)
-  //
-  //       this.messagebox(data.message);
-  //     },
-  //     err => {
-  //       this.messagebox(err.message);
-  //
-  //     }
-  //   );
-  // }
 
-
-  deleteSale(sale: Sale): any {
-
-    // Swal.fire({
-    //   title: 'Are you sure?',
-    //   text: "You won't be able to revert this!",
-    //   icon: 'warning',
-    //   showCancelButton: true,
-    //   confirmButtonColor: '#3085d6',
-    //   cancelButtonColor: '#d33',
-    //   confirmButtonText: 'Yes, delete it!'
-    // }).then((result) => {
-    //   if (result.isConfirmed) {
-    //     this.saleservice.deleteSale(sale).subscribe(
-    //       data => {
-    //         this.getAllCompanies()
-    //         Swal.fire(
-    //           'Deleted!',
-    //           'Your Sale has been deleted.',
-    //           'success'
-    //         )
-    //       },
-    //       err => {
-    //         this.messagebox("Error deleting sale, please make sure no products are in this sale.");
-    //       }
-    //     );
-    //   }
-    // })
-  }
 
 
   submitOrder() {
@@ -279,7 +197,9 @@ export class SaleOrdersComponent implements OnInit, AfterViewInit {
       dialogRef.afterClosed().subscribe(res => {
        this.invoice=new Invoice([],0,0);
        this.sales=[];
-        this.refreshproduct();
+        const productrequest = new ProductRequest(0, "",
+          "", 0, 0, 0, 0, 0, 0, false, false, 0, 0, 0, null, null, false, 'name', 'desc', 10, 0);
+        this.getAllOrders(productrequest)
       });
 
     }

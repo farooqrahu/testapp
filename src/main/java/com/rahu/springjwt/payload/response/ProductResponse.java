@@ -6,6 +6,8 @@ import com.rahu.springjwt.dto.ProductDto;
 import com.rahu.springjwt.dto.ProductOrderInvoiceDto;
 import com.rahu.springjwt.models.Category;
 
+import com.rahu.springjwt.models.Product;
+import com.rahu.springjwt.models.ProductHistory;
 import org.springframework.data.domain.Page;
 
 import lombok.Data;
@@ -22,6 +24,7 @@ public class ProductResponse {
   private boolean images;
   private List<ProductDto> list;
   private List<ProductOrderInvoiceDto> productOrderInvoiceDtos;
+  private List<Product> prodContent;
   private int currentpage;
   private long totalitems;
   private int totalpages;
@@ -49,11 +52,10 @@ public class ProductResponse {
     this.list = list;
   }
 
-  public ProductResponse(Page<ProductDto> list) {
-    this.list = list.getContent();
-    this.currentpage = list.getNumber();
-    this.totalitems = list.getTotalElements();
-    this.totalpages = list.getTotalPages();
+  public ProductResponse(Page<Product> productPage) {
+    this.prodContent = productPage.getContent();
+    this.currentpage = productPage.getNumber();
+    this.totalitems = productPage.getTotalElements();
+    this.totalpages = productPage.getTotalPages();
   }
-
 }

@@ -1,11 +1,14 @@
 package com.rahu.springjwt.dto;
 
+import com.rahu.springjwt.models.Product;
 import com.rahu.springjwt.models.ProductOrder;
 import com.rahu.springjwt.models.ProductSaleList;
 import com.rahu.springjwt.util.Utility;
 import lombok.*;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Setter
@@ -25,6 +28,18 @@ public class ProductOrderInvoiceDto {
   String mobileNumber = null;
   private boolean isReturned = false;
   private List<ProductSaleDto> productSales;
+
+  private List<ProductOrderInvoiceDto> saleOrders;
+  private int currentpage;
+  private long totalitems;
+  private int totalpages;
+
+  public ProductOrderInvoiceDto(Page<ProductOrder> productOrders) {
+    this.saleOrders = productOrders.getContent().stream().map(ProductOrderInvoiceDto::factoryProductOrderInvoice).filter(Objects::nonNull).collect(Collectors.toList());
+    this.currentpage = productOrders.getNumber();
+    this.totalitems = productOrders.getTotalElements();
+    this.totalpages = productOrders.getTotalPages();
+  }
 
   public static ProductOrderInvoiceDto factoryProductOrderInvoice(ProductOrder productOrder) {
     String customerName = "";

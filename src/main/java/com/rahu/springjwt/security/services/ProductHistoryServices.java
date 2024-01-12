@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 import java.util.stream.Collectors;
+
 @Service
 public class ProductHistoryServices {
 
@@ -24,37 +25,22 @@ public class ProductHistoryServices {
     if (productRequest.getCategory() != null || productRequest.getName() != null) {
       return findByNameContainingAndCategory(productRequest);
     } else {
-//      if (productRequest.getName() != null) {
-//        return findByNameContaining(productRequest);
-//      } else {
-        return findAllProducts(productRequest);
-      }
+      return findAllProducts(productRequest);
+    }
 //    }
   }
 
   public ResponseEntity<?> findAllProducts(ProductRequest productRequest) {
     Pageable paging = checkPaging(productRequest);
-//    if (paging == null)
-//      return ResponseEntity.ok(new ProductHistoryResponse(productHistoryRepository.findAll().stream().map(ProductHistoryDto::factoryProduct).collect(Collectors.toList())));
     return ResponseEntity.ok(new ProductHistoryResponse(productHistoryRepository.findAll(paging)));
-  }
-
-  public ResponseEntity<?> findByNameContaining(ProductRequest productRequest) {
-    Pageable paging = checkPaging(productRequest);
-//    if (paging == null)
-//      return ResponseEntity.ok(new ProductHistoryResponse(productHistoryRepository.findByNameContaining(productRequest.getName()).stream().map(ProductHistoryDto::factoryProduct).collect(Collectors.toList())));
-//    else
-//      return ResponseEntity
-//        .ok(new ProductHistoryResponse(productHistoryRepository.findByNameContaining(productRequest.getName(), paging).stream().map(ProductHistoryDto::factoryProduct).collect(Collectors.toList())));
-  return null;
   }
 
   public ResponseEntity<?> findByNameContainingAndCategory(ProductRequest productRequest) {
     Pageable paging = checkPaging(productRequest);
-      return ResponseEntity.ok(new ProductHistoryResponse(productHistoryRepository
-        .findByNameContainingOrCategory(productRequest.getName(), productRequest.getCategory(), paging)));
-//return null;return ResponseEntity.ok(new ProductHistoryResponse(productHistoryRepository.findAll(paging)));
+    return ResponseEntity.ok(new ProductHistoryResponse(productHistoryRepository
+      .findByNameContainingOrCategory(productRequest.getName(), productRequest.getCategory(), paging)));
   }
+
   public Pageable checkPaging(ProductRequest productRequest) {
     if (productRequest.getPagesize() > 0 && productRequest.getPagenumber() >= 0) {
       if (Objects.equals(productRequest.getSortdirection(), "desc")) {

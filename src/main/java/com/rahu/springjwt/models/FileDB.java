@@ -26,8 +26,8 @@ public class FileDB {
   @Type(type = "org.hibernate.type.ImageType")
   private byte[] data;
 
-  @OneToOne(mappedBy = "files")
-  private Product product;
+//  @OneToOne(mappedBy = "files")
+//  private Product product;
 
   @OneToOne(mappedBy = "files")
   private User user;

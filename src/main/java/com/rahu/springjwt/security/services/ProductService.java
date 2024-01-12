@@ -61,14 +61,10 @@ public class ProductService {
   private String barcodeLabel;
 
   public ResponseEntity<?> findProduct(ProductRequest productRequest) {
-    if (productRequest.getCategory() != null && productRequest.getName() != null) {
+    if (productRequest.getCategory() != null) {
       return findByNameContainingAndCategory(productRequest);
     } else {
-      if (productRequest.getName() != null) {
-        return findByNameContaining(productRequest);
-      } else {
         return findAllProducts(productRequest);
-      }
     }
   }
   public ResponseEntity<?> findProductOutOfStock(ProductRequest productRequest) {
@@ -98,16 +94,13 @@ public class ProductService {
 
   public ResponseEntity<?> findAllProducts(ProductRequest productRequest) {
     Pageable paging = checkPaging(productRequest);
-    if (paging == null)
-      return ResponseEntity.ok(new ProductResponse(productRepository.findAllByCreateDate().stream().map(ProductDto::factoryProduct).collect(Collectors.toList())));
-    return ResponseEntity.ok(new ProductResponse(productRepository.findAll(paging).stream().map(ProductDto::factoryProduct).collect(Collectors.toList())));
+    return ResponseEntity.ok(new ProductResponse(productRepository.findAll(paging)));
+
   }
 
   public ResponseEntity<?> findAllProductsOutOfStock(ProductRequest productRequest) {
     Pageable paging = checkPaging(productRequest);
-    if (paging == null)
-      return ResponseEntity.ok(new ProductResponse(productRepository.findAllOutOfStock(productRequest.isOutOfStock()).stream().map(ProductDto::factoryProduct).collect(Collectors.toList())));
-    return ResponseEntity.ok(new ProductResponse(productRepository.findAllOutOfStock(productRequest.isOutOfStock(),paging).stream().map(ProductDto::factoryProduct).collect(Collectors.toList())));
+    return ResponseEntity.ok(new ProductResponse(productRepository.findAllOutOfStock(productRequest.isOutOfStock(),paging)));
   }
 
   public ResponseEntity<?> findByNameContaining(ProductRequest productRequest) {
@@ -120,30 +113,19 @@ public class ProductService {
   }
   public ResponseEntity<?> findByNameContainingOutOfStock(ProductRequest productRequest) {
     Pageable paging = checkPaging(productRequest);
-    if (paging == null)
-      return ResponseEntity.ok(new ProductResponse(productRepository.findByNameContainingAndOutOfStock(productRequest.getName(),productRequest.isOutOfStock()).stream().map(ProductDto::factoryProduct).collect(Collectors.toList())));
-    else
       return ResponseEntity
-        .ok(new ProductResponse(productRepository.findByNameContainingAndOutOfStock(productRequest.getName(),productRequest.isOutOfStock(), paging).stream().map(ProductDto::factoryProduct).collect(Collectors.toList())));
+        .ok(new ProductResponse(productRepository.findByNameContainingAndOutOfStock(productRequest.getName(),productRequest.isOutOfStock(), paging)));
   }
 
   public ResponseEntity<?> findByNameContainingAndCategory(ProductRequest productRequest) {
     Pageable paging = checkPaging(productRequest);
-    if (paging == null)
-      return ResponseEntity.ok(new ProductResponse(
-        productRepository.findByNameContainingAndCategoryName(productRequest.getName(), productRequest.getCategory().getName()).stream().map(ProductDto::factoryProduct).collect(Collectors.toList())));
-    else
-      return ResponseEntity.ok(new ProductResponse(productRepository
-        .findByNameContainingAndCategory(productRequest.getName(), productRequest.getCategory(), paging).stream().map(ProductDto::factoryProduct).collect(Collectors.toList())));
+    return ResponseEntity.ok(new ProductResponse(productRepository
+      .findProductByCategoryName(productRequest.getCategory().getName(), paging)));
   }
   public ResponseEntity<?> findByNameContainingAndCategoryOutOfStock(ProductRequest productRequest) {
     Pageable paging = checkPaging(productRequest);
-    if (paging == null)
-      return ResponseEntity.ok(new ProductResponse(
-        productRepository.findByNameContainingAndCategoryNameAndOutOfStock(productRequest.getName(), productRequest.getCategory().getName(),productRequest.isOutOfStock()).stream().map(ProductDto::factoryProduct).collect(Collectors.toList())));
-    else
       return ResponseEntity.ok(new ProductResponse(productRepository
-        .findByNameContainingAndCategoryAndOutOfStock(productRequest.getName(), productRequest.getCategory(),productRequest.isOutOfStock(), paging).stream().map(ProductDto::factoryProduct).collect(Collectors.toList())));
+        .findByNameContainingAndCategoryAndOutOfStock(productRequest.getName(), productRequest.getCategory(),productRequest.isOutOfStock(), paging)));
   }
 
   public ResponseEntity<?> addProduct(ProductRequest productRequest) throws IOException {

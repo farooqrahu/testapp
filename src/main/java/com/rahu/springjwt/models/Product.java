@@ -44,8 +44,9 @@ public class Product extends BaseEntity{
   @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
   private Company company;
 
+  @Nullable
   @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-  @JoinColumn(name = "files_id", referencedColumnName = "id")
+//  @JoinColumn(name = "files_id", referencedColumnName = "id")
   private FileDB files;
 
   @Nullable

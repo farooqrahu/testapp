@@ -80,8 +80,10 @@ export class ReportsComponent implements OnInit, AfterViewInit {
   }
 
   refreshproduct() {
+    const productrequest = new ProductRequest(0, "",
+      "", 0, 0, 0, 0, 0, 0, false, false, 0, 0, 0, null, null, false, 'name', 'asc', 10, 0)
 
-    this.saleservice.getAllOrders().subscribe(
+    this.saleservice.getAllOrders(productrequest).subscribe(
       data => {
         console.log(data);
         this.saleOrders = data.productOrderInvoiceDtos

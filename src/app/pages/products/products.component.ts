@@ -1,23 +1,21 @@
-import { ProductRequest } from './../../models/productrequest.model';
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
-import { CategoryformComponent } from 'src/app/modal/categoryform/categoryform.component';
-import { MessageboxComponent } from 'src/app/modal/messagebox/messagebox.component';
-import { ProductformComponent } from 'src/app/modal/productform/productform.component';
-import { ProductService } from 'src/app/_services/product.service';
-import { TokenStorageService } from 'src/app/_services/token-storage.service';
-import { Category } from '../../models/category.model';
-import { Product } from '../../models/product.model';
+import {ProductRequest} from './../../models/productrequest.model';
+import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {MatDialog} from '@angular/material/dialog';
+import {MatPaginator, PageEvent} from '@angular/material/paginator';
+import {MatSort} from '@angular/material/sort';
+import {MatTableDataSource} from '@angular/material/table';
+import {CategoryformComponent} from 'src/app/modal/categoryform/categoryform.component';
+import {ProductformComponent} from 'src/app/modal/productform/productform.component';
+import {ProductService} from 'src/app/_services/product.service';
+import {TokenStorageService} from 'src/app/_services/token-storage.service';
+import {Category} from '../../models/category.model';
+import {Product} from '../../models/product.model';
 import Swal from 'sweetalert2'
 import {BarcodeComponent} from "../../modal/barcode/barcode.component";
 import {Company} from "../../models/compnay.model";
 import {CompanyformComponent} from "../../modal/companyform/companyform.component";
 import {SelectionModel} from "@angular/cdk/collections";
 import {MatTableExporterDirective} from "mat-table-exporter";
-import {AddProductFormComponent} from "../../modal/addproductform/addproductform.component";
 
 @Component({
   selector: 'app-products',
@@ -25,19 +23,56 @@ import {AddProductFormComponent} from "../../modal/addproductform/addproductform
   styleUrls: ['./products.component.scss']
 })
 export class ProductsComponent implements OnInit, AfterViewInit {
-  columnsToDisplay = ["select","id", 'name', "price","wholeSalePrice","quantityItem","quantityBundle","extraQuantity","quantity", "description", "category","company","outOfStock","createdAt", "action"];
-  @ViewChild("exporter") exporter! : MatTableExporterDirective;
-  dataSource: MatTableDataSource<Product> = null;
+  columnsToDisplay = ["select", "id", 'name', "price", "wholeSalePrice", "quantityItem", "quantityBundle", "extraQuantity", "quantity", "description", "category", "company", "outOfStock", "createdAt", "action"];
+  products: Product[] = [];
+  productslength = 0;
+  totalElements: number = 0;
+
+  categoriesdatasource: MatTableDataSource<Category> = null;
+  companiesdatasource: MatTableDataSource<Company> = null;
+  categories: Category[] = [];
+  companies: Company[] = [];
+
+  constructor(public productservice: ProductService, private token: TokenStorageService
+    , public dialog: MatDialog
+              // ,@Inject(DOCUMENT) document:Document
+  ) {
+  }
+
+  ngAfterViewInit(): void {
+  }
+  @ViewChild(MatSort) sort: MatSort | any;
+  // @ViewChild(MatPaginator) paginator: MatPaginator | any;
+
+  //declare your datasource like this
+  dataSource: MatTableDataSource<Product> = new MatTableDataSource();
+  @ViewChild(MatPaginator, { read: true }) paginator: MatPaginator;
+  ngOnInit() {
+    if (!(this.token.isAdmin() || this.token.isDEO())) {
+      this.token.signOut();
+    }
+    // this.productsearch.nativeElement=""
+    const productrequest = new ProductRequest(0, "",
+      "", 0, 0, 0, 0, 0, 0, false, false, 0, 0, 0, null, null, false, 'name', 'asc', 10, 0)
+    this.getProducts(productrequest);
+
+    this.getAllCompanies();
+    this.getAllCategories();
+  }
+  @ViewChild("exporter") exporter!: MatTableExporterDirective;
+  // dataSource: MatTableDataSource<Product> = null;
   selection = new SelectionModel<Product>(true, []);
 
   /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
-    if(this.dataSource){
+
+    if (this.dataSource) {
       const numSelected = this.selection.selected.length;
       const numRows = this.dataSource.data.length;
       return numSelected === numRows;
     }
   }
+
   /** Selects all rows if they are not all selected; otherwise clear selection. */
   masterToggle() {
     if (this.isAllSelected()) {
@@ -57,78 +92,47 @@ export class ProductsComponent implements OnInit, AfterViewInit {
   }
 
 
-  categoriesdatasource: MatTableDataSource<Category> = null;
-  companiesdatasource: MatTableDataSource<Company> = null;
-  products: Product[] = [];
-  categories: Category[] = [];
-  companies: Company[] = [];
-  productslength = 0;
-  constructor(public productservice: ProductService, private token: TokenStorageService
-    , public dialog: MatDialog
-    // ,@Inject(DOCUMENT) document:Document
-  ) { }
-  ngAfterViewInit(): void {}
-  @ViewChild(MatSort) sort: MatSort | any;
-  @ViewChild(MatPaginator) paginator: MatPaginator | any;
-  @ViewChild('productsearch') productsearch: ElementRef  | any;
+  @ViewChild('productsearch') productsearch: ElementRef | any;
+
+  nextPage(event: PageEvent) {
+    // const request = {};
+    // request['page'] = ;
+    // request['size'] = ;
+    const productrequest = new ProductRequest(0, "",
+      "", 0, 0, 0, 0, 0, 0, false, false, 0, 0, 0, null, null, false, 'name', 'asc', event.pageSize, event.pageIndex)
+
+    this.getProducts(productrequest);
+  }
+
+  private getProducts(request) {
+    this.productservice.findProduct(request)
+      .subscribe(data => {
+          this.products = data['prodContent'];
+          this.totalElements = data['totalitems'];
+          this.dataSource = new MatTableDataSource(this.products);
+          this.dataSource.sort = this.sort;
+        }
+        , error => {
+          console.log(error.error.message);
+        }
+      );
+  }
+
+
   counter(i: number) {
     return new Array(i);
   }
   loadproductresults(): void {
-    console.log("pagiggggggggggggggg")
-    // this.paginator.page.subscribe(() => {
-      const productrequest = new ProductRequest( 0, this.productsearch.nativeElement.value,
-        this.productsearch.nativeElement.value, 0,0,0,0,0, 0,false,false,0,0,0,null, null, false, 'name', 'asc', this.paginator.pageSize, this.paginator.getNumberOfPages())
-console.log("pagiggggggggggggggg")
-        console.log(productrequest)
-      this.productservice.findProduct(productrequest).subscribe(
-        data => {
-          this.products = data.list;
-          // (this.products);
-          this.productslength = data.totalitems;
-          setTimeout(() => {
-            this.dataSource = new MatTableDataSource(this.products);
-            this.dataSource.sort = this.sort;
-            this.dataSource.paginator = this.paginator;
-          });
-        },
-        err => {
-          (err);
-        }
-      // );
-
-
-    // }
-    )
-  }
-  ngOnInit() {
-    if (!(this.token.isAdmin() || this.token.isDEO())) {
-      this.token.signOut();
-    }
-     // this.productsearch.nativeElement=""
-    this.refreshproduct();
-    this.getAllCompanies();
-    this.getAllCategories();
+    const category: Category = new Category(0,this.productsearch.nativeElement.value);
+    const productrequest = new ProductRequest(0, this.productsearch.nativeElement.value,
+      this.productsearch.nativeElement.value, 0, 0, 0, 0, 0, 0, false, false, 0, 0, 0,
+      category,
+      this.productsearch.nativeElement.value, false, 'name', 'asc', 10, 0)
+debugger;
+      this.getProducts(productrequest);
   }
 
-  refreshproduct() {
 
-    this.productservice.getAllProducts().subscribe(
-      data => {
-        this.products = data.list;
-        (this.products.length);
-        this.productslength = data.totalitems;
-        this.dataSource = new MatTableDataSource(this.products);
-        setTimeout(() => {
-          this.dataSource.sort = this.sort;
-          this.dataSource.paginator = this.paginator;
-        });
-      },
-      err => {
-        (err);
-      }
-    );
-  }
   public doFilter = (value: string, type: String) => {
     switch (type) {
       case 'product':
@@ -143,15 +147,27 @@ console.log("pagiggggggggggggggg")
 
     }
   }
+
   openDialog(product?: Product): void {
     if (product === undefined)
-      product = new Product(0, "", "", 0,0, this.categories[0],this.companies[0], false,0,0,0,0,false,false,"",null,"",0,0,0,10,0)
+      product = new Product(0, "", "", 0, 0, this.categories[0], this.companies[0], false, 0, 0, 0, 0, false, false, "", null, "", 0, 0, 0, 10, 0)
     const dialogRef = this.dialog.open(ProductformComponent, {
       width: '550px',
       data: {
-        id: product.id, name: product.name, description: product.description,
-        price: product.price,wholeSalePrice: product.wholeSalePrice, category: product.category,company: product.company,quantityItem:product.quantityItem,quantityBundle:product.quantityBundle,extraQuantity:product.extraQuantity
-,quantity:product.quantity,enableTQ:product.enableTQ,wareHouseProduct:product.wareHouseProduct
+        id: product.id,
+        name: product.name,
+        description: product.description,
+        price: product.price,
+        wholeSalePrice: product.wholeSalePrice,
+        category: product.category,
+        company: product.company,
+        quantityItem: product.quantityItem,
+        quantityBundle: product.quantityBundle,
+        extraQuantity: product.extraQuantity
+        ,
+        quantity: product.quantity,
+        enableTQ: product.enableTQ,
+        wareHouseProduct: product.wareHouseProduct
       }
     });
     dialogRef.afterClosed().subscribe(res => {
@@ -159,15 +175,17 @@ console.log("pagiggggggggggggggg")
         if (product.id != res.id)
           console.log("error")
         else {
-          this.updateProduct(res)
-          this.refreshproduct()
+          this.updateProduct(res);
+          const productrequest = new ProductRequest(0, "",
+            "", 0, 0, 0, 0, 0, 0, false, false, 0, 0, 0, null, null, false, 'name', 'desc', 10, 0);
+          this.getProducts(productrequest)
         }
       }
 
 
-
     });
   }
+
   viewDialog(product?: Product): void {
     const dialogRef = this.dialog.open(BarcodeComponent, {
       width: '920px',
@@ -206,7 +224,8 @@ console.log("pagiggggggggggggggg")
       }
     });
   }
-  @ViewChild('produtimage', { static: false })
+
+  @ViewChild('produtimage', {static: false})
   produtimage: HTMLImageElement;
 
   changeproductimage() {
@@ -218,13 +237,17 @@ console.log("pagiggggggggggggggg")
     this.updateProductImage(event, id, i);
 
   }
+
   public fileExists(id, number): boolean {
     var exists = false;
     this.productservice.fileExists(id, number).subscribe(
-      data => { exists = data }
+      data => {
+        exists = data
+      }
     )
     return exists;
   }
+
   updateProductImage(event, id, i): void {
     const image: FormData = new FormData();
     image.append('image', event.target.files[0]);
@@ -242,13 +265,16 @@ console.log("pagiggggggggggggggg")
     );
 
   }
+
   updateProduct(product: Product): any {
     this.productservice.updateProduct(product).subscribe(
       data => {
         var objIndex = this.products.findIndex((obj => obj.id == product.id));
         this.products[objIndex] = product
-        this.dataSource = new MatTableDataSource(this.products)
-        this.refreshproduct()
+        this.dataSource = new MatTableDataSource(this.products);
+        const productrequest = new ProductRequest(0, "",
+          "", 0, 0, 0, 0, 0, 0, false, false, 0, 0, 0, null, null, false, 'name', 'desc', 10, 0);
+        this.getProducts(productrequest);
         this.messageboxSuccess(data.message);
 
       },
@@ -276,8 +302,10 @@ console.log("pagiggggggggggggggg")
               'Deleted!',
               'Your Product has been deleted.',
               'success'
-            )
-            this.refreshproduct()
+            );
+            const productrequest = new ProductRequest(0, "",
+              "", 0, 0, 0, 0, 0, 0, false, false, 0, 0, 0, null, null, false, 'name', 'desc', 10, 0);
+            this.getProducts(productrequest);
           },
           err => {
             this.messageboxError("error deleting product");
@@ -287,8 +315,8 @@ console.log("pagiggggggggggggggg")
     })
 
 
-
   }
+
   deleteCategory(category: Category): any {
 
     Swal.fire({
@@ -329,6 +357,7 @@ console.log("pagiggggggggggggggg")
       }
     );
   }
+
   updateCategory(category: Category): any {
     this.productservice.updateCategory(category).subscribe(
       data => {
@@ -344,6 +373,7 @@ console.log("pagiggggggggggggggg")
       }
     );
   }
+
   getAllCategories(): any {
     this.productservice.getAllCategories().subscribe(
       data => {
@@ -360,6 +390,7 @@ console.log("pagiggggggggggggggg")
       }
     );
   }
+
   messageboxSuccess(body: string, title?: string) {
     if (title === undefined)
       title = "Notice"
@@ -379,7 +410,6 @@ console.log("pagiggggggggggggggg")
       'error'
     )
   }
-
 
 
   opencompanydialog(company?: Company): void {
@@ -421,6 +451,7 @@ console.log("pagiggggggggggggggg")
       }
     );
   }
+
   updateCompany(company: Company): any {
     this.productservice.updateCompany(company).subscribe(
       data => {
@@ -483,6 +514,8 @@ console.log("pagiggggggggggggggg")
       }
     })
   }
+
+  // }
 
 
 }

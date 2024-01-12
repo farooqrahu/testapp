@@ -1,12 +1,17 @@
 package com.rahu.springjwt.dto;
 
 import com.rahu.springjwt.models.Product;
+import com.rahu.springjwt.models.ProductOrder;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.domain.Page;
 
 import java.util.Base64;
 import java.util.Date;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Setter
 @Getter
@@ -29,6 +34,10 @@ public class ProductDto {
   private Date createdAt;
   private boolean outOfStock;
   private boolean wareHouseProduct;
+  private List<ProductDto> prodContent;
+  private int currentpage;
+  private long totalitems;
+  private int totalpages;
 
   public static ProductDto factoryProduct(Product product) {
     return ProductDto.builder().id(product.getId()).name(product.getName()).description(product.getDescription()).price(product.getPrice()).wholeSalePrice(product.getWholeSalePrice()).outOfStock(product.getOutOfStock())
