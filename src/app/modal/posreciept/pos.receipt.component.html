@@ -3,9 +3,9 @@
 
     <div class="logo"></div>
     <div class="info" style="text-align: center">
-      <p>Habib Paint House Bandhi Road,Moro, Sindh</p>
+      <p>Hardware Shop Naushahro Feroze, Sindh</p>
       <p></p>
-      <p>0301000000</p>
+      <p>03020889052</p>
     </div><!--End Info-->
 
   <div id="mid">
@@ -26,23 +26,25 @@
         <tr class="tabletitle">
           <td class="item">Product</td>
           <td class="item">Quantity</td>
-          <td class="item">Price</td>
+          <td class="item">Item Price</td>
+          <td class="item">Amount</td>
         </tr>
         <tr class="service" *ngFor="let p of productOrderList.productSales">
           <td class="itemtext">{{p.product.name}}</td>
           <td class="tableitem"><p class="itemtext">{{p.totalQuantitySale}}</p></td>
+          <td class="tableitem"><p class="itemtext">{{p.product.price | currency:'Rs:'}}</p></td>
           <td class="tableitem"><p class="itemtext">{{p.product.price * p.totalQuantitySale | currency:'Rs:'}}</p></td>
         </tr>
 
         <tr class="tabletitle">
-          <td class="itemlabletext">Total Quantity</td>
-          <td></td>
+          <td  colspan="2" class="itemlabletext">Total Quantity</td>
+          <td ></td>
           <td class="tableitem">{{productOrderList.totalQuantity}}</td>
         </tr>
 
         <tr class="tabletitle">
-          <td class="itemlabletext">Total Amount</td>
-          <td></td>
+          <td  colspan="2" class="itemlabletext">Total Amount</td>
+          <td ></td>
           <td class="tableitem">{{productOrderList.grandTotal | currency:'Rs:'}}</td>
         </tr>
       </table>
@@ -52,7 +54,8 @@
       <p class="legal"><strong>This is computer generated print and do not require signature</strong>
       </p>
       <p class="legal" >Thank you!</p>
-    </div>
+<!--      <p class="" >Developed By: </p>-->
+    </div>l
 
   </div><!--End InvoiceBot-->
 </div><!--End Invoice-->

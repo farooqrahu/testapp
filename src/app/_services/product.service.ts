@@ -81,12 +81,12 @@ export class ProductService {
     console.log("productrequest")
     debugger;
     console.log(productrequest)
-    var id = productrequest.id;
-    var category = productrequest.category;
+    // var id = productrequest.id;
+    // var category = productrequest.category;
     var name = productrequest.name;
-    var price = productrequest.price;
-    var quantity = productrequest.quantity;
-    var description = productrequest.description;
+    // var price = productrequest.price;
+    // var quantity = productrequest.quantity;
+    // var description = productrequest.description;
     var pagenumber = productrequest.pagenumber;
     var pagesize = productrequest.pagesize;
 
@@ -94,7 +94,7 @@ export class ProductService {
 
     return this.http.post(PRODUCT_API + 'findProduct', {
 
-      id, price, name,category, description, quantity,pagenumber,pagesize
+     name,pagenumber,pagesize
     }, httpOptions);
   }
 
@@ -132,7 +132,7 @@ debugger;
     var pagesize = productrequest.pagesize;
     console.log(productrequest)
 
-    return this.http.post(PRODUCT_API + 'findProductOutOfStock', {name,pagenumber,pagesize}, httpOptions);
+    return this.http.post(PRODUCT_API + 'findByNameInStock', {name,pagenumber,pagesize}, httpOptions);
   }
 
   getAllProductHistory(): Observable<any> {

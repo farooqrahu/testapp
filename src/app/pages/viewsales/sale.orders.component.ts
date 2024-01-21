@@ -72,11 +72,11 @@ export class SaleOrdersComponent implements OnInit, AfterViewInit {
       );
   }
   loadproductresults(): void {
-    const category: Category = new Category(0,'');
+    // const category: Category = new Category(0,'');
     const productrequest = new ProductRequest(0, this.productsearch.nativeElement.value,
       this.productsearch.nativeElement.value, 0, 0, 0, 0, 0, 0, false, false, 0, 0, 0,
-      category,
-      this.productsearch.nativeElement.value, false, 'name', 'asc', 10, 0)
+      null,
+      this.productsearch.nativeElement.value, false, 'name', 'asc', 100000000, 0)
     debugger;
     this.getAllOrders(productrequest);
   }

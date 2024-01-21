@@ -65,10 +65,9 @@ export class ProductHistoryComponent implements OnInit, AfterViewInit {
     }
 
     loadproductresults(): void {
-        console.log(this.paginator.pageSize, this.paginator.getNumberOfPages())
+        // console.log(this.paginator.pageSize, this.paginator.getNumberOfPages())
         const productrequest = new ProductRequest(0, this.productsearch.nativeElement.value,
-            this.productsearch.nativeElement.value, 0, 0, 0, 0, 0, 0, false, false, 0, 0, 0, this.productsearch.nativeElement.value, this.productsearch.nativeElement.value, false, 'name', 'asc', this.paginator.pageSize, 0)
-
+            this.productsearch.nativeElement.value, 0, 0, 0, 0, 0, 0, false, false, 0, 0, 0, this.productsearch.nativeElement.value, this.productsearch.nativeElement.value, false, 'name', 'asc', 100000000, 0)
         this.getProducts(productrequest);
     }
 

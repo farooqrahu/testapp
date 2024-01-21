@@ -24,10 +24,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.math.BigInteger;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Locale;
@@ -61,22 +57,7 @@ public class ProductService {
   private String barcodeLabel;
 
   public ResponseEntity<?> findProduct(ProductRequest productRequest) {
-    if (productRequest.getCategory() != null) {
-      return findByNameContainingAndCategory(productRequest);
-    } else {
-        return findAllProducts(productRequest);
-    }
-  }
-  public ResponseEntity<?> findProductOutOfStock(ProductRequest productRequest) {
-    if (productRequest.getCategory() != null && productRequest.getName() != null) {
-      return findByNameContainingAndCategoryOutOfStock(productRequest);
-    } else {
-      if (productRequest.getName() != null) {
-        return findByNameContainingOutOfStock(productRequest);
-      } else {
-        return findAllProductsOutOfStock(productRequest);
-      }
-    }
+      return findByProductName(productRequest);
   }
 
   public Pageable checkPaging(ProductRequest productRequest) {
@@ -111,16 +92,16 @@ public class ProductService {
       return ResponseEntity
         .ok(new ProductResponse(productRepository.findByNameContaining(productRequest.getName(), paging).stream().map(ProductDto::factoryProduct).collect(Collectors.toList())));
   }
-  public ResponseEntity<?> findByNameContainingOutOfStock(ProductRequest productRequest) {
+  public ResponseEntity<?> findByNameInStock(ProductRequest productRequest) {
     Pageable paging = checkPaging(productRequest);
       return ResponseEntity
-        .ok(new ProductResponse(productRepository.findByNameContainingAndOutOfStock(productRequest.getName(),productRequest.isOutOfStock(), paging)));
+        .ok(new ProductResponse(productRepository.findByNameInStock(productRequest.getName().toUpperCase(Locale.ROOT), paging)));
   }
 
-  public ResponseEntity<?> findByNameContainingAndCategory(ProductRequest productRequest) {
+  public ResponseEntity<?> findByProductName(ProductRequest productRequest) {
     Pageable paging = checkPaging(productRequest);
     return ResponseEntity.ok(new ProductResponse(productRepository
-      .findProductByCategoryName(productRequest.getCategory().getName(), paging)));
+      .findByProductName(productRequest.getName().toUpperCase(Locale.ROOT), paging)));
   }
   public ResponseEntity<?> findByNameContainingAndCategoryOutOfStock(ProductRequest productRequest) {
     Pageable paging = checkPaging(productRequest);

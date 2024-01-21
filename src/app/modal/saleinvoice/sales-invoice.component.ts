@@ -213,7 +213,7 @@ export class SalesInvoiceComponent implements OnInit {
         });
         setTimeout(() => { // Needed for large documents
           var divContents = document.getElementById("invoice-POS").innerHTML;
-          var printWindow = window.open('', '', 'height=400,width=500');
+          var printWindow = window.open('', '', 'height=400,width=600');
           // printWindow.document.querySelector("*").forEach(e => e.style.display="none");
           printWindow.document.write('<html><head><title>Print DIV Content</title>');
           printWindow.document.write('</head><body >');
@@ -254,7 +254,7 @@ export class SalesInvoiceComponent implements OnInit {
     // printWindow.document.write(document.documentElement.innerHTML);
     setTimeout(() => { // Needed for large documents
       var divContents = document.getElementById("invoice-POS").innerHTML;
-      var printWindow = window.open('', '', 'height=400,width=500');
+      var printWindow = window.open('', '', 'height=400,width=600');
       // printWindow.document.querySelector("*").forEach(e => e.style.display="none");
       printWindow.document.write('<html><head><title>Print DIV Content</title>');
       printWindow.document.write('</head><body >');

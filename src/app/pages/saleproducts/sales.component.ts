@@ -63,14 +63,14 @@ export class SalesComponent implements OnInit, AfterViewInit {
   }
 
   loadproductresults(): void {
-    const category: Category = new Category(0,'');
+    // const category: Category = new Category(0,this.productsearch.nativeElement.value);
     const productrequest = new ProductRequest(0, this.productsearch.nativeElement.value,
-      this.productsearch.nativeElement.value, 0, 0, 0, 0, 0, 0, false, false, 0, 0, 0,
-      category,
-      this.productsearch.nativeElement.value, false, 'name', 'asc', 10, 0)
-    debugger;
+      null, 0, 0, 0, 0, 0, 0, false, false, 0, 0, 0,
+      null,
+      null, false, 'name', 'desc', 10, 0)
     this.findProductOutOfStock(productrequest);
   }
+
 
 
   ngOnInit() {

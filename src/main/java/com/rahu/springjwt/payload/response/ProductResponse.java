@@ -54,7 +54,6 @@ public class ProductResponse {
 
   public ProductResponse(Page<Product> productPage) {
     this.prodContent = productPage.getContent();
-    this.currentpage = productPage.getNumber();
     this.totalitems = productPage.getTotalElements();
     this.totalpages = productPage.getTotalPages();
   }

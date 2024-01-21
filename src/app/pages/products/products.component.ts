@@ -98,7 +98,7 @@ export class ProductsComponent implements OnInit, AfterViewInit {
     // const request = {};
     // request['page'] = ;
     // request['size'] = ;
-    const productrequest = new ProductRequest(0, "",
+    const productrequest = new ProductRequest(0, '',
       "", 0, 0, 0, 0, 0, 0, false, false, 0, 0, 0, null, null, false, 'name', 'asc', event.pageSize, event.pageIndex)
 
     this.getProducts(productrequest);
@@ -123,12 +123,11 @@ export class ProductsComponent implements OnInit, AfterViewInit {
     return new Array(i);
   }
   loadproductresults(): void {
-    const category: Category = new Category(0,this.productsearch.nativeElement.value);
+    // const category: Category = new Category(0,this.productsearch.nativeElement.value);
     const productrequest = new ProductRequest(0, this.productsearch.nativeElement.value,
       this.productsearch.nativeElement.value, 0, 0, 0, 0, 0, 0, false, false, 0, 0, 0,
-      category,
-      this.productsearch.nativeElement.value, false, 'name', 'asc', 10, 0)
-debugger;
+      null,
+      this.productsearch.nativeElement.value, false, 'name', 'asc', 1000000000, 0)
       this.getProducts(productrequest);
   }
 

@@ -21,9 +21,12 @@
         <div style="margin-left:1%">
 
           <mat-form-field>
-            <input matInput (change)="loadproductresults()" #productsearch type="text"
+            <input matInput (change)="loadproductresults();" #productsearch type="text"
                    (keyup)="doFilter($event.target.value,'product')" placeholder="Search">
           </mat-form-field>
+
+          <button (click)="loadproductresults()" mat-button>Search</button>
+
           <button class="mat-button mat-raised-button mat-badge-active"  (click)="clear()" mat-button>Clear List <span class="material-icons">shopping_cart</span>
             <span class='badge badge-warning' id='lblCartCount'> {{itemCount}} </span></button>
 &nbsp;

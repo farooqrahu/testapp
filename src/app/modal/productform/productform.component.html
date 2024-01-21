@@ -12,7 +12,7 @@
         <input matInput   minlength="2" maxlength="20" [(ngModel)]="data.name" cdkFocusInitial required>
       </mat-form-field>
       <section class="example-section">
-        <mat-checkbox [disabled]="data.id>0"  (change)="validate(data);clearQty(data)" [(ngModel)]="data.wareHouseProduct" >WareHouse</mat-checkbox>
+        <mat-checkbox   (change)="validate(data);clearQty(data)" [(ngModel)]="data.wareHouseProduct" >WareHouse</mat-checkbox>
       </section>
       <section class="example-section">
         <mat-checkbox [disabled]="data.id>0"  (change)="validate(data);clearQty(data)" [(ngModel)]="data.enableTQ" >Enter Total Quantity</mat-checkbox>
