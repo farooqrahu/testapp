@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
-import {MatPaginator} from '@angular/material/paginator';
+import {MatPaginator, PageEvent} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
 import {MessageboxComponent} from 'src/app/modal/messagebox/messagebox.component';
@@ -26,6 +26,7 @@ export class ReportsComponent implements OnInit, AfterViewInit {
   saleOrdersdatasource: MatTableDataSource<SaleOrders> = null;
   saleOrders: SaleOrders[] = [];
   sales: Sale[] = [];
+  totalElements: number = 0;
   // invoices: Invoice[] = [];
    invoice: Invoice=new Invoice([],0,0);
   productslength = 0;
@@ -45,58 +46,64 @@ export class ReportsComponent implements OnInit, AfterViewInit {
   counter(i: number) {
     return new Array(i);
   }
+  nextPage(event: PageEvent) {
+    // const request = {};
+    // request['page'] = ;
+    // request['size'] = ;
+    const productrequest = new ProductRequest( 0, "",
+      "", 0,0,0,0,0, 0,false,false,
+      0,0,0,null, null, false, 'name', 'asc', event.pageSize, event.pageIndex)
+    this.getAllOrders(productrequest);
+  }
+
+  private getAllOrders(request) {
+    this.saleservice.getAllOrders(request)
+      .subscribe(data => {
+          this.saleOrders = data['saleOrders'];
+          this.totalElements = data['totalitems'];
+          this.saleOrdersdatasource = new MatTableDataSource(this.saleOrders);
+          this.saleOrdersdatasource.sort = this.sort;
+        }
+        , error => {
+          console.log(error.error.message);
+        }
+      );
+  }
 
   loadproductresults(): void {
-    this.paginator.page.subscribe(() => {
-        const productrequest = new ProductRequest(0, this.productsearch.nativeElement.value,
-          this.productsearch.nativeElement.value, 0,0, 0, 0, 0, 0, false,false,0,0,0,null, null, false, 'name', 'asc', this.paginator.pageSize, this.paginator.getNumberOfPages())
-        this.saleservice.findProduct(productrequest).subscribe(
-          data => {
-            debugger;
-            this.saleOrders = data.productOrderInvoiceDtos;
-            console.log(this.saleOrders);
-            this.productslength = data.totalitems;
-            setTimeout(() => {
-              this.saleOrdersdatasource = new MatTableDataSource(this.saleOrders);
-              this.saleOrdersdatasource.sort = this.sort;
-              this.saleOrdersdatasource.paginator = this.paginator;
-            });
-          },
-          err => {
-            (err);
-          }
-        );
-
-
-      }
-    )
+    // const category: Category = new Category(0,'');
+    const productrequest = new ProductRequest(0, this.productsearch.nativeElement.value,
+      this.productsearch.nativeElement.value, 0, 0, 0, 0, 0, 0, false, false, 0, 0, 0,
+      null,
+      this.productsearch.nativeElement.value, false, 'name', 'asc', 100000000, 0)
+    debugger;
+    this.getAllOrders(productrequest);
   }
 
   ngOnInit() {
-    if (!(this.token.isAdmin())) {
-      this.token.signOut();
-    }
-    this.refreshproduct();
-  }
-
-  refreshproduct() {
     const productrequest = new ProductRequest(0, "",
       "", 0, 0, 0, 0, 0, 0, false, false, 0, 0, 0, null, null, false, 'name', 'asc', 10, 0)
-
-    this.saleservice.getAllOrders(productrequest).subscribe(
-      data => {
-        console.log(data);
-        this.saleOrders = data.productOrderInvoiceDtos
-          console.log("this is te");
-        this.productslength = data.totalitems;
-        this.saleOrdersdatasource = new MatTableDataSource(this.saleOrders);
-        console.log(this.saleOrders);
-      },
-      err => {
-        (err);
-      }
-    );
+    this.getAllOrders(productrequest);
   }
+
+  // refreshproduct() {
+  //   const productrequest = new ProductRequest(0, "",
+  //     "", 0, 0, 0, 0, 0, 0, false, false, 0, 0, 0, null, null, false, 'name', 'asc', 10, 0)
+  //
+  //   this.saleservice.getAllOrders(productrequest).subscribe(
+  //     data => {
+  //       console.log(data);
+  //       this.saleOrders = data.productOrderInvoiceDtos
+  //         console.log("this is te");
+  //       this.productslength = data.totalitems;
+  //       this.saleOrdersdatasource = new MatTableDataSource(this.saleOrders);
+  //       console.log(this.saleOrders);
+  //     },
+  //     err => {
+  //       (err);
+  //     }
+  //   );
+  // }
 
   public doFilter = (value: string, type: string) => {
     switch (type) {
@@ -136,7 +143,10 @@ export class ReportsComponent implements OnInit, AfterViewInit {
     });
     dialogRef.afterClosed().subscribe(res => {
       // console.log(res);
-          this.refreshproduct()
+      const productrequest = new ProductRequest(0, "",
+        "", 0, 0, 0, 0, 0, 0, false, false, 0, 0, 0, null, null, false, 'name', 'desc', 10, 0);
+      this.getAllOrders(productrequest)
+
     });
   }
   printDialog(saleOrders?: SaleOrders): void {
@@ -158,7 +168,10 @@ export class ReportsComponent implements OnInit, AfterViewInit {
     });
     dialogRef.afterClosed().subscribe(res => {
       // console.log(res);
-          this.refreshproduct()
+      const productrequest = new ProductRequest(0, "",
+        "", 0, 0, 0, 0, 0, 0, false, false, 0, 0, 0, null, null, false, 'name', 'desc', 10, 0);
+      this.getAllOrders(productrequest)
+
     });
   }
 
@@ -235,7 +248,10 @@ export class ReportsComponent implements OnInit, AfterViewInit {
       dialogRef.afterClosed().subscribe(res => {
        this.invoice=new Invoice([],0,0);
        this.sales=[];
-        this.refreshproduct();
+        const productrequest = new ProductRequest(0, "",
+          "", 0, 0, 0, 0, 0, 0, false, false, 0, 0, 0, null, null, false, 'name', 'desc', 10, 0);
+        this.getAllOrders(productrequest)
+
       });
 
     }

@@ -151,7 +151,7 @@ export class ProductsComponent implements OnInit, AfterViewInit {
     if (product === undefined)
       product = new Product(0, "", "", 0, 0, this.categories[0], this.companies[0], false, 0, 0, 0, 0, false, false, "", null, "", 0, 0, 0, 10, 0)
     const dialogRef = this.dialog.open(ProductformComponent, {
-      width: '550px',
+      width: '690px',
       data: {
         id: product.id,
         name: product.name,

@@ -25,8 +25,7 @@
                    (keyup)="doFilter($event.target.value,'product')" placeholder="Search">
           </mat-form-field>
 <!--          <button class="mat-button mat-raised-button mat-primary" (click)="submitOrder()" mat-button>Submit Order</button>-->
-          <mat-paginator [pageSize]="10" [pageSizeOptions]="[2, 4, 6, 10, 20]">
-          </mat-paginator>
+          <mat-paginator [pageSizeOptions]="[ 10, 25, 100]" [pageSize]="10" [length]="totalElements" (page)="nextPage($event)"> </mat-paginator>
         </div>
         <div class="table-responsive">
           <table mat-table [dataSource]="saleOrdersdatasource" matSort matSortActive="id" matSortDirection="desc"

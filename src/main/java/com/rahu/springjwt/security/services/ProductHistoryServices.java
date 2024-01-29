@@ -22,7 +22,7 @@ public class ProductHistoryServices {
 
 
   public ResponseEntity<?> findProductHistory(ProductRequest productRequest) {
-    if (productRequest.getCategory() != null || productRequest.getName() != null) {
+    if (productRequest.getCategory() != null || (!"".equals(productRequest.getName()) && productRequest.getName() != null)) {
       return findByNameContainingAndCategory(productRequest);
     } else {
       return findAllProducts(productRequest);
