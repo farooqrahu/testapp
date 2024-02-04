@@ -9,8 +9,9 @@ import {Product} from './../models/product.model';
 import {ProductRequest} from './../models/productrequest.model';
 import {NumberSymbol} from '@angular/common';
 import {Company} from "../models/compnay.model";
+import {ApiService} from "./ApiService";
 
-const PRODUCT_API = 'http://localhost:8080/api/product/';
+// const this.apiService.getBaseUrl() = 'http://localhost:8080/api/product/';
 
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})
@@ -23,7 +24,7 @@ const HttpUploadOptions = {
   providedIn: 'root'
 })
 export class ProductService {
-  constructor(private http: HttpClient, private token: TokenStorageService) {
+  constructor(private http: HttpClient, private token: TokenStorageService, private apiService: ApiService) {
   }
 
   fileExists(id: any, number: any): Observable<boolean> {
@@ -50,7 +51,7 @@ export class ProductService {
     var enableTQ =this.productrequest.enableTQ;
     var wareHouseProduct =this.productrequest.wareHouseProduct;
 
-    return this.http.post(PRODUCT_API + 'updateProduct', {//productrequest
+    return this.http.post(this.apiService.getBaseUrl() + 'product/updateProduct', {//productrequest
       id, category,company, price,wholeSalePrice, name, description, quantityItem,quantityBundle,extraQuantity,quantity
     ,enableTQ,wareHouseProduct
     }, httpOptions);
@@ -66,7 +67,7 @@ export class ProductService {
     var quantity =this.productrequest.quantity;
     var enableTQ =this.productrequest.enableTQ;
     var description = form.get('description').value;
-    return this.http.post(PRODUCT_API + 'addProduct', {
+    return this.http.post(this.apiService.getBaseUrl() + 'product/addProduct', {
       category, price,
       name
       , description, quantityItem,quantityBundle,extraQuantity,quantity,enableTQ
@@ -74,7 +75,7 @@ export class ProductService {
   }
 
   updateProductImage(form: FormData): Observable<any> {
-    return this.http.post(PRODUCT_API + 'updateProductImage', form);
+    return this.http.post(this.apiService.getBaseUrl() + 'product/updateProductImage', form);
   }
 
   findProduct(productrequest: ProductRequest): Observable<any> {
@@ -92,7 +93,7 @@ export class ProductService {
 
     console.log(productrequest)
 
-    return this.http.post(PRODUCT_API + 'findProduct', {
+    return this.http.post(this.apiService.getBaseUrl() + 'product/findProduct', {
 
      name,pagenumber,pagesize
     }, httpOptions);
@@ -110,7 +111,7 @@ debugger;
     var pagesize = productrequest.pagesize;
     console.log(productrequest)
 
-    return this.http.post(PRODUCT_API + 'findProductHistory', {
+    return this.http.post(this.apiService.getBaseUrl() + 'product/findProductHistory', {
 
       id, price, name, description, quantity,pagenumber,pagesize
     }, httpOptions);
@@ -118,11 +119,11 @@ debugger;
 
   deleteProduct(product: Product): Observable<any> {
     var id = product.id
-    return this.http.post(PRODUCT_API + 'deleteProduct', {id}, httpOptions);
+    return this.http.post(this.apiService.getBaseUrl() + 'product/deleteProduct', {id}, httpOptions);
   }
 
   getAllProducts(): Observable<any> {
-    return this.http.post(PRODUCT_API + 'findProduct', {}, httpOptions);
+    return this.http.post(this.apiService.getBaseUrl() + 'product/findProduct', {}, httpOptions);
   }
 
   findProductOutOfStock(productrequest: ProductRequest): Observable<any> {
@@ -132,19 +133,19 @@ debugger;
     var pagesize = productrequest.pagesize;
     console.log(productrequest)
 
-    return this.http.post(PRODUCT_API + 'findByNameInStock', {name,pagenumber,pagesize}, httpOptions);
+    return this.http.post(this.apiService.getBaseUrl() + 'product/findByNameInStock', {name,pagenumber,pagesize}, httpOptions);
   }
 
   getAllProductHistory(): Observable<any> {
-    return this.http.post(PRODUCT_API + 'findProductHistory', {}, httpOptions);
+    return this.http.post(this.apiService.getBaseUrl() + 'product/findProductHistory', {}, httpOptions);
   }
 
   getAllCategories(): Observable<any> {
-    return this.http.post(PRODUCT_API + 'getAllCategories', {}, httpOptions);
+    return this.http.post(this.apiService.getBaseUrl() + 'product/getAllCategories', {}, httpOptions);
   }
 
   getAllCompanies(): Observable<any> {
-    return this.http.post(PRODUCT_API + 'getAllCompanies', {}, httpOptions);
+    return this.http.post(this.apiService.getBaseUrl() + 'product/getAllCompanies', {}, httpOptions);
   }
 
   updateCategory(category: Category): Observable<any> {
@@ -152,14 +153,14 @@ debugger;
     var name = category.name
     // var price=form.get('price').value;
     // var description=form.get('description').value;
-    return this.http.post(PRODUCT_API + 'updateCategory', {id, name}, httpOptions);
+    return this.http.post(this.apiService.getBaseUrl() + 'product/updateCategory', {id, name}, httpOptions);
   }
 
   addCategory(category: Category): Observable<any> {
     var name = category.name
     // var price=form.get('price').value;
     // var description=form.get('description').value;
-    return this.http.post(PRODUCT_API + 'addCategory', {name}, httpOptions);
+    return this.http.post(this.apiService.getBaseUrl() + 'product/addCategory', {name}, httpOptions);
   }
 
   updateCompany(company: Company): Observable<any> {
@@ -167,40 +168,40 @@ debugger;
     var name = company.name
     // var price=form.get('price').value;
     // var description=form.get('description').value;
-    return this.http.post(PRODUCT_API + 'updateCompany', {id, name}, httpOptions);
+    return this.http.post(this.apiService.getBaseUrl() + 'product/updateCompany', {id, name}, httpOptions);
   }
 
   addCompany(company: Company): Observable<any> {
     var name = company.name
     // var price=form.get('price').value;
     // var description=form.get('description').value;
-    return this.http.post(PRODUCT_API + 'addCompany', {name}, httpOptions);
+    return this.http.post(this.apiService.getBaseUrl() + 'product/addCompany', {name}, httpOptions);
   }
 
   deleteCompany(company: Company): Observable<any> {
     var id = company.id
     var name = company.name;
-    return this.http.post(PRODUCT_API + 'deleteCompany', {id, name,}, httpOptions);
+    return this.http.post(this.apiService.getBaseUrl() + 'product/deleteCompany', {id, name,}, httpOptions);
   }
   deleteCategory(category: Category): Observable<any> {
     var id = category.id
     var name = category.name;
-    return this.http.post(PRODUCT_API + 'deleteCategory', {id, name,}, httpOptions);
+    return this.http.post(this.apiService.getBaseUrl() + 'product/deleteCategory', {id, name,}, httpOptions);
   }
 
   getAllShoppingCarts(): Observable<any> {
-    return this.http.post(PRODUCT_API + 'getAllShoppingCarts', {}, httpOptions);
+    return this.http.post(this.apiService.getBaseUrl() + 'product/getAllShoppingCarts', {}, httpOptions);
   }
 
   getShoppingCart(userid: any): Observable<any> {
-    return this.http.post(PRODUCT_API + 'getShoppingCart', {userid}, httpOptions);
+    return this.http.post(this.apiService.getBaseUrl() + 'product/getShoppingCart', {userid}, httpOptions);
   }
 
   updateShoppingCartItems(userid: any, cartItems: Cartitem[]): Observable<any> {
     cartItems.forEach(element => {
       element.shoppingcart = undefined
     });
-    return this.http.post(PRODUCT_API + 'updateShoppingCartItems', {userid, cartItems}, httpOptions);
+    return this.http.post(this.apiService.getBaseUrl() + 'product/updateShoppingCartItems', {userid, cartItems}, httpOptions);
   }
 
   removeCartItem(userid: any, productid: number): Observable<any> {
@@ -208,7 +209,7 @@ debugger;
     var username = this.token.getUsername();
     var password = this.token.getPassword();
 
-    return this.http.post(PRODUCT_API + 'removeCartItem', {
+    return this.http.post(this.apiService.getBaseUrl() + 'product/removeCartItem', {
       username, password, userid, productid
     }, httpOptions);
   }
@@ -218,13 +219,13 @@ debugger;
     var userid = shoppingcart.user.id;
     // var price=form.get('price').value;
     // var description=form.get('description').value;
-    return this.http.post(PRODUCT_API + 'setCompletedDate', {}, httpOptions);
+    return this.http.post(this.apiService.getBaseUrl() + 'product/setCompletedDate', {}, httpOptions);
   }
 
   setShippingDate(shoppingcart: any): Observable<any> {
     var userid = shoppingcart.user.id;
     // var price=form.get('price').value;
     // var description=form.get('description').value;
-    return this.http.post(PRODUCT_API + 'setShippingDate', {userid}, httpOptions);
+    return this.http.post(this.apiService.getBaseUrl() + 'product/setShippingDate', {userid}, httpOptions);
   }
 }

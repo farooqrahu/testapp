@@ -86,25 +86,6 @@ export class ReportsComponent implements OnInit, AfterViewInit {
     this.getAllOrders(productrequest);
   }
 
-  // refreshproduct() {
-  //   const productrequest = new ProductRequest(0, "",
-  //     "", 0, 0, 0, 0, 0, 0, false, false, 0, 0, 0, null, null, false, 'name', 'asc', 10, 0)
-  //
-  //   this.saleservice.getAllOrders(productrequest).subscribe(
-  //     data => {
-  //       console.log(data);
-  //       this.saleOrders = data.productOrderInvoiceDtos
-  //         console.log("this is te");
-  //       this.productslength = data.totalitems;
-  //       this.saleOrdersdatasource = new MatTableDataSource(this.saleOrders);
-  //       console.log(this.saleOrders);
-  //     },
-  //     err => {
-  //       (err);
-  //     }
-  //   );
-  // }
-
   public doFilter = (value: string, type: string) => {
     switch (type) {
       case 'product':
@@ -173,63 +154,6 @@ export class ReportsComponent implements OnInit, AfterViewInit {
       this.getAllOrders(productrequest)
 
     });
-  }
-
-  // addSale(sale: Sale): any {
-  //   this.saleservice.addSale(sale).subscribe(
-  //     data => {
-  //       this.messagebox(data.message);
-  //       this.getAllsales()
-  //     },
-  //     err => {
-  //       this.messagebox("Error adding category. make sure it does not already exist");
-  //     }
-  //   );
-  // }
-  // updateSale(sale: Sale): any {
-  //   this.saleservice.updateSale(sale).subscribe(
-  //     data => {
-  //       var objIndex = this.sales.findIndex((obj => obj.id == sale.id));
-  //       this.sales[objIndex] = sale
-  //       this.salesdatasource = new MatTableDataSource(this.sales)
-  //
-  //       this.messagebox(data.message);
-  //     },
-  //     err => {
-  //       this.messagebox(err.message);
-  //
-  //     }
-  //   );
-  // }
-
-
-  deleteSale(sale: Sale): any {
-
-    // Swal.fire({
-    //   title: 'Are you sure?',
-    //   text: "You won't be able to revert this!",
-    //   icon: 'warning',
-    //   showCancelButton: true,
-    //   confirmButtonColor: '#3085d6',
-    //   cancelButtonColor: '#d33',
-    //   confirmButtonText: 'Yes, delete it!'
-    // }).then((result) => {
-    //   if (result.isConfirmed) {
-    //     this.saleservice.deleteSale(sale).subscribe(
-    //       data => {
-    //         this.getAllCompanies()
-    //         Swal.fire(
-    //           'Deleted!',
-    //           'Your Sale has been deleted.',
-    //           'success'
-    //         )
-    //       },
-    //       err => {
-    //         this.messagebox("Error deleting sale, please make sure no products are in this sale.");
-    //       }
-    //     );
-    //   }
-    // })
   }
 
 

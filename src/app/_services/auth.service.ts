@@ -4,8 +4,9 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { FormGroup } from '@angular/forms';
 import { User } from '../models/user';
+import {ApiService} from "./ApiService";
 
-const AUTH_API = 'http://localhost:8080/api/auth/';
+// const this.apiService.getBaseUrl()  = 'http://localhost:8080/api/auth/';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -18,20 +19,20 @@ const HttpUploadOptions = {
   providedIn: 'root'
 })
 export class AuthService {
-  constructor(private http: HttpClient, private token: TokenStorageService) { }
+  constructor(private http: HttpClient, private token: TokenStorageService, private apiService: ApiService) { }
   deleteUser(user: User) {
     var id = user.id;
-    return this.http.post(AUTH_API + 'deleteUser', {  id });
+    return this.http.post(this.apiService.getBaseUrl()  + 'auth/deleteUser', {  id });
   }
   confirmUserAccount(token: string): Observable<any> {
     let headers = new Headers();
     headers.append('Content-Type', 'application/json');
     let params = new HttpParams().set("token", token);
-    return this.http.get<string>(AUTH_API + 'confirmuseraccount', { params: params });
+    return this.http.get<string>(this.apiService.getBaseUrl()  + 'auth/confirmuseraccount', { params: params });
 
   }
   getAllUsers(): Observable<any> {
-    return this.http.post(AUTH_API + 'getAllUsers', {});
+    return this.http.post(this.apiService.getBaseUrl()  + 'auth/getAllUsers', {});
   }
 
   updateProfile(id: any, username: string, form: FormGroup): Observable<any> {
@@ -48,7 +49,7 @@ export class AuthService {
     var job = form.get('job').value;
     var description = form.get('description').value;
 
-    return this.http.post(AUTH_API + 'user-profile', {
+    return this.http.post(this.apiService.getBaseUrl()  + 'auth/user-profile', {
       id,
       username, password
       , name
@@ -58,15 +59,15 @@ export class AuthService {
   }
 
   updateProfileImage(form: FormData): Observable<any> {
-    return this.http.post(AUTH_API + 'updateProfileImage', form);
+    return this.http.post(this.apiService.getBaseUrl()  + 'auth/updateProfileImage', form);
   }
 
   getProfileImage(): Observable<any> {
-    return this.http.get(AUTH_API + 'user-profile',{});
+    return this.http.get(this.apiService.getBaseUrl()  + 'auth/user-profile',{});
   }
 
   login(username: string, password: string): Observable<any> {
-    return this.http.post(AUTH_API + 'login', {
+    return this.http.post(this.apiService.getBaseUrl()  + 'auth/login', {
       username,
       password
     }, httpOptions);

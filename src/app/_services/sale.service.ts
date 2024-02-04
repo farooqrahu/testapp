@@ -6,9 +6,10 @@ import {Sale} from "../models/sale.model";
 import {ProductRequest} from "../models/productrequest.model";
 import {SaleOrders} from "../models/sale.orders.model";
 import {Invoice} from "../models/invoice.model";
+import {ApiService} from "./ApiService";
 
-const PRODUCT_SALE_API = 'http://localhost:8080/api/sale/';
-const CUSTOMER_API = 'http://localhost:8080/api/customer/';
+// const PRODUCT_SALE_API ='${this.apiService.getBaseUrl()}/sale/';
+// const CUSTOMER_API = '${this.apiService.getBaseUrl()}/customer/';
 
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})
@@ -21,13 +22,13 @@ const HttpUploadOptions = {
   providedIn: 'root'
 })
 export class SaleService {
-  constructor(private http: HttpClient, private token: TokenStorageService) {
+  constructor(private http: HttpClient, private token: TokenStorageService, private apiService: ApiService) {
   }
 
   submitSaleOrder(productSaleList: Invoice,customerId?,customerName?,mobileNumber?): Observable<any> {
     let data = productSaleList._sales;
     let grandTotal = productSaleList._grandTotal;
-    return this.http.post(PRODUCT_SALE_API + 'submitSaleOrder', {data,grandTotal,customerId,customerName,mobileNumber}, httpOptions);
+    return this.http.post(this.apiService.getBaseUrl() + 'sale/submitSaleOrder', {data,grandTotal,customerId,customerName,mobileNumber}, httpOptions);
   }
   findProduct(productrequest: ProductRequest): Observable<any> {
 
@@ -39,7 +40,7 @@ export class SaleService {
     var description = productrequest.description;
     console.log(productrequest)
 
-    return this.http.post(PRODUCT_SALE_API + 'findProduct', {
+    return this.http.post(this.apiService.getBaseUrl() + 'sale/findProduct', {
 
       id, category, price, name, description, quantity
     }, httpOptions);
@@ -50,13 +51,13 @@ export class SaleService {
     var pagenumber = productrequest.pagenumber;
     var pagesize = productrequest.pagesize;
 
-    return this.http.post(PRODUCT_SALE_API + 'findOrders', {pagenumber,pagesize,name}, httpOptions);
+    return this.http.post(this.apiService.getBaseUrl() + 'sale/findOrders', {pagenumber,pagesize,name}, httpOptions);
   }
   getAllCustomers(): Observable<any> {
-    return this.http.get(CUSTOMER_API + 'getAllCustomers');
+    return this.http.get(this.apiService.getBaseUrl() + 'customer/getAllCustomers');
   }
   findReturnOrdersByInvoiceNo(invoiceNo: number): Observable<any> {
-    return this.http.post(PRODUCT_SALE_API + 'findReturnOrdersByInvoiceNo', {invoiceNo}, httpOptions);
+    return this.http.post(this.apiService.getBaseUrl() + 'sale/findReturnOrdersByInvoiceNo', {invoiceNo}, httpOptions);
   }
 
   returnProductSale(saleOrders:SaleOrders): Observable<any> {
@@ -64,9 +65,9 @@ export class SaleService {
     var data = saleOrders.productSales;
     var id = saleOrders.id;
     // let json = JSON.stringify(data);
-    return this.http.post(PRODUCT_SALE_API + 'returnProductSale', {data,id}, httpOptions);
+    return this.http.post(this.apiService.getBaseUrl() + 'sale/returnProductSale', {data,id}, httpOptions);
   }
   findCustomerByMobileNumber(mobileNumber?): Observable<any> {
-    return this.http.post(PRODUCT_SALE_API + 'findCustomerByMobileNumber', {mobileNumber}, httpOptions);
+    return this.http.post(this.apiService.getBaseUrl() + 'customer/findCustomerByMobileNumber', {mobileNumber}, httpOptions);
   }
 }

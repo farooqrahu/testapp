@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import { Observable } from 'rxjs';
+import {ApiService} from "./ApiService";
 
-const API_URL = 'http://localhost:8080/api/test/';
-const AUTH_API = 'http://localhost:8080/api/auth/';
+// const this.apiService.getBaseUrl() = 'http://localhost:8080/api/test/';
+// const AUTH_API = 'http://localhost:8080/api/auth/';
+
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
@@ -11,31 +13,31 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class UserService {
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private apiService: ApiService) { }
 
   getPublicContent(): Observable<any> {
-    return this.http.get(API_URL + 'all', { responseType: 'text' });
+    return this.http.get(this.apiService.getBaseUrl() + 'auth/all', { responseType: 'text' });
   }
 
   getUserBoard(): Observable<any> {
-    return this.http.get(API_URL + 'user', { responseType: 'text' });
+    return this.http.get(this.apiService.getBaseUrl() + 'auth/user', { responseType: 'text' });
   }
 
   getModeratorBoard(): Observable<any> {
-    return this.http.get(API_URL + 'mod', { responseType: 'text' });
+    return this.http.get(this.apiService.getBaseUrl() + 'auth/mod', { responseType: 'text' });
   }
 
   getAdminBoard(): Observable<any> {
-    return this.http.get(API_URL + 'admin', { responseType: 'text' });
+    return this.http.get(this.apiService.getBaseUrl() + 'auth/admin', { responseType: 'text' });
   }
 
   getAllRoles(): Observable<any> {
-    return this.http.post(AUTH_API + 'getAllRoles', {}, httpOptions);
+    return this.http.post(this.apiService.getBaseUrl() + 'auth/getAllRoles', {}, httpOptions);
   }
   register(username: string,name: string, email: string, password: string,roleId: any): Observable<any> {
     // debugger;
     console.log("role.id"+roleId)
-    return this.http.post(AUTH_API + 'register', {
+    return this.http.post(this.apiService.getBaseUrl() + 'auth/register', {
       username,
       name,
       email,

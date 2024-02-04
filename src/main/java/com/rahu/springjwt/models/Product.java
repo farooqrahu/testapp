@@ -18,7 +18,7 @@ public class Product extends BaseEntity{
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
   @NotBlank
-  @Size(max = 20)
+  @Size(max = 70)
   private String name;
   @Nullable
   private String description = "";
@@ -60,7 +60,7 @@ public class Product extends BaseEntity{
     this.category = category;
     this.company = company;
     this.images = images;
-    this.quantity = quantity;
+  this.quantity = quantity;
   }
 
   public Product(ProductRequest productRequest) {
