@@ -3,6 +3,8 @@ package com.rahu.springjwt.dto;
 import com.rahu.springjwt.models.ProductSaleList;
 import lombok.*;
 
+import java.util.Date;
+
 @Setter
 @Getter
 @NoArgsConstructor
@@ -19,10 +21,11 @@ public class ProductSaleDto {
   private Long extraSale;
   private Long bundleSale;
   private String detail;
+  private Date createdAt;
   private boolean isReturned = false;
 
   public static ProductSaleDto factoryProductSale(ProductSaleList productSaleList) {
-    return ProductSaleDto.builder().id(productSaleList.getId()).extraSale(productSaleList.getExtraSale()).bundleSale(productSaleList.getBundleSale()).totalQuantitySale(productSaleList.getTotalQuantitySale()).product(ProductDto.factoryProduct(productSaleList.getProduct())).build();
+    return ProductSaleDto.builder().id(productSaleList.getId()).extraSale(productSaleList.getExtraSale()).bundleSale(productSaleList.getBundleSale()).totalQuantitySale(productSaleList.getTotalQuantitySale()).createdAt(productSaleList.getCreatedAt()).product(ProductDto.factoryProduct(productSaleList.getProduct())).build();
   }
 
 

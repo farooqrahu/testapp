@@ -530,4 +530,7 @@ public class ProductService {
     return ResponseEntity.ok(new MessageResponse("Cart updated"));
 
   }
+
+  public ResponseEntity<?> getProductReport(ProductRequest productRequest) {
+    return findByProductName(productRequest);  }
 }

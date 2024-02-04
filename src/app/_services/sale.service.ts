@@ -53,6 +53,14 @@ export class SaleService {
 
     return this.http.post(this.apiService.getBaseUrl() + 'sale/findOrders', {pagenumber,pagesize,name}, httpOptions);
   }
+
+  getProductReport(productrequest: ProductRequest): Observable<any> {
+    var name = productrequest.name;
+    var pagenumber = productrequest.pagenumber;
+    var pagesize = productrequest.pagesize;
+
+    return this.http.post(this.apiService.getBaseUrl() + 'report/getProductReport', {pagenumber,pagesize,name}, httpOptions);
+  }
   getAllCustomers(): Observable<any> {
     return this.http.get(this.apiService.getBaseUrl() + 'customer/getAllCustomers');
   }

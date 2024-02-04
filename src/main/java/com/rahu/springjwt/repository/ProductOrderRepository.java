@@ -2,6 +2,7 @@ package com.rahu.springjwt.repository;
 
 import com.rahu.springjwt.models.ProductOrder;
 import com.rahu.springjwt.models.ProductSaleList;
+import com.rahu.springjwt.payload.request.ProductRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

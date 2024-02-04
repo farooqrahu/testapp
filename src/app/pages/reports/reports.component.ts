@@ -14,6 +14,8 @@ import {SaleService} from "../../_services/sale.service";
 import {SaleOrders} from "../../models/sale.orders.model";
 import {SalesListComponent} from "../../modal/viewsalesform/sales-list.component";
 import {SalesInvoiceComponent} from "../../modal/saleinvoice/sales-invoice.component";
+import {Product} from "../../models/product.model";
+import {Reports} from "../../models/report.model";
 
 @Component({
   selector: 'app-reports',
@@ -21,10 +23,12 @@ import {SalesInvoiceComponent} from "../../modal/saleinvoice/sales-invoice.compo
   styleUrls: ['./reports.component.scss']
 })
 export class ReportsComponent implements OnInit, AfterViewInit {
-  companycolumnsToDisplay = ["id","customerName","mobileNumber", "invoiceNo","grandTotal","createdAt","action"];
+  companycolumnsToDisplay = ["id","product.name","bundleSale","extraSale","totalQuantitySale","createdAt"];
   // saleList =Sale[] = [];
   saleOrdersdatasource: MatTableDataSource<SaleOrders> = null;
   saleOrders: SaleOrders[] = [];
+  dataSource: MatTableDataSource<Reports> = new MatTableDataSource();
+  reports: Reports[] = [];
   sales: Sale[] = [];
   totalElements: number = 0;
   // invoices: Invoice[] = [];
@@ -57,12 +61,13 @@ export class ReportsComponent implements OnInit, AfterViewInit {
   }
 
   private getAllOrders(request) {
-    this.saleservice.getAllOrders(request)
+    this.saleservice.getProductReport(request)
       .subscribe(data => {
-          this.saleOrders = data['saleOrders'];
+          this.reports = data['prodContent'];
           this.totalElements = data['totalitems'];
-          this.saleOrdersdatasource = new MatTableDataSource(this.saleOrders);
-          this.saleOrdersdatasource.sort = this.sort;
+          this.dataSource = new MatTableDataSource(this.reports);
+          this.dataSource.sort = this.sort;
+
         }
         , error => {
           console.log(error.error.message);
