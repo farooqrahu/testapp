@@ -35,7 +35,7 @@ export class UserService {
     return this.http.post(this.apiService.getBaseUrl() + 'auth/getAllRoles', {}, httpOptions);
   }
   register(username: string,name: string, email: string, password: string,roleId: any): Observable<any> {
-    // debugger;
+    //
     console.log("role.id"+roleId)
     return this.http.post(this.apiService.getBaseUrl() + 'auth/register', {
       username,

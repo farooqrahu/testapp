@@ -20,9 +20,9 @@ export var adminROUTES: RouteInfo[] = [
   { path: '/companies', title: 'Companies', icon: 'ni-bullet-list-67 text-red', class: '' },
   { path: '/sales', title: 'Create Sales', icon: 'ni-bullet-list-67 text-red', class: '' },
   { path: '/sale-orders', title: 'View Sales', icon: 'ni-bullet-list-67 text-red', class: '' },
+  { path: '/reports', title: 'Sales Report', icon: 'ni-bullet-list-67 text-red', class: '' },
   { path: '/users', title: 'Users', icon: 'ni-bullet-list-67 text-red', class: '' },
   // { path: '/shopping-carts', title: 'Shopping Carts', icon: 'ni-bullet-list-67 text-red', class: '' },
-  { path: '/reports', title: 'Reports', icon: 'ni-bullet-list-67 text-red', class: '' },
 ];
 export var SALES_MAN_ROUT: RouteInfo[] = [
   { path: '/sales', title: 'Create Sales', icon: 'ni-bullet-list-67 text-red', class: '' },

@@ -1,6 +1,7 @@
 package com.rahu.springjwt.payload.response;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.rahu.springjwt.dto.ProductDto;
 import com.rahu.springjwt.dto.ProductOrderInvoiceDto;
@@ -24,7 +25,7 @@ public class ProductResponse {
   private boolean images;
   private List<ProductDto> list;
   private List<ProductOrderInvoiceDto> productOrderInvoiceDtos;
-  private List<Product> prodContent;
+  private List<ProductDto> prodContent;
   private int currentpage;
   private long totalitems;
   private int totalpages;
@@ -53,7 +54,7 @@ public class ProductResponse {
   }
 
   public ProductResponse(Page<Product> productPage) {
-    this.prodContent = productPage.getContent();
+    this.prodContent = productPage.getContent().stream().map(ProductDto::factoryProduct).collect(Collectors.toList());
     this.totalitems = productPage.getTotalElements();
     this.totalpages = productPage.getTotalPages();
   }

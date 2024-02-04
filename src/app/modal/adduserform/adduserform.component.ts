@@ -53,7 +53,7 @@ export class AdduserformComponent implements OnInit {
   onSubmit(): void {
     console.log("submit")
     const {username,name, email, password,role} = this.form;
-    debugger;
+
     this.userService.register(username, name,email, password,role.id).subscribe(
       data => {
         (data);

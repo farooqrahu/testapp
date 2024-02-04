@@ -45,7 +45,7 @@ export class ProductformComponent implements OnInit {
     this.dialogRef.close();
   }
   calculateQty(data: Product){
-    debugger;
+
     let ext = Number(this.data.extraQuantity) || 0;
     let qtyItem = Number(this.data.quantityItem) || 0;
     let bundle = Number(this.data.quantityBundle) || 0;

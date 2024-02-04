@@ -81,7 +81,7 @@ export class ReportsComponent implements OnInit, AfterViewInit {
       this.productsearch.nativeElement.value, 0, 0, 0, 0, 0, 0, false, false, 0, 0, 0,
       null,
       this.productsearch.nativeElement.value, false, 'name', 'asc', 100000000, 0)
-    debugger;
+
     this.getAllOrders(productrequest);
   }
 

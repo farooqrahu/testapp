@@ -80,7 +80,7 @@ export class ProductService {
 
   findProduct(productrequest: ProductRequest): Observable<any> {
     console.log("productrequest")
-    debugger;
+
     console.log(productrequest)
     // var id = productrequest.id;
     // var category = productrequest.category;
@@ -100,7 +100,7 @@ export class ProductService {
   }
 
   findProductHistory(productrequest: ProductRequest): Observable<any> {
-debugger;
+
     var id = productrequest.id;
     // var category = productrequest.category.name;
     var name = productrequest.name;
