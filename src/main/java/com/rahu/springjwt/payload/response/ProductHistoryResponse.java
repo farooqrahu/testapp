@@ -8,6 +8,7 @@ import lombok.Data;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 public class ProductHistoryResponse {
@@ -20,7 +21,7 @@ public class ProductHistoryResponse {
   private Float price;
   private boolean images;
   private List<ProductHistoryDto> productHistoryContent;
-  private List<ProductHistory> prodHisContent;
+  private List<ProductHistoryDto> prodHisContent;
   private List<ProductOrderInvoiceDto> productOrderInvoiceDtos;
   private int currentpage;
   private long totalitems;
@@ -51,7 +52,7 @@ public class ProductHistoryResponse {
 //  }
 
   public ProductHistoryResponse(Page<ProductHistory> productHistoryContent) {
-    this.prodHisContent = productHistoryContent.getContent();
+    this.prodHisContent = productHistoryContent.getContent().stream().map(ProductHistoryDto::factoryProduct).collect(Collectors.toList());
     this.currentpage = productHistoryContent.getNumber();
     this.totalitems = productHistoryContent.getTotalElements();
     this.totalpages = productHistoryContent.getTotalPages();

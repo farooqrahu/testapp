@@ -49,6 +49,12 @@ public class ProductController {
   public ResponseEntity<?> findProduct(@Valid @RequestBody ProductRequest productRequest) {
     return productService.findProduct(productRequest);
   }
+
+  @PostMapping("/outOfStock")
+  public ResponseEntity<?> outOfStock(@Valid @RequestBody ProductRequest productRequest) {
+    return productService.outOfStock(productRequest);
+  }
+
   @PostMapping("/findByNameInStock")
   public ResponseEntity<?> findByNameInStock(@Valid @RequestBody ProductRequest productRequest) {
     return productService.findByNameInStock(productRequest);

@@ -2,7 +2,7 @@
   <div class="container-fluid">
     <!-- Brand -->
     <a class="h4 mb-0 text-white text-uppercase d-none d-lg-inline-block" routerLinkActive="active"
-      [routerLink]="['/dashboard']">{{getTitle()}}</a>
+      [routerLink]="['/dashboard']">{{getTitle()}} </a>
     <!-- Form -->
 
     <!-- User -->
@@ -14,7 +14,7 @@
               <img alt="Image placeholder" [src]=profileimg>
             </span>
             <div class="media-body ml-2 d-none d-lg-block">
-              <span class="mb-0 text-sm  font-weight-bold">{{currentUser.name}} {{currentUser.surname}}</span>
+              <span class="mb-0 text-sm  font-weight-bold">{{currentUser.name}} {{currentUser.surname}} <span id="NotificationBadge" class="badge" style="background-color: #832525" [ngbTooltip]="'Out Of Stock'">{{outOfStockCounter}}</span></span>
             </div>
           </div>
         </a>
@@ -26,6 +26,10 @@
             <i class="ni ni-single-02"></i>
             <span>My profile</span>
           </a>
+<!--          <a routerLinkActive="active" [routerLink]="['/user-profile']" class="dropdown-item">-->
+<!--            <i class="ni ni-single-02"></i>-->
+<!--            <span>Notification <span id="NotificationBadges" class="badge" style="background-color: #f0ad4e">1</span></span>-->
+<!--          </a>-->
 
           <div class="dropdown-divider"></div>
           <a (click)="logout()" class="dropdown-item">

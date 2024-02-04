@@ -78,6 +78,11 @@ export class ProductService {
     return this.http.post(this.apiService.getBaseUrl() + 'product/updateProductImage', form);
   }
 
+  outOfStock(): Observable<any> {
+    return this.http.post(this.apiService.getBaseUrl() + 'product/outOfStock', {
+    }, httpOptions);
+  }
+
   findProduct(productrequest: ProductRequest): Observable<any> {
     console.log("productrequest")
 

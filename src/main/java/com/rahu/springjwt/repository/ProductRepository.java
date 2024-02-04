@@ -42,4 +42,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
   @Query("select p from Product p where p.outOfStock=?1")
   Page<Product> findAllOutOfStock(Boolean outOfStock, Pageable paging);
+
+  @Query("select count(p.id) from Product p where p.outOfStock=?1")
+  Integer outOfStock(Boolean outOfStock);
+
 }

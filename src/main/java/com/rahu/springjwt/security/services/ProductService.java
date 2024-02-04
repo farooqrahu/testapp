@@ -84,6 +84,10 @@ public class ProductService {
     return ResponseEntity.ok(new ProductResponse(productRepository.findAllOutOfStock(productRequest.isOutOfStock(),paging)));
   }
 
+  public ResponseEntity<?> outOfStock(ProductRequest productRequest) {
+    return ResponseEntity.ok(productRepository.outOfStock(Boolean.TRUE));
+  }
+
   public ResponseEntity<?> findByNameContaining(ProductRequest productRequest) {
     Pageable paging = checkPaging(productRequest);
     if (paging == null)
