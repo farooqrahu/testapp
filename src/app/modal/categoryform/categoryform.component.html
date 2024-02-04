@@ -1,6 +1,9 @@
-<h1 mat-dialog-title>modify category</h1>
+<h1 mat-dialog-title>Category
+  <button  class="float-right"   mat-button (click)="onNoClick()">&times;</button>
+</h1>
 <div mat-dialog-content>
   <mat-form-field>
+    <p>Category Name</p>
     <input matInput (change)="validate(data)" [(ngModel)]="data.name" cdkFocusInitial required>
   </mat-form-field>
 

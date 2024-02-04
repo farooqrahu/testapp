@@ -1,7 +1,8 @@
-import { Productrequest } from './productrequest.model';
+import { ProductRequest } from './productrequest.model';
 
-describe('Productrequest', () => {
+describe('ProductRequest', () => {
   it('should create an instance', () => {
-    expect(new Productrequest()).toBeTruthy();
+    // @ts-ignore
+    expect(new ProductRequest()).toBeTruthy();
   });
 });

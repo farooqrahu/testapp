@@ -14,6 +14,14 @@ export class TokenStorageService {
     let x = this.getUser().roles.filter(item => item.name.includes("ROLE_ADMIN")).length > 0;
     return x;
   }
+  isSalesMan(): boolean {
+    let x = this.getUser().roles.filter(item => item.name.includes("ROLE_SALES_MAN")).length > 0;
+    return x;
+  }
+  isDEO(): boolean {
+    let x = this.getUser().roles.filter(item => item.name.includes("ROLE_DEO")).length > 0;
+    return x;
+  }
   constructor(private router: Router) { }
 
   signOut(): void {

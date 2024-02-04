@@ -1,7 +1,7 @@
 <div class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center"
-    style="min-height: 600px; background-image: url(assets/img/theme/profile-cover.jpg); background-size: cover; background-position: center top;">
+    style="min-height: 600px; background-image: url(assets/img/theme/hardware5.gif); background-size: cover; background-position: center top;">
     <!-- Mask -->
-    <span class="mask bg-gradient-danger opacity-8"></span>
+    <span class="mask bg-gradient-danger opacity-6"></span>
     <!-- Header container -->
     <div class="container-fluid d-flex align-items-center">
         <div class="row">
@@ -24,7 +24,7 @@
                             <form *ngIf="!isSuccessful" [formGroup]="imageForm" enctype='multipart/form-data'
                                 (ngSubmit)=" update()" novalidate>
                                 <label>
-                                    <img [src]=profileimg class="rounded-circle">
+                                    <img src="{{profileimg}}" class="rounded-circle">
                                     <input type="file" (change)="onFileChanged($event)" style="display: none;"
                                         accept="image/png, image/jpeg" class="btn btn-sm btn-info mr-4">
                                 </label>

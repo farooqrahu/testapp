@@ -1,0 +1,60 @@
+
+<div id="invoice-POS" >
+
+    <div class="logo"></div>
+    <div class="info" style="text-align: center">
+      <p>Hardware Shop Naushahro Feroze, Sindh</p>
+      <p></p>
+      <p>03020889052</p>
+    </div><!--End Info-->
+
+  <div id="mid">
+    <div class="info">
+      <p>Customer Name: {{productOrderList.customerName}} </p>
+      <p>Mobile Number: {{productOrderList.mobileNumber}} </p>
+      <p>Invoice No. {{productOrderList.invoiceNo}}</p>
+      <p>Date. {{productOrderList.createdAt}}</p>
+    </div>
+  </div><!--End Invoice Mid-->
+
+  <div id="bot">
+
+    <div id="table">
+
+
+      <table>
+        <tr class="tabletitle">
+          <td class="item">Product</td>
+          <td class="item">Category</td>
+          <td class="item">Quantity</td>
+<!--          <td class="item">Price</td>-->
+        </tr>
+        <tr class="service" *ngFor="let p of productOrderList.productSales">
+          <td class="itemtext">{{p.product.name}}</td>
+          <td class="itemtext">{{p.product.category.name}}</td>
+          <td class="tableitem"><p class="itemtext">{{p.totalQuantitySale}}</p></td>
+<!--          <td class="tableitem"><p class="itemtext">{{p.product.price * p.totalQuantitySale | currency:'Rs:'}}</p></td>-->
+        </tr>
+
+<!--        <tr class="tabletitle">-->
+<!--          <td class="itemlabletext">Total Quantity</td>-->
+<!--          <td></td>-->
+<!--          <td class="tableitem">{{productOrderList.totalQuantity}}</td>-->
+<!--        </tr>-->
+
+<!--        <tr class="tabletitle">-->
+<!--          <td class="itemlabletext">Total Amount</td>-->
+<!--          <td></td>-->
+<!--          <td class="tableitem">{{productOrderList.grandTotal | currency:'Rs:'}}</td>-->
+<!--        </tr>-->
+      </table>
+    </div><!--End Table-->
+
+    <div id="legalcopy">
+      <p class="legal"><strong>This is computer generated print and do not require signature</strong>
+      </p>
+      <p class="legal" >Thank you!</p>
+    </div>
+
+  </div><!--End InvoiceBot-->
+</div><!--End Invoice-->

@@ -1,0 +1,14 @@
+<h1 mat-dialog-title align="center">Product Barcode</h1>
+<div mat-dialog-content>
+
+<!--    <p></p>-->
+    <img src="{{data.file}}" class="card-profile-image">
+<!--    <input matInput (change)="validate(data)" [(ngModel)]="data.name" cdkFocusInitial required>-->
+
+
+</div>
+<div mat-dialog-actions align="center">
+  <button mat-button (click)="onNoClick()">Cancel</button>
+<!--  <button *ngIf="validate(data)" mat-button [mat-dialog-close]="data">Print</button>-->
+  <button mat-button (click)="onClick()">Print this page</button>
+</div>

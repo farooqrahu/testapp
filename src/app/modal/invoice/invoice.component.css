@@ -19,3 +19,9 @@
 .mat-dialog-content {
   max-height: unset !important;
 }
+
+::ng-deep .mat-dialog-title{
+  color: darkred !important;
+  border-bottom: 2px solid !important;
+  padding: 9px !important;
+}

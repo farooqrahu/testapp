@@ -22,35 +22,40 @@ import { MatDialogModule } from '@angular/material/dialog';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { UserProfileComponent } from 'src/app/pages/user-profile/user-profile.component';
+import {CategoriesComponent} from "../../pages/categories/categories.component";
+import {CompaniesComponent} from "../../pages/companies/companies.component";
+import {MatCheckboxModule} from "@angular/material/checkbox";
+import {MatTableExporterModule} from "mat-table-exporter";
+import {MatTooltipModule} from "@angular/material/tooltip";
 
 // import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    RouterModule.forChild(AdminLayoutRoutes),
-    FormsModule,
-    HttpClientModule,
-    NgbModule, ReactiveFormsModule,
-    ClipboardModule,
-    MatInputModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatSortModule,
+    imports: [
+        CommonModule,
+        RouterModule.forChild(AdminLayoutRoutes),
+        FormsModule,
+        HttpClientModule,
+        NgbModule, ReactiveFormsModule,
+        ClipboardModule,
+        MatInputModule,
+        MatTableModule,
+        MatPaginatorModule,
+        MatSortModule,
 
-    MatProgressSpinnerModule,
-    MatButtonModule,
-    MatIconModule,
-    MatFormFieldModule,
+        MatProgressSpinnerModule,
+        MatButtonModule,
+        MatIconModule,
+        MatFormFieldModule,
 
-    MatDialogModule
-  ],
+        MatDialogModule, MatCheckboxModule, MatTableExporterModule, MatTooltipModule
+    ],
   declarations: [
     DashboardComponent,
     UserProfileComponent,
     ProductsComponent,
-
-
+    CategoriesComponent,
+    CompaniesComponent,
   ]
 })
 

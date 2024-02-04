@@ -56,4 +56,7 @@ export class InvoiceComponent implements OnInit {
       PDF.save('Order N ' + this.data.shoppingcart.id + '.pdf');
     });
   }
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
 }

@@ -1,20 +1,16 @@
-import { EditshoppingcartComponent } from './../../modal/editshoppingcart/editshoppingcart.component';
-import { Shoppingcart } from './../../models/shoppingcart.model';
-import { InvoiceComponent } from '../../modal/invoice/invoice.component';
-import { Category } from './../../models/category.model';
-import { Product } from './../../models/product.model';
-import { AfterViewInit, Component, Inject, OnInit, ViewChild } from '@angular/core';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
-import { ProductService } from 'src/app/_services/product.service';
-import { TokenStorageService } from 'src/app/_services/token-storage.service';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
-import { ProductformComponent } from 'src/app/modal/productform/productform.component';
-import { MatPaginator } from '@angular/material/paginator';
-import { CategoryformComponent } from 'src/app/modal/categoryform/categoryform.component';
-import { MessageboxComponent } from 'src/app/modal/messagebox/messagebox.component';
-import { DOCUMENT } from '@angular/common';
+import {EditshoppingcartComponent} from './../../modal/editshoppingcart/editshoppingcart.component';
+import {Shoppingcart} from './../../models/shoppingcart.model';
+import {InvoiceComponent} from '../../modal/invoice/invoice.component';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {MatSort} from '@angular/material/sort';
+import {MatTableDataSource} from '@angular/material/table';
+import {ProductService} from 'src/app/_services/product.service';
+import {TokenStorageService} from 'src/app/_services/token-storage.service';
+import {MatDialog} from '@angular/material/dialog';
+import {MatPaginator} from '@angular/material/paginator';
+import {MessageboxComponent} from 'src/app/modal/messagebox/messagebox.component';
+import Swal from "sweetalert2";
+
 @Component({
   selector: 'app-shopping-carts',
   templateUrl: './shopping-carts.component.html',
@@ -83,12 +79,11 @@ export class ShoppingCartsComponent implements OnInit {
   messagebox(body: string, title?: string) {
     if (title === undefined)
       title = "Notice"
-    const dialogRef = this.dialog.open(MessageboxComponent, {
-      width: '350px',
-      data: {
-        title: title, body: body
-      }
-    });
+    Swal.fire(
+      title,
+      body,
+      'success'
+    )
   }
   viewshoppingcart(shoppingcart: any) {
     const dialogRef = this.dialog.open(InvoiceComponent, {
