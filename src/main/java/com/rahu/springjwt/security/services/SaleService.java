@@ -78,7 +78,7 @@ public class SaleService {
           totalQuantity = saleRequest.getUserTotalQuantity();
           if (!product.get().isEnableTQ()) {
             if (saleRequest.getUserTotalQuantity() <= product.get().getExtraQuantity()) {
-              product.get().setExtraQuantity(zeroIfNull(product.get().getExtraQuantity()) - zeroIfNull(saleRequest.getQuantity()));
+              product.get().setExtraQuantity(zeroIfNull(product.get().getExtraQuantity()) - zeroIfNull(saleRequest.getUserTotalQuantity()));
             } else {
               long bundles = saleRequest.getUserQuantityBundle();
               long extra = saleRequest.getUserExtraQuantity();

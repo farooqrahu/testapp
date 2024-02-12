@@ -16,5 +16,4 @@ public class CategoryDto {
   public static CategoryDto factoryCategoryDto(Category category){
     return CategoryDto.builder().id(category.getId()).name(category.getName()).build();
   }
-
 }
