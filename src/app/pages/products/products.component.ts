@@ -23,7 +23,7 @@ import {MatTableExporterDirective} from "mat-table-exporter";
   styleUrls: ['./products.component.scss']
 })
 export class ProductsComponent implements OnInit, AfterViewInit {
-  columnsToDisplay = ["select", "id", 'name', "price", "wholeSalePrice", "quantityItem", "quantityBundle", "extraQuantity", "quantity", "description", "category", "company", "outOfStock", "createdAt", "action"];
+  columnsToDisplay = ["select", "id", 'name',"wholeSalePrice","retailPrice","price" , "quantityItem", "quantityBundle", "extraQuantity", "quantity", "description", "category", "company", "outOfStock", "createdAt", "action"];
   products: Product[] = [];
   productslength = 0;
   totalElements: number = 0;
@@ -52,8 +52,9 @@ export class ProductsComponent implements OnInit, AfterViewInit {
       this.token.signOut();
     }
     // this.productsearch.nativeElement=""
-    const productrequest = new ProductRequest(0, "",
-      "", 0, 0, 0, 0, 0, 0, false, false, 0, 0, 0, null, null, false, 'name', 'asc', 10, 0)
+    // const productrequest = new ProductRequest(0, "",
+    //   "", 0, 0, 0, 0, 0, 0, false, false, 0, 0, 0, null, null, false, 'name', 'asc', 10, 0)
+    const productrequest=this.getProductRequest('',10,0);
     this.getProducts(productrequest);
 
     this.getAllCompanies();
@@ -98,9 +99,9 @@ export class ProductsComponent implements OnInit, AfterViewInit {
     // const request = {};
     // request['page'] = ;
     // request['size'] = ;
-    const productrequest = new ProductRequest(0, '',
-      "", 0, 0, 0, 0, 0, 0, false, false, 0, 0, 0, null, null, false, 'name', 'asc', event.pageSize, event.pageIndex)
-
+    // const productrequest = new ProductRequest(0, '',
+    //   "", 0, 0, 0, 0, 0, 0, false, false, 0, 0, 0, null, null, false, 'name', 'asc', event.pageSize, event.pageIndex)
+    const productrequest=this.getProductRequest('',event.pageSize,event.pageIndex);
     this.getProducts(productrequest);
   }
 
@@ -123,11 +124,13 @@ export class ProductsComponent implements OnInit, AfterViewInit {
     return new Array(i);
   }
   loadproductresults(): void {
+
     // const category: Category = new Category(0,this.productsearch.nativeElement.value);
-    const productrequest = new ProductRequest(0, this.productsearch.nativeElement.value,
-      this.productsearch.nativeElement.value, 0, 0, 0, 0, 0, 0, false, false, 0, 0, 0,
-      null,
-      this.productsearch.nativeElement.value, false, 'name', 'asc', 1000000000, 0)
+    // const productrequest = new ProductRequest(0, ,
+    //   this.productsearch.nativeElement.value, 0, 0, 0, 0, 0, 0, false, false, 0, 0, 0,
+    //   null,
+    //   this.productsearch.nativeElement.value, false, 'name', 'asc', 1000000000, 0)
+    const productrequest=this.getProductRequest(this.productsearch.nativeElement.value,1000000000,0);
       this.getProducts(productrequest);
   }
 
@@ -146,10 +149,16 @@ export class ProductsComponent implements OnInit, AfterViewInit {
 
     }
   }
+  getProductRequest(name:string, pageSize:number,pageNumber:number) {
+    const productrequest = new ProductRequest( 0, name,
+      "", 0,0,0,0,0,0, 0,false,false,
+      0,0,0,null, null, false, 'name', 'desc', pageSize, pageNumber);
+  return productrequest;
+  }
 
   openDialog(product?: Product): void {
     if (product === undefined)
-      product = new Product(0, "", "", 0, 0, this.categories[0], this.companies[0], false, 0, 0, 0, 0, false, false, "", null, "", 0, 0, 0, 10, 0)
+      product = new Product(0, "", "", 0, 0,0, this.categories[0], this.companies[0], false, 0, 0, 0, 0, false, false, "", null, "", 0, 0, 0, 10, 0,"",0)
     const dialogRef = this.dialog.open(ProductformComponent, {
       width: '690px',
       data: {
@@ -157,6 +166,7 @@ export class ProductsComponent implements OnInit, AfterViewInit {
         name: product.name,
         description: product.description,
         price: product.price,
+        retailPrice: product.retailPrice,
         wholeSalePrice: product.wholeSalePrice,
         category: product.category,
         company: product.company,
@@ -175,8 +185,9 @@ export class ProductsComponent implements OnInit, AfterViewInit {
           console.log("error")
         else {
           this.updateProduct(res);
-          const productrequest = new ProductRequest(0, "",
-            "", 0, 0, 0, 0, 0, 0, false, false, 0, 0, 0, null, null, false, 'name', 'desc', 10, 0);
+          // const productrequest = new ProductRequest(0, "",
+          //   "", 0, 0, 0, 0, 0, 0, false, false, 0, 0, 0, null, null, false, 'name', 'desc', 10, 0);
+          const productrequest=this.getProductRequest('',10,0);
           this.getProducts(productrequest)
         }
       }
@@ -271,8 +282,9 @@ export class ProductsComponent implements OnInit, AfterViewInit {
         var objIndex = this.products.findIndex((obj => obj.id == product.id));
         this.products[objIndex] = product
         this.dataSource = new MatTableDataSource(this.products);
-        const productrequest = new ProductRequest(0, "",
-          "", 0, 0, 0, 0, 0, 0, false, false, 0, 0, 0, null, null, false, 'name', 'desc', 10, 0);
+        // const productrequest = new ProductRequest(0, "",
+        //   "", 0, 0, 0, 0, 0, 0, false, false, 0, 0, 0, null, null, false, 'name', 'desc', 10, 0);
+        const productrequest=this.getProductRequest('',10,0);
         this.getProducts(productrequest);
         this.messageboxSuccess(data.message);
 
@@ -302,8 +314,9 @@ export class ProductsComponent implements OnInit, AfterViewInit {
               'Your Product has been deleted.',
               'success'
             );
-            const productrequest = new ProductRequest(0, "",
-              "", 0, 0, 0, 0, 0, 0, false, false, 0, 0, 0, null, null, false, 'name', 'desc', 10, 0);
+            // const productrequest = new ProductRequest(0, "",
+            //   "", 0, 0, 0, 0, 0, 0, false, false, 0, 0, 0, null, null, false, 'name', 'desc', 10, 0);
+            const productrequest=this.getProductRequest('',10,0);
             this.getProducts(productrequest);
           },
           err => {

@@ -54,12 +54,18 @@ export class ReportsComponent implements OnInit, AfterViewInit {
     // const request = {};
     // request['page'] = ;
     // request['size'] = ;
-    const productrequest = new ProductRequest( 0, "",
-      "", 0,0,0,0,0, 0,false,false,
-      0,0,0,null, null, false, 'name', 'asc', event.pageSize, event.pageIndex)
+    // const productrequest = new ProductRequest( 0, "",
+    //   "", 0,0,0,0,0, 0,false,false,
+    //   0,0,0,null, null, false, 'name', 'asc', event.pageSize, event.pageIndex)
+    const productrequest=this.getProductRequest('',event.pageSize,event.pageIndex);
     this.getAllOrders(productrequest);
   }
-
+  getProductRequest( name:string,pageSize:number,pageNumber:number) {
+    const productrequest = new ProductRequest( 0, name,
+      "", 0,0,0,0,0,0, 0,false,false,
+      0,0,0,null, null, false, 'name', 'asc', pageSize, pageNumber);
+  return productrequest;
+  }
   private getAllOrders(request) {
     this.saleservice.getProductReport(request)
       .subscribe(data => {
@@ -77,17 +83,19 @@ export class ReportsComponent implements OnInit, AfterViewInit {
 
   loadproductresults(): void {
     // const category: Category = new Category(0,'');
-    const productrequest = new ProductRequest(0, this.productsearch.nativeElement.value,
-      this.productsearch.nativeElement.value, 0, 0, 0, 0, 0, 0, false, false, 0, 0, 0,
-      null,
-      this.productsearch.nativeElement.value, false, 'name', 'asc', 100000000, 0)
+    // const productrequest = new ProductRequest(0, this.productsearch.nativeElement.value,
+    //   this.productsearch.nativeElement.value, 0, 0, 0, 0, 0, 0, false, false, 0, 0, 0,
+    //   null,
+    //   this.productsearch.nativeElement.value, false, 'name', 'asc', 100000000, 0)
+    const productrequest=this.getProductRequest(this.productsearch.nativeElement.value,100000000,0);
 
     this.getAllOrders(productrequest);
   }
 
   ngOnInit() {
-    const productrequest = new ProductRequest(0, "",
-      "", 0, 0, 0, 0, 0, 0, false, false, 0, 0, 0, null, null, false, 'name', 'asc', 10, 0)
+    // const productrequest = new ProductRequest(0, "",
+    //   "", 0, 0, 0, 0, 0, 0, false, false, 0, 0, 0, null, null, false, 'name', 'asc', 10, 0)
+    const productrequest=this.getProductRequest('',10,0);
     this.getAllOrders(productrequest);
   }
 
@@ -129,8 +137,9 @@ export class ReportsComponent implements OnInit, AfterViewInit {
     });
     dialogRef.afterClosed().subscribe(res => {
       // console.log(res);
-      const productrequest = new ProductRequest(0, "",
-        "", 0, 0, 0, 0, 0, 0, false, false, 0, 0, 0, null, null, false, 'name', 'desc', 10, 0);
+      // const productrequest = new ProductRequest(0, "",
+      //   "", 0, 0, 0, 0, 0, 0, false, false, 0, 0, 0, null, null, false, 'name', 'desc', 10, 0);
+      const productrequest=this.getProductRequest('',10,0);
       this.getAllOrders(productrequest)
 
     });
@@ -139,7 +148,7 @@ export class ReportsComponent implements OnInit, AfterViewInit {
     // if (saleOrders === undefined)
     //   saleOrders = new SaleOrders(0, "","","","",  0,0,0, null, null, null,null,null)
     const dialogRef = this.dialog.open(SalesInvoiceComponent, {
-      width: '1120px', height: '600px',
+      width: '1220px', height: '800px',
       data: {
         id: saleOrders.id,
         customerName:saleOrders.customerName,
@@ -154,8 +163,9 @@ export class ReportsComponent implements OnInit, AfterViewInit {
     });
     dialogRef.afterClosed().subscribe(res => {
       // console.log(res);
-      const productrequest = new ProductRequest(0, "",
-        "", 0, 0, 0, 0, 0, 0, false, false, 0, 0, 0, null, null, false, 'name', 'desc', 10, 0);
+      // const productrequest = new ProductRequest(0, "",
+      //   "", 0, 0, 0, 0, 0, 0, false, false, 0, 0, 0, null, null, false, 'name', 'desc', 10, 0);
+      const productrequest=this.getProductRequest('',10,0);
       this.getAllOrders(productrequest)
 
     });
@@ -177,8 +187,9 @@ export class ReportsComponent implements OnInit, AfterViewInit {
       dialogRef.afterClosed().subscribe(res => {
        this.invoice=new Invoice([],0,0);
        this.sales=[];
-        const productrequest = new ProductRequest(0, "",
-          "", 0, 0, 0, 0, 0, 0, false, false, 0, 0, 0, null, null, false, 'name', 'desc', 10, 0);
+        // const productrequest = new ProductRequest(0, "",
+        //   "", 0, 0, 0, 0, 0, 0, false, false, 0, 0, 0, null, null, false, 'name', 'desc', 10, 0);
+        const productrequest=this.getProductRequest('',10,0);
         this.getAllOrders(productrequest)
 
       });

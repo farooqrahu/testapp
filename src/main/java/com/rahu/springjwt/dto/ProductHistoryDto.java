@@ -15,6 +15,7 @@ public class ProductHistoryDto {
   private String name;
   private String description = "";
   private Float price;
+  private Float retailPrice;
   private Long quantityItem;
   private Long quantityBundle;
   private Long extraQuantity;
@@ -28,7 +29,7 @@ public class ProductHistoryDto {
   private Date createdAt;
 
   public static ProductHistoryDto factoryProduct(ProductHistory product) {
-    return ProductHistoryDto.builder().id(product.getId()).name(product.getName()).description(product.getDescription()).price(product.getPrice())
+    return ProductHistoryDto.builder().id(product.getId()).name(product.getName()).description(product.getDescription()).retailPrice(product.getRetailPrice()).price(product.getPrice())
       .quantityItem(product.getQuantityItem()).quantityBundle(product.getQuantityBundle()).extraQuantity(product.getExtraQuantity()).quantity(product.getQuantity()).category(CategoryDto.factoryCategoryDto(product.getCategory())).company(CompanyDto.factoryCompanyDto(product.getCompany())).userName(product.getUpdatedByUser().getName()).createdAt(product.getCreatedAt()).build();
   }
 }

@@ -67,7 +67,8 @@ export class ProductHistoryComponent implements OnInit, AfterViewInit {
     loadproductresults(): void {
         // console.log(this.paginator.pageSize, this.paginator.getNumberOfPages())
         const productrequest = new ProductRequest(0, this.productsearch.nativeElement.value,
-            this.productsearch.nativeElement.value, 0, 0, 0, 0, 0, 0, false, false, 0, 0, 0, this.productsearch.nativeElement.value, this.productsearch.nativeElement.value, false, 'name', 'asc', 100000000, 0)
+            this.productsearch.nativeElement.value, 0, 0,0, 0, 0, 0, 0, false, false, 0, 0, 0, this.productsearch.nativeElement.value, this.productsearch.nativeElement.value, false, 'name', 'asc', 100000000, 0)
+      // const productrequest=this.getProductRequest(100000000, 0);
         this.getProducts(productrequest);
     }
 
@@ -76,7 +77,7 @@ export class ProductHistoryComponent implements OnInit, AfterViewInit {
             this.token.signOut();
         }
         const productrequest = new ProductRequest(0, "",
-            "", 0, 0, 0, 0, 0, 0, false, false, 0, 0, 0, null, null, false, 'name', 'asc', 10, 0)
+            "", 0, 0, 0, 0, 0,0, 0, false, false, 0, 0, 0, null, null, false, 'name', 'asc', 10, 0)
         this.getProducts(productrequest);
     }
 
@@ -117,7 +118,7 @@ export class ProductHistoryComponent implements OnInit, AfterViewInit {
         // request['page'] = ;
         // request['size'] = ;
         const productrequest = new ProductRequest(0, "",
-            "", 0, 0, 0, 0, 0, 0, false, false, 0, 0, 0, null, null, false, 'name', 'asc', event.pageSize, event.pageIndex)
+            "", 0, 0, 0, 0,0, 0, 0, false, false, 0, 0, 0, null, null, false, 'name', 'asc', event.pageSize, event.pageIndex)
 
         this.getProducts(productrequest);
     }

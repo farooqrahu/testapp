@@ -1,9 +1,9 @@
-<h1 mat-dialog-title>Sale Product</h1>
+<h1 mat-dialog-title>Sale data</h1>
   <table class="table table-condensed">
     <thead>
     <tr>
-      <th>Product Name:</th>
-      <th>Product Price:</th>
+      <th>data Name:</th>
+      <th>data Price:</th>
       <th>Quantity Item:</th>
       <th>Quantity Bundle:</th>
       <th>Extra Quantity:</th>
@@ -11,13 +11,20 @@
     </thead>
     <tbody><tr>
       <td>{{data.name}}</td>
-      <td>{{data.price}}</td>
+      <td *ngIf="priceSelected=='Retail'">{{data.retailPrice}}</td>
+      <td *ngIf="priceSelected=='Whole'">{{data.wholeSalePrice}}</td>
+      <td *ngIf="priceSelected=='Price'">{{data.price}}</td>
       <td>{{data.quantityItem}}</td>
       <td>{{data.quantityBundle}}</td>
       <td>{{data.extraQuantity}}</td>
       <td>{{data.quantity}}</td>
     </tr></tbody>
   </table>
+<mat-radio-group [(ngModel)]="priceSelected" >
+  <mat-radio-button class="example-radio-button" *ngFor="let type of priceTypes" [value]="type">
+    {{type}}
+  </mat-radio-button>
+</mat-radio-group>
 <div mat-dialog-content>
 
   <mat-form-field *ngIf="!data.enableTQ">

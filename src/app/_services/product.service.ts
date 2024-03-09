@@ -32,7 +32,7 @@ export class ProductService {
       catchError(() => of(false)));
   }
 
-  productrequest: ProductRequest = new ProductRequest(0, '', '',0, 0, 0,0,0,0, false,false,0,0,0,null,null, false);
+  productrequest: ProductRequest = new ProductRequest(0, '', '',0,0, 0, 0,0,0,0, false,false,0,0,0,null,null, false);
 
   updateProduct(product: Product): Observable<any> {
 
@@ -42,6 +42,7 @@ export class ProductService {
     var company = this.productrequest.company;
     var name = this.productrequest.name;
     var price = this.productrequest.price;
+    var retailPrice = this.productrequest.retailPrice;
     var wholeSalePrice = this.productrequest.wholeSalePrice;
     var quantityItem = this.productrequest.quantityItem;
     var quantityBundle = this.productrequest.quantityBundle;
@@ -52,7 +53,7 @@ export class ProductService {
     var wareHouseProduct =this.productrequest.wareHouseProduct;
 
     return this.http.post(this.apiService.getBaseUrl() + 'product/updateProduct', {//productrequest
-      id, category,company, price,wholeSalePrice, name, description, quantityItem,quantityBundle,extraQuantity,quantity
+      id, category,company, retailPrice,price,wholeSalePrice, name, description, quantityItem,quantityBundle,extraQuantity,quantity
     ,enableTQ,wareHouseProduct
     }, httpOptions);
   }
@@ -61,6 +62,7 @@ export class ProductService {
     var category = form.get('Category').value;
     var name = form.get('name').value;
     var price = form.get('price').value;
+    var retailPrice = form.get('retailPrice').value;
     var quantityItem = this.productrequest.quantityItem;
     var quantityBundle = this.productrequest.quantityBundle;
     var extraQuantity = this.productrequest.extraQuantity;
@@ -68,7 +70,7 @@ export class ProductService {
     var enableTQ =this.productrequest.enableTQ;
     var description = form.get('description').value;
     return this.http.post(this.apiService.getBaseUrl() + 'product/addProduct', {
-      category, price,
+      category, retailPrice,price,
       name
       , description, quantityItem,quantityBundle,extraQuantity,quantity,enableTQ
     }, httpOptions);
@@ -110,6 +112,7 @@ export class ProductService {
     // var category = productrequest.category.name;
     var name = productrequest.name;
     var price = productrequest.price;
+    var retailPrice = productrequest.retailPrice;
     var quantity = productrequest.quantity;
     var description = productrequest.description;
     var pagenumber = productrequest.pagenumber;
@@ -118,7 +121,7 @@ export class ProductService {
 
     return this.http.post(this.apiService.getBaseUrl() + 'product/findProductHistory', {
 
-      id, price, name, description, quantity,pagenumber,pagesize
+      id, retailPrice,price, name, description, quantity,pagenumber,pagesize
     }, httpOptions);
   }
 

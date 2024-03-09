@@ -1,7 +1,16 @@
-
+.mat-form-field{
+  padding-right:20px !important
+}
 .example-section {
   display: flex;
   align-content: center;
   align-items: center;
   height: 60px;
+}
+.example-radio-button {
+  margin: 5px;
+}
+
+.example-selected-value {
+  margin: 15px 0;
 }

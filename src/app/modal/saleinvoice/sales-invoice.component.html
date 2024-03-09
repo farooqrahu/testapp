@@ -20,8 +20,8 @@
         <p>Customer Id: {{productOrderList.customerId}} </p>
         <p>Mobile Number: {{productOrderList.mobileNumber}} </p>
         <p>Invoice No. {{productOrderList.invoiceNo}}</p>
-        <p>Date. {{productOrderList.createdAt}}</p>
-        <p><mat-checkbox (change)="setWareHousePrint()" [(ngModel)]="wareHouseProduct" >Print WareHouse</mat-checkbox></p>
+        <p>Date. {{productOrderList.createdAt | date:'short'}}</p>
+<!--        <p><mat-checkbox (change)="setWareHousePrint()" [(ngModel)]="wareHouseProduct" >Print WareHouse</mat-checkbox></p>-->
 
       </div>
     </div>
@@ -39,8 +39,8 @@
       <tr *ngFor="let p of productOrderList.productSales">
         <td>{{p.product.name}}</td>
         <td>{{p.totalQuantitySale}}</td>
-        <td>{{p.product.price | currency:'Rs:'}}</td>
-        <td>{{p.product.price * p.totalQuantitySale | currency:'Rs:'}}</td>
+        <td>{{p.product.retailPrice | currency:'Rs:'}}</td>
+        <td>{{p.product.retailPrice * p.totalQuantitySale | currency:'Rs:'}}</td>
       </tr>
       <tr class="table table-borderless table-dark">
         <th>Total Products</th>

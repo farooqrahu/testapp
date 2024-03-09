@@ -6,6 +6,7 @@ export class CustomerModel {
     public mobileNumber: string,
     public productId:number,
     public price:number,
+    public retailPrice:number,
     public totalQuantitySale:number,
     public userQuantityBundle: number,
     public userExtraQuantity: number,

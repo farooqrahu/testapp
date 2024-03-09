@@ -36,13 +36,14 @@ export class SaleService {
     var category = productrequest.category.name;
     var name = productrequest.name;
     var price = productrequest.price;
+    var retailPrice = productrequest.retailPrice;
     var quantity = productrequest.quantity;
     var description = productrequest.description;
     console.log(productrequest)
 
     return this.http.post(this.apiService.getBaseUrl() + 'sale/findProduct', {
 
-      id, category, price, name, description, quantity
+      id, category, retailPrice,price, name, description, quantity
     }, httpOptions);
   }
 

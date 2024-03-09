@@ -175,14 +175,14 @@ public class ProductService {
       return ResponseEntity.badRequest().body(new MessageResponse("Error: Company does not exist"));
     if (productRequest.getName() == null || Objects.equals(productRequest.getName(), ""))
       return ResponseEntity.badRequest().body(new MessageResponse("Error: name must not be empty"));
-    if (productRequest.getPrice() == null || productRequest.getPrice() <= 0)
-      return ResponseEntity.badRequest().body(new MessageResponse("Error: price must not be empty, zero or negative"));
+    if (productRequest.getRetailPrice() == null || productRequest.getRetailPrice() <= 0)
+      return ResponseEntity.badRequest().body(new MessageResponse("Error: Enter retail price"));
     Optional<Product> prodFound=productRepository.findById(productRequest.getId());
     if(prodFound.isPresent()){
       User user=userDetailsServiceImpl.getUser();
       ProductHistory productHistory= ProductHistory.builder().quantityItem(prodFound.get().getQuantityItem())
         .quantityBundle(prodFound.get().getQuantityBundle()).extraQuantity(prodFound.get().getExtraQuantity()).quantity(prodFound.get().getQuantity())
-        .price(prodFound.get().getPrice()).wholeSalePrice(prodFound.get().getWholeSalePrice()).product(prodFound.get()).category(prodFound.get().getCategory()).company(prodFound.get().getCompany()).name(prodFound.get().getName()).description(prodFound.get().getDescription())
+        .retailPrice(prodFound.get().getRetailPrice()).price(prodFound.get().getPrice()).wholeSalePrice(prodFound.get().getWholeSalePrice()).product(prodFound.get()).category(prodFound.get().getCategory()).company(prodFound.get().getCompany()).name(prodFound.get().getName()).description(prodFound.get().getDescription())
         .updatedByUser(user).build();
       productHistoryRepository.save(productHistory);
     }

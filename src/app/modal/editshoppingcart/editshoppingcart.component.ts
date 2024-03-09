@@ -50,7 +50,7 @@ export class EditshoppingcartComponent implements OnInit {
     this.total = 0;
     this.shoppingcart.cartItems.forEach(element => {
 
-      this.subtotal += element.product.price * element.quantity
+      this.subtotal += element.product.retailPrice * element.quantity
     });
     this.total = this.subtotal + this.shipping
   }

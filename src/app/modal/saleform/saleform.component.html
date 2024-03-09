@@ -80,8 +80,17 @@
     <tr *ngFor="let product of productSaleList._sales">
       <td>{{product.name}}</td>
       <td>{{product.totalQuantitySale}}</td>
-      <td>{{product.price | currency:'Rs:'}}</td>
-      <td>{{product.price * product.totalQuantitySale | currency:'Rs:'}}</td>
+
+      <td *ngIf="product.priceSelected=='' || product.priceSelected==null">{{product.retailPrice}}</td>
+      <td *ngIf="product.priceSelected=='Retail'">{{product.retailPrice}}</td>
+      <td *ngIf="product.priceSelected=='Whole'">{{product.wholeSalePrice}}</td>
+      <td *ngIf="product.priceSelected=='Price'">{{product.price}}</td>
+
+      <td *ngIf="product.priceSelected=='' || product.priceSelected==null">{{product.retailPrice * product.totalQuantitySale | currency:'Rs:'}}</td>
+      <td *ngIf="product.priceSelected=='Retail'">{{product.retailPrice * product.totalQuantitySale | currency:'Rs:'}}</td>
+      <td *ngIf="product.priceSelected=='Whole'">{{product.wholeSalePrice * product.totalQuantitySale | currency:'Rs:'}}</td>
+      <td *ngIf="product.priceSelected=='Price'">{{product.price * product.totalQuantitySale | currency:'Rs:'}}</td>
+
       <td>
         <button type="button" style=" outline: none;box-shadow: none;" mat-mini-fab color="warn"
                 matTooltip="Remove this item" (click)="remove(product)">

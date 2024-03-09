@@ -15,10 +15,12 @@ import {ProductSales} from "../../models/product.sale.model";
 import jsPDF from 'jspdf';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
+
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import htmlToPdfmake from 'html-to-pdfmake';
 import {PosReceiptComponent} from "../posreciept/pos.receipt.component";
 import {WarehousePosReceiptComponent} from "../warehouse-posreciept/warehouse-pos-receipt.component";
+
 @Component({
   selector: 'app-sales-invoice',
   templateUrl: './sales-invoice.component.html',
@@ -42,6 +44,7 @@ export class SalesInvoiceComponent implements OnInit {
   counter(i: number) {
     return new Array(i);
   }
+
   title = 'htmltopdf';
 
   @ViewChild('pdfTable') pdfTable: ElementRef;
@@ -131,20 +134,22 @@ export class SalesInvoiceComponent implements OnInit {
     const pdfTable = this.pdfTable.nativeElement;
 
     var html = htmlToPdfmake(pdfTable.innerHTML);
-    const documentDefinition = {   content: [html],
+    const documentDefinition = {
+      content: [html],
       margin: [20, 5, 0, 10],
-      styles:{
+      styles: {
         tableCenter: {
           alignment: 'center',
-          absolutePosition: { x: 10, y: 35 },
+          absolutePosition: {x: 10, y: 35},
         },
-      rightme:
+        rightme:
           {
             alignment: 'right'
-          },'html-table':{alignment:'center'},'html-h1':{ alignment:'center'}},
-      pageOrientation: 'portrait', pageMargins: [40,60,40,30],
+          }, 'html-table': {alignment: 'center'}, 'html-h1': {alignment: 'center'}
+      },
+      pageOrientation: 'portrait', pageMargins: [40, 60, 40, 30],
       // footer: function (currentPage, pageCount) {return {table: { widths: [ "*"],body: [[{text: 'Page: ' + currentPage.toString() + ' of ' + pageCount, alignment: 'center'}]]},};},
-    //
+      //
     };
     pdfMake.createPdf(documentDefinition).open();
   }
@@ -174,47 +179,53 @@ export class SalesInvoiceComponent implements OnInit {
       img.src = url;
     });
   }
-  printPos(){
+
+  printPos() {
 
   }
 
-  printPosDialog(saleOrders?: SaleOrders,wareHouseProduct?): void {
+  printPosDialog(saleOrders?: SaleOrders, wareHouseProduct?): void {
     debugger
     const result = saleOrders.productSales.filter((obj) => {
       return obj.product.wareHouseProduct === true;
 
     });
-    if(wareHouseProduct){
+    console.log("result")
+    console.log(result)
+    if (result.length > 0) {
       const dialogRef = this.dialog.open(WarehousePosReceiptComponent, {
         data: {
           id: saleOrders.id,
-          customerName:saleOrders.customerName,
-          mobileNumber:saleOrders.mobileNumber,
-          invoiceNo:saleOrders.invoiceNo+" - WareHouse",
-          grandTotal:saleOrders.grandTotal,
-          totalQuantity:saleOrders.totalQuantity,
+          customerName: saleOrders.customerName,
+          mobileNumber: saleOrders.mobileNumber,
+          invoiceNo: saleOrders.invoiceNo + " - WareHouse",
+          grandTotal: saleOrders.grandTotal,
+          totalQuantity: saleOrders.totalQuantity,
           createdAt: saleOrders.createdAt,
-          productSales:result,
+          productSales: result,
         }
       });
+
       dialogRef.afterClosed().subscribe(res => {
         // console.log(res);
         const dialogRef2 = this.dialog.open(PosReceiptComponent, {
           data: {
             id: saleOrders.id,
-            customerName:saleOrders.customerName,
-            mobileNumber:saleOrders.mobileNumber,
-            invoiceNo:saleOrders.invoiceNo,
-            grandTotal:saleOrders.grandTotal,
-            totalQuantity:saleOrders.totalQuantity,
+            customerName: saleOrders.customerName,
+            mobileNumber: saleOrders.mobileNumber,
+            invoiceNo: saleOrders.invoiceNo,
+            grandTotal: saleOrders.grandTotal,
+            totalQuantity: saleOrders.totalQuantity,
             createdAt: saleOrders.createdAt,
-            productSales:saleOrders.productSales,
+            productSales: saleOrders.productSales,
           }
         });
+
         setTimeout(() => { // Needed for large documents
           var divContents = document.getElementById("invoice-POS").innerHTML;
           var printWindow = window.open('', '', 'height=400,width=600');
           // printWindow.document.querySelector("*").forEach(e => e.style.display="none");
+          // printWindow.document.write('<link rel="stylesheet" type="text/css" href="sales-invoice.component.css"/>')
           printWindow.document.write('<html><head><title>Print DIV Content</title>');
           printWindow.document.write('</head><body >');
           printWindow.document.write(divContents);
@@ -228,20 +239,20 @@ export class SalesInvoiceComponent implements OnInit {
         });
 
       });
-    }else{
+    } else {
       // if ( saleOrders === undefined)
-        // saleOrders = new SaleOrders(0, "","","","",  0,0,0, null, null, null,null,null)
+      // saleOrders = new SaleOrders(0, "","","","",  0,0,0, null, null, null,null,null)
       const dialogRef = this.dialog.open(PosReceiptComponent, {
         data: {
           id: saleOrders.id,
-          customerName:saleOrders.customerName,
-          customerId:saleOrders.customerId,
-          mobileNumber:saleOrders.mobileNumber,
-          invoiceNo:saleOrders.invoiceNo,
-          grandTotal:saleOrders.grandTotal,
-          totalQuantity:saleOrders.totalQuantity,
+          customerName: saleOrders.customerName,
+          customerId: saleOrders.customerId,
+          mobileNumber: saleOrders.mobileNumber,
+          invoiceNo: saleOrders.invoiceNo,
+          grandTotal: saleOrders.grandTotal,
+          totalQuantity: saleOrders.totalQuantity,
           createdAt: saleOrders.createdAt,
-          productSales:saleOrders.productSales,
+          productSales: saleOrders.productSales,
         }
       });
       dialogRef.afterClosed().subscribe(res => {
@@ -266,6 +277,6 @@ export class SalesInvoiceComponent implements OnInit {
   }
 
   setWareHousePrint() {
-    this.wareHouseProduct=true;
+    this.wareHouseProduct = true;
   }
 }

@@ -17,6 +17,7 @@ public class ProductRequest {
   private Long invoiceNo;
   private String description;
   private Float price;
+  private Float retailPrice;
   private Float wholeSalePrice;
   private boolean images;
   private String sort = "createdAt";

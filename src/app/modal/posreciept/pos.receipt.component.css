@@ -61,7 +61,7 @@ p{
 }
 .info{
   display: block;
-//float:left;
+float:top;
   margin-left: 0;
 }
 .title{
@@ -88,6 +88,7 @@ td{
 
 #legalcopy{
   margin-top: 5mm;
+
 }
 
 

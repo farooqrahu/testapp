@@ -6,6 +6,7 @@ export class Product {
     public name: string,
     public description: string,
     public price: number,
+    public retailPrice: number,
     public wholeSalePrice: number,
     public category: Category,
     public company: Company,
@@ -23,7 +24,9 @@ export class Product {
     public userExtraQuantity: number,
     public userTotalQuantity: number,
     public pagesize: number,
-    public pagenumber: number
+    public pagenumber: number,
+    public priceSelected:string,
+    public grandTotal: number
 
   ) { }
 

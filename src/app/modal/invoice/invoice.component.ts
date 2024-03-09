@@ -25,10 +25,7 @@ export class InvoiceComponent implements OnInit {
   }
   calculatetotal() {
     this.data.shoppingcart.cartItems.forEach(element => {
-      this.subtotal += element.product.price * element.quantity
-
-
-
+      this.subtotal += element.product.retailPrice * element.quantity
     });
     this.total = this.subtotal + this.shipping
   }

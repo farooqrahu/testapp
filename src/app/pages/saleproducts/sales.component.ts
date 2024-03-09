@@ -21,7 +21,7 @@ import {Category} from "../../models/category.model";
   styleUrls: ['./sales.component.scss']
 })
 export class SalesComponent implements OnInit, AfterViewInit {
-  columnsToDisplay = ["id", 'name', "price", "quantity", "description", "category",'createdAt', "action"];
+  columnsToDisplay = ["id", 'name', "retailPrice", "quantity", "description", "category",'createdAt', "action"];
   companycolumnsToDisplay = ["id", 'name', "category", "company", "quantity",'createdAt', "action"];
   // saleList =Sale[] = [];
   dataSource: MatTableDataSource<Product> = null;
@@ -57,7 +57,7 @@ export class SalesComponent implements OnInit, AfterViewInit {
     // request['page'] = ;
     // request['size'] = ;
     const productrequest = new ProductRequest( 0, "",
-      "", 0,0,0,0,0, 0,false,false,
+      "", 0,0,0,0,0,0, 0,false,false,
       0,0,0,null, null, false, 'name', 'asc', event.pageSize, event.pageIndex)
     this.findProductOutOfStock(productrequest);
   }
@@ -65,7 +65,7 @@ export class SalesComponent implements OnInit, AfterViewInit {
   loadproductresults(): void {
     // const category: Category = new Category(0,this.productsearch.nativeElement.value);
     const productrequest = new ProductRequest(0, this.productsearch.nativeElement.value,
-      null, 0, 0, 0, 0, 0, 0, false, false, 0, 0, 0,
+      null, 0, 0, 0,0, 0, 0, 0, false, false, 0, 0, 0,
       null,
       null, false, 'name', 'desc', 10, 0)
     this.findProductOutOfStock(productrequest);
@@ -75,7 +75,7 @@ export class SalesComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     const productrequest = new ProductRequest(0, "",
-      "", 0, 0, 0, 0, 0, 0, false, false, 0, 0, 0, null, null, false, 'name', 'asc', 10, 0);
+      "", 0, 0, 0,0, 0, 0, 0, false, false, 0, 0, 0, null, null, false, 'name', 'asc', 10, 0);
 
     this.findProductOutOfStock(productrequest);
   }
@@ -122,14 +122,14 @@ export class SalesComponent implements OnInit, AfterViewInit {
 
   openDialog(product?: Product): void {
     if (product === undefined)
-      product = new Product(0, "", "", 0,0, null, null, false, 0, 0, 0, 0, false,false,"",null,"",0,0,0,10,0)
+      product = new Product(0, "", "", 0,0,0, null, null, false, 0, 0, 0, 0, false,false,"",null,"",0,0,0,10,0,"",0)
     const dialogRef = this.dialog.open(SaleformComponent, {
       width: '55px',
       data: {
         id: product.id,
         name: product.name,
         description: product.description,
-        price: product.price,
+        retailPrice: product.retailPrice,
         wholeSalePrice: product.wholeSalePrice,
         category: product.category,
         company: product.company,
@@ -156,14 +156,30 @@ export class SalesComponent implements OnInit, AfterViewInit {
 
   add(product?: Product): void {
     const dialogRef = this.dialog.open(AddProductFormComponent, {
-      width: '880px',
+      width: '990px',
       data: {
-        id: product.id, name: product.name, description: product.description,
-        price: product.price, category: product.category,company: product.company,quantityItem:product.quantityItem,quantityBundle:product.quantityBundle,extraQuantity:product.extraQuantity
-        ,quantity:product.quantity,enableTQ:product.enableTQ,userTotalQuantity:0,userExtraQuantity:0,userQuantityBundle:0
+        id: product.id,
+        name: product.name,
+        description: product.description,
+        retailPrice: product.retailPrice,
+        wholeSalePrice: product.wholeSalePrice,
+        price: product.price,
+        category: product.category,
+        company: product.company,
+        quantityItem: product.quantityItem,
+        quantityBundle: product.quantityBundle,
+        extraQuantity: product.extraQuantity,
+        quantity: product.quantity,
+        enableTQ: product.enableTQ,
+        userTotalQuantity: 0,
+        userExtraQuantity: 0,
+        userQuantityBundle: 0
       }
     });
     dialogRef.afterClosed().subscribe(res => {
+console.log("ressssssssssssssssssssssssssssssss")
+      console.log(res.priceSelected)
+      console.log(res.grandTotal)
       if (JSON.stringify(product) != JSON.stringify(res)) {
         if (product.id != res.id){
           console.log("error")
@@ -171,7 +187,7 @@ export class SalesComponent implements OnInit, AfterViewInit {
         }
         else {
           //send customer and item detail to submit view invoice
-          this.sale = new Sale(null, res.name,"","", res.id, res.price,res.userTotalQuantity, res.userQuantityBundle,res.userExtraQuantity,res.userTotalQuantity);
+          this.sale = new Sale(null, res.name,"","", res.id, res.price,res.retailPrice,res.wholeSalePrice,res.userTotalQuantity, res.userQuantityBundle,res.userExtraQuantity,res.userTotalQuantity,res.priceSelected);
           let qu = 0;
           let tu = 0;
           let found = [];
@@ -199,7 +215,7 @@ export class SalesComponent implements OnInit, AfterViewInit {
             }
             this.invoice._sales = this.sales;
             this.invoice._totalQuantity = Number(qu) + Number(res.userTotalQuantity);
-            this.invoice._grandTotal = tu + (Number(res.price) * Number(res.userTotalQuantity));
+            this.invoice._grandTotal = tu + (Number(res.grandTotal));
             // this.invoice = new Invoice(this.sales,  ,);
             this.itemCount++;
             this.view();
@@ -234,7 +250,7 @@ export class SalesComponent implements OnInit, AfterViewInit {
     this.invoice = new Invoice([], 0, 0);
     this.sales = [];
     const productrequest = new ProductRequest(0, "",
-      "", 0, 0, 0, 0, 0, 0, false, false, 0, 0, 0, null, null, false, 'name', 'desc', 10, 0);
+      "", 0, 0,0, 0, 0, 0, 0, false, false, 0, 0, 0, null, null, false, 'name', 'desc', 10, 0);
     this.findProductOutOfStock(productrequest);
     this.itemCount = 0;
   }

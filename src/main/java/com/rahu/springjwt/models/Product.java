@@ -23,6 +23,7 @@ public class Product extends BaseEntity{
   @Nullable
   private String description = "";
   private Float price;
+  private Float retailPrice;
   private Float wholeSalePrice;
   private Long quantityItem;
   private Long quantityBundle;
@@ -68,6 +69,7 @@ public class Product extends BaseEntity{
     this.name = productRequest.getName();
     this.description = productRequest.getDescription();
     this.price = productRequest.getPrice();
+    this.retailPrice = productRequest.getRetailPrice();
     this.wholeSalePrice = productRequest.getWholeSalePrice();
     this.category = productRequest.getCategory();
     this.company = productRequest.getCompany();
@@ -88,18 +90,20 @@ public class Product extends BaseEntity{
     return this.images;
   }
 
-  public Product(String name, String description, boolean images, Float price,Long quantity) {
+  public Product(String name, String description, boolean images, Float price,Float retailPrice,Long quantity) {
     this.name = name;
     this.description = description;
     this.images = images;
+    this.retailPrice = retailPrice;
     this.price = price;
     this.quantity = quantity;
   }
 
-  public Product(String name, String description, Float price,Long quantity) {
+  public Product(String name, String description, Float price,Float retailPrice,Long quantity) {
     this.name = name;
     this.description = description;
     this.price = price;
+    this.retailPrice = retailPrice;
     this.quantity = quantity;
 
   }
@@ -107,23 +111,25 @@ public class Product extends BaseEntity{
   public Product() {
   }
 
-  public Product(String name, String description, Category category,Company company, boolean images, Float price,Long quantity) {
+  public Product(String name, String description, Category category,Company company, boolean images, Float price,Float retailPrice,Long quantity) {
     this.name = name;
     this.description = description;
     this.category = category;
     this.company = company;
     this.images = images;
     this.price = price;
+    this.retailPrice = retailPrice;
     this.quantity = quantity;
 
   }
 
-  public Product(String name, String description, Category category,Company company, Float price,Long quantity) {
+  public Product(String name, String description, Category category,Company company, Float price,Float retailPrice,Long quantity) {
     this.name = name;
     this.description = description;
     this.category = category;
     this.company = company;
     this.price = price;
+    this.retailPrice = retailPrice;
     this.quantity = quantity;
   }
 
