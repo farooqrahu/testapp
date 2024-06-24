@@ -15,6 +15,7 @@ export class ProductSales {
     public userQuantityBundle: number,
     public userExtraQuantity: number,
     public userTotalQuantity: number,
+    public priceSelected: string,
     public detail: string,
     public isReturn: boolean,
     public wareHouseProduct: boolean,

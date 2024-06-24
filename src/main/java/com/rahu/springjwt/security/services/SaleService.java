@@ -115,7 +115,7 @@ public class SaleService {
             product.get().setOutOfStock(Boolean.TRUE);
           }
           productRepository.save(product.get());
-          productSaleRepository.save(ProductSaleList.builder().id(0L).totalQuantitySale(totalQuantity).bundleSale(saleRequest.getUserQuantityBundle()).extraSale(saleRequest.getUserExtraQuantity()).product(product.get()).productOrder(productOrder).build());
+          productSaleRepository.save(ProductSaleList.builder().id(0L).priceSelected(saleRequest.getPriceSelected()).totalQuantitySale(totalQuantity).bundleSale(saleRequest.getUserQuantityBundle()).extraSale(saleRequest.getUserExtraQuantity()).product(product.get()).productOrder(productOrder).build());
         }
       });
       productOrder.setGrandTotal(productRequest.getGrandTotal());

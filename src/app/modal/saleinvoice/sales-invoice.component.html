@@ -16,7 +16,7 @@
 
       </div>
       <div class="col-md-3" >
-        <p>Customer Name: {{productOrderList.customerName}} </p>
+        <p>Customer ddddddddddddd: {{productOrderList.customerName}} </p>
         <p>Customer Id: {{productOrderList.customerId}} </p>
         <p>Mobile Number: {{productOrderList.mobileNumber}} </p>
         <p>Invoice No. {{productOrderList.invoiceNo}}</p>
@@ -39,8 +39,14 @@
       <tr *ngFor="let p of productOrderList.productSales">
         <td>{{p.product.name}}</td>
         <td>{{p.totalQuantitySale}}</td>
-        <td>{{p.product.retailPrice | currency:'Rs:'}}</td>
-        <td>{{p.product.retailPrice * p.totalQuantitySale | currency:'Rs:'}}</td>
+        <td *ngIf="p.priceSelected=='Retail'">{{p.product.retailPrice | currency:'Rs:'}}</td>
+        <td *ngIf="p.priceSelected=='Whole'">{{p.product.wholeSalePrice | currency:'Rs:'}}</td>
+        <td *ngIf="p.priceSelected=='Price'">{{p.product.price | currency:'Rs:'}}</td>
+
+        <td *ngIf="p.priceSelected=='Retail'">{{p.product.retailPrice * p.totalQuantitySale | currency:'Rs:'}}</td>
+        <td *ngIf="p.priceSelected=='Whole'">{{p.product.wholeSalePrice * p.totalQuantitySale | currency:'Rs:'}}</td>
+        <td *ngIf="p.priceSelected=='Price'">{{p.product.price * p.totalQuantitySale | currency:'Rs:'}}</td>
+
       </tr>
       <tr class="table table-borderless table-dark">
         <th>Total Products</th>

@@ -20,6 +20,7 @@ public class ProductSaleList extends BaseEntity{
   @Nullable
   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
   private Product product;
+  private String priceSelected;
   private Long totalQuantitySale;
   private Long extraSale;
   private Long bundleSale;

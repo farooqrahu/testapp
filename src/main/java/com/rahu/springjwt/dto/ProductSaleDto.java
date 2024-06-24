@@ -21,11 +21,12 @@ public class ProductSaleDto {
   private Long extraSale;
   private Long bundleSale;
   private String detail;
+  private String priceSelected;
   private Date createdAt;
   private boolean isReturned = false;
 
   public static ProductSaleDto factoryProductSale(ProductSaleList productSaleList) {
-    return ProductSaleDto.builder().id(productSaleList.getId()).extraSale(productSaleList.getExtraSale()).bundleSale(productSaleList.getBundleSale()).totalQuantitySale(productSaleList.getTotalQuantitySale()).createdAt(productSaleList.getCreatedAt()).product(ProductDto.factoryProduct(productSaleList.getProduct())).build();
+    return ProductSaleDto.builder().id(productSaleList.getId()).priceSelected(productSaleList.getPriceSelected()).extraSale(productSaleList.getExtraSale()).bundleSale(productSaleList.getBundleSale()).totalQuantitySale(productSaleList.getTotalQuantitySale()).createdAt(productSaleList.getCreatedAt()).product(ProductDto.factoryProduct(productSaleList.getProduct())).build();
   }
 
 

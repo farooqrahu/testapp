@@ -22,7 +22,7 @@ public class ProductHistory extends BaseEntity{
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
   @NotBlank
-  @Size(max = 20)
+  @Size(max = 70)
   private String name;
   @Nullable
   private String description = "";
