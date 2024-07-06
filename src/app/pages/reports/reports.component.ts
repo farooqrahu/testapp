@@ -23,7 +23,7 @@ import {Reports} from "../../models/report.model";
   styleUrls: ['./reports.component.scss']
 })
 export class ReportsComponent implements OnInit, AfterViewInit {
-  companycolumnsToDisplay = ["id","product.name","bundleSale","extraSale","totalQuantitySale","createdAt"];
+  companycolumnsToDisplay = ["id","product.name","customerName","invoiceNo","bundleSale","extraSale","totalQuantitySale","createdAt"];
   // saleList =Sale[] = [];
   saleOrdersdatasource: MatTableDataSource<SaleOrders> = null;
   saleOrders: SaleOrders[] = [];

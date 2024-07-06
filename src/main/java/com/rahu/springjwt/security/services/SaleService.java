@@ -130,8 +130,14 @@ public class SaleService {
       if (customerFound.isPresent()) {
         productOrder.setCustomer(customerFound.get());
       } else {
-        Customer customer = Customer.builder().customerCode(productRequest.getCustomerName().toUpperCase(Locale.ROOT).substring(0, 2) + "" + productOrder.getInvoiceNo()).mobileNumber(productRequest.getMobileNumber()).name(productRequest.getCustomerName()).address(productRequest.getAddress()).build();
-        productOrder.setCustomer(customer);
+
+        Optional<Customer> customerFoundByMsisdn = customerRepository.findByMobileNumber(productRequest.getMobileNumber());
+        if (customerFoundByMsisdn.isPresent()) {
+          productOrder.setCustomer(customerFoundByMsisdn.get());
+        } else {
+          Customer customer = Customer.builder().customerCode(productRequest.getCustomerName().toUpperCase(Locale.ROOT).substring(0, 2) + "" + productOrder.getInvoiceNo()).mobileNumber(productRequest.getMobileNumber()).name(productRequest.getCustomerName()).address(productRequest.getAddress()).build();
+          productOrder.setCustomer(customer);
+        }
       }
       productOrderRepository.save(productOrder);
     }
@@ -256,7 +262,7 @@ public class SaleService {
                           productSold.get().setBundleSale(productSold.get().getBundleSale() - 1);
                           productSold.get().setBundleSale(productSold.get().getBundleSale() - bundleReturn);
                         }
-                        productSold.get().setExtraSale(Objects.requireNonNull(productSold.get().getProduct()).getQuantityItem() + productSold.get().getExtraSale()-extraReturn );
+                        productSold.get().setExtraSale(Objects.requireNonNull(productSold.get().getProduct()).getQuantityItem() + productSold.get().getExtraSale() - extraReturn);
                       }
                     }
                   }

@@ -18,7 +18,10 @@ export class Reports {
     public detail: string,
     public isReturn: boolean,
     public wareHouseProduct: boolean,
+    private customerName: string,
+    private invoiceNo: number,
 
-  ) { }
+
+) { }
 
 }
