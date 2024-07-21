@@ -16,6 +16,7 @@ import {FormControl} from "@angular/forms";
 import {map, Observable, startWith} from "rxjs";
 import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
 import {MatOptionSelectionChange} from "@angular/material/core";
+import {stringify} from "@angular/compiler/src/util";
 
 @Component({
   selector: 'app-saleform',
@@ -210,7 +211,15 @@ export class SaleformComponent implements OnInit {
   validateMobileNumber() {
     if (this.mobileNumber.length < 11) {
       this.mobileNumberErrorText = 'Invalid mobile Number!';
+    }else{
+      this.customers.forEach(value => {
+        if (value.mobileNumber == this.mobileNumber) {
+          this.customerName = value.name;
+          this.customerId= value.id.toString();
+        }
+      });
     }
+
   }
 
 
