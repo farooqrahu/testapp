@@ -60,6 +60,11 @@ public class ProductController {
     return productService.findByNameInStock(productRequest);
   }
 
+  @PostMapping("/findByOutOfStock")
+  public ResponseEntity<?> findByOutOfStock(@Valid @RequestBody ProductRequest productRequest) {
+    return productService.findByOutOfStock(productRequest);
+  }
+
   @PostMapping("/findProductHistory")
   public ResponseEntity<?> findProductHistory(@Valid @RequestBody ProductRequest productRequest) {
     return productHistoryServices.findProductHistory(productRequest);

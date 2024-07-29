@@ -22,6 +22,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
   @Query("select p from Product p where  UPPER(p.name) like %:productName% and  p.outOfStock=FALSE order by p.createdAt desc ")
   Page<Product> findByNameInStock(String productName, Pageable pageable);
 
+  @Query("select p from Product p where  UPPER(p.name) like %:productName% and  p.outOfStock=TRUE order by p.createdAt desc ")
+  Page<Product> findByOutOfStock(String productName, Pageable pageable);
+
   List<Product> findByNameContainingAndCategoryName(String name, String category);
 
   List<Product> findByNameContainingAndCategoryNameAndOutOfStock(String name, String category, Boolean outOfStock);

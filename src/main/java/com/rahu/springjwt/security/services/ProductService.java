@@ -101,6 +101,11 @@ public class ProductService {
       return ResponseEntity
         .ok(new ProductResponse(productRepository.findByNameInStock(productRequest.getName().toUpperCase(Locale.ROOT), paging)));
   }
+  public ResponseEntity<?> findByOutOfStock(ProductRequest productRequest) {
+    Pageable paging = checkPaging(productRequest);
+      return ResponseEntity
+        .ok(new ProductResponse(productRepository.findByOutOfStock(productRequest.getName().toUpperCase(Locale.ROOT), paging)));
+  }
 
   public ResponseEntity<?> findByProductName(ProductRequest productRequest) {
     Pageable paging = checkPaging(productRequest);

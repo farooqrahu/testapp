@@ -48,6 +48,7 @@ import {ReportsComponent} from "./pages/reports/reports.component";
 import {PosReceiptComponent} from "./modal/posreciept/pos.receipt.component";
 import {WarehousePosReceiptComponent} from "./modal/warehouse-posreciept/warehouse-pos-receipt.component";
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
+import {ProductHistoryOutOfStockComponent} from "./pages/productoutofstock/productoutofstock.component";
 
 @NgModule({
     imports: [
@@ -97,6 +98,7 @@ import {MatSlideToggleModule} from "@angular/material/slide-toggle";
     InvoiceComponent,
     EditshoppingcartComponent,
     ProductHistoryComponent,
+    ProductHistoryOutOfStockComponent,
     AddProductFormComponent,
     SaleListReturn,
     ReportsComponent,

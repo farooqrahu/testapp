@@ -143,6 +143,15 @@ export class ProductService {
 
     return this.http.post(this.apiService.getBaseUrl() + 'product/findByNameInStock', {name,pagenumber,pagesize}, httpOptions);
   }
+  findOutOfStock(productrequest: ProductRequest): Observable<any> {
+    // var category = productrequest.category.name;
+    var name = productrequest.name;
+    var pagenumber = productrequest.pagenumber;
+    var pagesize = productrequest.pagesize;
+    console.log(productrequest)
+
+    return this.http.post(this.apiService.getBaseUrl() + 'product/findByOutOfStock', {name,pagenumber,pagesize}, httpOptions);
+  }
 
   getAllProductHistory(): Observable<any> {
     return this.http.post(this.apiService.getBaseUrl() + 'product/findProductHistory', {}, httpOptions);

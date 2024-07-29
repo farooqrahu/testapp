@@ -11,12 +11,14 @@ import {SalesComponent} from "../../pages/saleproducts/sales.component";
 import {SaleOrdersComponent} from "../../pages/viewsales/sale.orders.component";
 import {ProductHistoryComponent} from "../../pages/producthistory/producthistory.component";
 import {ReportsComponent} from "../../pages/reports/reports.component";
+import {ProductHistoryOutOfStockComponent} from "../../pages/productoutofstock/productoutofstock.component";
 
 export const AdminLayoutRoutes: Routes = [
   { path: 'dashboard', component: DashboardComponent },
   { path: 'user-profile', component: UserProfileComponent },
   { path: 'products', component: ProductsComponent },
   { path: 'productshisotry', component: ProductHistoryComponent },
+  { path: 'productstock', component: ProductHistoryOutOfStockComponent },
   { path: 'categories', component: CategoriesComponent },
   { path: 'companies', component: CompaniesComponent },
   { path: 'sales', component: SalesComponent },
