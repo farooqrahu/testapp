@@ -26,9 +26,9 @@ public class ProductHistory extends BaseEntity{
   private String name;
   @Nullable
   private String description = "";
-  private Float price;
-  private Float retailPrice;
-  private Float wholeSalePrice;
+  private Double price;
+  private Double retailPrice;
+  private Double wholeSalePrice;
   @OneToOne(fetch = FetchType.LAZY)
   private User updatedByUser;
   private Long quantityItem;

@@ -159,6 +159,8 @@ export class SaleOrdersComponent implements OnInit, AfterViewInit {
 
   }
   printDialog(saleOrders?: SaleOrders): void {
+console.log("saleOrders.grandTotal")
+    console.log(saleOrders.grandTotal)
     // if (saleOrders === undefined)
       // saleOrders = new SaleOrders(0, "","","","",  0,0,0, null, null, null,null,null)
     const dialogRef = this.dialog.open(SalesInvoiceComponent, {

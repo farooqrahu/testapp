@@ -18,7 +18,7 @@ public class ProductSaleList extends BaseEntity{
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
   @Nullable
-  @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
+  @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
   private Product product;
   private String priceSelected;
   private Long totalQuantitySale;
@@ -26,7 +26,7 @@ public class ProductSaleList extends BaseEntity{
   private Long bundleSale;
   private String detail;
   @Nullable
-  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
+  @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
   private ProductOrder productOrder;
 
 

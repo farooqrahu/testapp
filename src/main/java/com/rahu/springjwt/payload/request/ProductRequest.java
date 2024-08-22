@@ -16,9 +16,9 @@ public class ProductRequest {
   private String name;
   private Long invoiceNo;
   private String description;
-  private Float price;
-  private Float retailPrice;
-  private Float wholeSalePrice;
+  private Double price;
+  private Double retailPrice;
+  private Double wholeSalePrice;
   private boolean images;
   private String sort = "createdAt";
   private String sortdirection = "desc";

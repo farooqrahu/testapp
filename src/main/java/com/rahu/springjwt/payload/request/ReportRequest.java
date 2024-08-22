@@ -16,8 +16,8 @@ public class ReportRequest {
   private String name;
   private Long invoiceNo;
   private String description;
-  private Float price;
-  private Float wholeSalePrice;
+  private Double price;
+  private Double wholeSalePrice;
   private boolean images;
   private String sort = "createdAt";
   private String sortdirection = "desc";

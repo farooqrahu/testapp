@@ -14,8 +14,8 @@ public class ProductHistoryDto {
   private Long id;
   private String name;
   private String description = "";
-  private Float price;
-  private Float retailPrice;
+  private Double price;
+  private Double retailPrice;
   private Long quantityItem;
   private Long quantityBundle;
   private Long extraQuantity;

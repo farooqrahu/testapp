@@ -23,6 +23,9 @@ public interface ProductOrderRepository extends JpaRepository<ProductOrder, Long
   @Query("select p from ProductOrder p  where p.isReturned=false order by p.createdAt desc ")
   Page<ProductOrder> findAllByReturnedIsFalse(Pageable pageable);
 
+  @Query("select p from ProductOrder p  where p.invoiceNo=?1 and p.isReturned=false order by p.createdAt desc ")
+  List<ProductOrder> findByIdReturnedIsFalse(Long invoiceNo);
+
   @Query("select max(p.invoiceNo) from ProductOrder p ")
   Long findMaxInvoiceNo();
 

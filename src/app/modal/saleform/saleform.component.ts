@@ -17,6 +17,9 @@ import {map, Observable, startWith} from "rxjs";
 import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
 import {MatOptionSelectionChange} from "@angular/material/core";
 import {stringify} from "@angular/compiler/src/util";
+import {SaleOrders} from "../../models/sale.orders.model";
+import {WarehousePosReceiptComponent} from "../warehouse-posreciept/warehouse-pos-receipt.component";
+import {PosReceiptComponent} from "../posreciept/pos.receipt.component";
 
 @Component({
   selector: 'app-saleform',
@@ -135,9 +138,11 @@ export class SaleformComponent implements OnInit {
       if (isValid) {
         this.saleService.submitSaleOrder(this.productSaleList, this.customerId,this.customerName, this.mobileNumber).subscribe(
           productSaleList => {
-            this.swAlert(productSaleList.message, "Product Sale!");
+            // this.swAlert("Sale order submitted successfully!", "Product Sale!");
             // this.exportAsExcelFile(this.productSaleList._sales,"receipt")
-
+          debugger;
+            const saleOrders = productSaleList.saleOrders;
+            this.printPosDialog(saleOrders[0]);
             return this.dialogRef.close("clear");
           },
           err => {
@@ -153,6 +158,105 @@ export class SaleformComponent implements OnInit {
       }
     }
   }
+
+
+
+  printPosDialog(saleOrders: SaleOrders): void {
+    debugger
+    const result = saleOrders.productSales.filter((obj) => {
+      return obj.product.wareHouseProduct === true;
+
+    });
+    console.log("result")
+    console.log(result)
+    if (result.length > 0) {
+      const dialogRef = this.dialog.open(WarehousePosReceiptComponent, {
+        data: {
+          id: saleOrders.id,
+          customerName: saleOrders.customerName,
+          mobileNumber: saleOrders.mobileNumber,
+          invoiceNo: saleOrders.invoiceNo + " - WareHouse",
+          grandTotal: saleOrders.grandTotal,
+          totalQuantity: saleOrders.totalQuantity,
+          createdAt: saleOrders.createdAt,
+          productSales: result,
+        }
+      });
+
+      dialogRef.afterClosed().subscribe(res => {
+        // console.log(res);
+        const dialogRef2 = this.dialog.open(PosReceiptComponent, {
+          data: {
+            id: saleOrders.id,
+            customerName: saleOrders.customerName,
+            mobileNumber: saleOrders.mobileNumber,
+            invoiceNo: saleOrders.invoiceNo,
+            grandTotal: saleOrders.grandTotal,
+            totalQuantity: saleOrders.totalQuantity,
+            createdAt: saleOrders.createdAt,
+            productSales:  saleOrders.productSales,
+          }
+        });
+
+        setTimeout(() => { // Needed for large documents
+          var divContents = document.getElementById("invoice-POS").innerHTML;
+          var printWindow = window.open('', '', 'height=400,width=600');
+          // printWindow.document.querySelector("*").forEach(e => e.style.display="none");
+          // printWindow.document.write('<link rel="stylesheet" type="text/css" href="sales-invoice.component.css"/>')
+          printWindow.document.write('<html><head><title>Print DIV Content</title>');
+          printWindow.document.write('</head><body >');
+          printWindow.document.write(divContents);
+          printWindow.document.write('</body></html>');
+          printWindow.document.close();
+          printWindow.print();
+        }, 1000)
+
+        dialogRef2.afterClosed().subscribe(res => {
+          // console.log(res);
+        });
+
+      });
+    } else {
+      // if ( saleOrders === undefined)
+      // saleOrders = new SaleOrders(0, "","","","",  0,0,0, null, null, null,null,null)
+      const dialogRef = this.dialog.open(PosReceiptComponent, {
+        data: {
+          id: saleOrders.id,
+          customerName: saleOrders.customerName,
+          customerId: saleOrders.customerId,
+          mobileNumber: saleOrders.mobileNumber,
+          invoiceNo: saleOrders.invoiceNo,
+          grandTotal: saleOrders.grandTotal,
+          totalQuantity: saleOrders.totalQuantity,
+          createdAt: saleOrders.createdAt,
+          productSales: saleOrders.productSales,
+        }
+      });
+      dialogRef.afterClosed().subscribe(res => {
+        // console.log(res);
+      });
+
+    }
+    // let printElement = document.getElementById("invoice-POS");
+    // var printWindow = window.open('', 'PRINT');
+    // printWindow.document.write(document.documentElement.innerHTML);
+    setTimeout(() => { // Needed for large documents
+      var divContents = document.getElementById("invoice-POS").innerHTML;
+      var printWindow = window.open('', '', 'height=400,width=600');
+      // printWindow.document.querySelector("*").forEach(e => e.style.display="none");
+      printWindow.document.write('<html><head><title>Print DIV Content</title>');
+      printWindow.document.write('</head><body >');
+      printWindow.document.write(divContents);
+      printWindow.document.write('</body></html>');
+      printWindow.document.close();
+      printWindow.print();
+    }, 1000)
+    // This method performs a hard reload
+    // window.location.reload(true);
+
+  }
+
+
 
   toExportFileName(excelFileName: string): string {
     return `${excelFileName}_export_${new Date().getTime()}.xlsx`;

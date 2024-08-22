@@ -42,6 +42,10 @@ public class ProductOrderInvoiceDto {
     this.totalpages = productOrders.getTotalPages();
   }
 
+  public ProductOrderInvoiceDto(List<ProductOrder> productOrders) {
+    this.saleOrders = productOrders.stream().map(ProductOrderInvoiceDto::factoryProductOrderInvoice).filter(Objects::nonNull).collect(Collectors.toList());
+  }
+
   public static ProductOrderInvoiceDto factoryProductOrderInvoice(ProductOrder productOrder) {
     String customerName = "";
     String mobileNumber = "";

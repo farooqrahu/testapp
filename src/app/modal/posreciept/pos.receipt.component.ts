@@ -1,5 +1,5 @@
 import {Sale} from '../../models/sale.model';
-import {Component, ElementRef, Inject, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {MatSort} from "@angular/material/sort";
 import {MatPaginator} from "@angular/material/paginator";
@@ -18,12 +18,14 @@ import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import htmlToPdfmake from 'html-to-pdfmake';
 import {SalesInvoiceComponent} from "../saleinvoice/sales-invoice.component";
+import {Subscription} from "rxjs";
 @Component({
   selector: 'pos-receipt-invoice',
   templateUrl: './pos.receipt.component.html',
   styleUrls: ['./pos.receipt.component.css']
 })
-export class PosReceiptComponent implements OnInit {
+export class PosReceiptComponent implements OnDestroy {
+  private subscriptions = new Subscription();
 
 
   sales: Sale[] = [];
@@ -32,7 +34,9 @@ export class PosReceiptComponent implements OnInit {
 
   ngAfterViewInit(): void {
   }
-
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe(); // Unsubscribe from all subscriptions
+  }
   @ViewChild(MatSort) sort: MatSort | any;
   @ViewChild(MatPaginator) paginator: MatPaginator | any;
   @ViewChild('productsearch') productsearch: ElementRef | any;

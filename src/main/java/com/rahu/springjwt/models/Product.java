@@ -22,9 +22,9 @@ public class Product extends BaseEntity{
   private String name;
   @Nullable
   private String description = "";
-  private Float price;
-  private Float retailPrice;
-  private Float wholeSalePrice;
+  private Double price;
+  private Double retailPrice;
+  private Double wholeSalePrice;
   private Long quantityItem;
   private Long quantityBundle;
   private Long extraQuantity;
@@ -53,7 +53,7 @@ public class Product extends BaseEntity{
   @Nullable
   private boolean images;
 
-  public Product(Long id, String name, String description, Float price, Category category,Company company, boolean images,Long quantity) {
+  public Product(Long id, String name, String description, Double price, Category category,Company company, boolean images,Long quantity) {
     this.id = id;
     this.name = name;
     this.description = description;
@@ -90,7 +90,7 @@ public class Product extends BaseEntity{
     return this.images;
   }
 
-  public Product(String name, String description, boolean images, Float price,Float retailPrice,Long quantity) {
+  public Product(String name, String description, boolean images, Double price,Double retailPrice,Long quantity) {
     this.name = name;
     this.description = description;
     this.images = images;
@@ -99,7 +99,7 @@ public class Product extends BaseEntity{
     this.quantity = quantity;
   }
 
-  public Product(String name, String description, Float price,Float retailPrice,Long quantity) {
+  public Product(String name, String description, Double price,Double retailPrice,Long quantity) {
     this.name = name;
     this.description = description;
     this.price = price;
@@ -111,7 +111,7 @@ public class Product extends BaseEntity{
   public Product() {
   }
 
-  public Product(String name, String description, Category category,Company company, boolean images, Float price,Float retailPrice,Long quantity) {
+  public Product(String name, String description, Category category,Company company, boolean images, Double price,Double retailPrice,Long quantity) {
     this.name = name;
     this.description = description;
     this.category = category;
@@ -123,7 +123,7 @@ public class Product extends BaseEntity{
 
   }
 
-  public Product(String name, String description, Category category,Company company, Float price,Float retailPrice,Long quantity) {
+  public Product(String name, String description, Category category,Company company, Double price,Double retailPrice,Long quantity) {
     this.name = name;
     this.description = description;
     this.category = category;

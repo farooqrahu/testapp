@@ -21,7 +21,7 @@ public class ProductResponse {
   private Category category;
   private String name;
   private String description;
-  private Float price;
+  private Double price;
   private boolean images;
   private List<ProductDto> list;
   private List<ProductOrderInvoiceDto> productOrderInvoiceDtos;
@@ -30,7 +30,7 @@ public class ProductResponse {
   private long totalitems;
   private int totalpages;
 
-  public ProductResponse(String token, Long id, Category category, String name, String description, Float price,
+  public ProductResponse(String token, Long id, Category category, String name, String description, Double price,
       boolean images) {
     this.token = token;
     this.id = id;

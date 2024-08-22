@@ -20,9 +20,9 @@ public class ProductDto {
   private Long id;
   private String name;
   private String description = "";
-  private Float price;
-  private Float retailPrice;
-  private Float wholeSalePrice;
+  private Double price;
+  private Double retailPrice;
+  private Double wholeSalePrice;
   private Long quantityItem;
   private Long quantityBundle;
   private Long extraQuantity;

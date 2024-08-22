@@ -23,7 +23,7 @@ public class ProductOrder extends BaseEntity {
   @Nullable
   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private Customer customer;
-  @OneToMany(mappedBy = "productOrder")
+  @OneToMany(mappedBy = "productOrder",fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
   private List<ProductSaleList> productSaleLists;
   @Column(columnDefinition = "boolean default false")
   private boolean isReturned = false;

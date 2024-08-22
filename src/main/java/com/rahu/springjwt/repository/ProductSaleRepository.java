@@ -13,6 +13,7 @@ import java.util.List;
 @Repository
 public interface ProductSaleRepository extends JpaRepository<ProductSaleList, Long> {
   ProductSaleList findByProductOrderId(Long id);
+  List<ProductSaleList> findAllByProductOrderId(Long id);
 
   @Query("select p from ProductSaleList p where UPPER(p.product.name) like %:name%")
   Page<ProductSaleList> findByProductName(String name, Pageable pageable);
