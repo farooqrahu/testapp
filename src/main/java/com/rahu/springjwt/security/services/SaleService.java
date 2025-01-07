@@ -1,5 +1,6 @@
 package com.rahu.springjwt.security.services;
 
+import com.rahu.springjwt.dto.AccountTypes;
 import com.rahu.springjwt.dto.DashboardDto;
 import com.rahu.springjwt.dto.ProductOrderInvoiceDto;
 import com.rahu.springjwt.dto.ProductReturnDto;
@@ -12,18 +13,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
@@ -53,21 +53,23 @@ public class SaleService {
   private FileDBRepository fileDBRepository;
   @Value("${barcode.label}")
   private String barcodeLabel;
-  @Autowired
-  private ProductSaleRepository productSaleRepository;
-  @Autowired
-  private ProductReturnRepository productReturnRepository;
-  @Autowired
-  private ProductOrderRepository productOrderRepository;
-  @Autowired
-  private ReturnRepository returnRepository;
-  @Autowired
-  private CustomerRepository customerRepository;
-  @Autowired
-  private final ApplicationEventPublisher eventPublisher;
+  private final ProductSaleRepository productSaleRepository;
+  private final ProductReturnListRepository productReturnListRepository;
+  private final ProductOrderRepository productOrderRepository;
+  private final ProductReturnRepository productReturnRepository;
+  private final CustomerRepository customerRepository;
+  private final GeneralLedgerRepository generalLedgerRepository;
+  private final AccountRepository accountRepository;
 
-  public SaleService(ApplicationEventPublisher eventPublisher) {
-    this.eventPublisher = eventPublisher;
+  @Autowired
+  public SaleService(ProductSaleRepository productSaleRepository, ProductReturnListRepository productReturnListRepository, ProductOrderRepository productOrderRepository, ProductReturnRepository productReturnRepository, CustomerRepository customerRepository, GeneralLedgerRepository generalLedgerRepository, AccountRepository accountRepository) {
+    this.productSaleRepository = productSaleRepository;
+    this.productReturnListRepository = productReturnListRepository;
+    this.productOrderRepository = productOrderRepository;
+    this.productReturnRepository = productReturnRepository;
+    this.customerRepository = customerRepository;
+    this.generalLedgerRepository = generalLedgerRepository;
+    this.accountRepository = accountRepository;
   }
 
 
@@ -83,8 +85,7 @@ public class SaleService {
 
   }
 
-  @Transactional
-  @Async
+
   public Long saveProductOrder(SaleRequestList productRequest) {
     userDetailsServiceImpl.checkAdmin();
     Long invoiceNumber = 0L;
@@ -92,7 +93,6 @@ public class SaleService {
       Long invoiceNo = productOrderRepository.findMaxInvoiceNo();
       invoiceNumber = invoiceNo == null ? 1 : invoiceNo + 1;
       ProductOrder productOrder = productOrderRepository.save(ProductOrder.builder().id(0L).invoiceNo(invoiceNumber).build());
-      AtomicReference<Double> grandTotal = new AtomicReference<>(0.0);
       productRequest.getData().forEach(saleRequest -> {
         Optional<Product> product = productRepository.findById(saleRequest.getProductId());
         long totalQuantity = 0;
@@ -161,17 +161,55 @@ public class SaleService {
           productOrder.setCustomer(customer);
         }
       }
+      Optional<Account> account;
+
       productOrderRepository.save(productOrder);
+      account = accountRepository.findByName(AccountTypes.AccountsEnum.CASH.getDescription());
+      GeneralLedger ledgerEntry = new GeneralLedger();
+      ledgerEntry.setDescription("Cash Account");
+      account.ifPresent(ledgerEntry::setAccount);
+      ledgerEntry.setDebit(productRequest.getAmountReceived());
+      ledgerEntry.setProductOrder(productOrder);
+      ledgerEntry.setCustomer(productOrder.getCustomer());
+      Double finalLedgerEntry1 = ledgerEntry.getDebit();
+      account.ifPresent(account1 -> account1.addBalance(BigDecimal.valueOf(finalLedgerEntry1)));
+      updateGeneralLedger(account, ledgerEntry);
+
+      account = accountRepository.findByName(AccountTypes.AccountsEnum.SALES_REVENUE.getDescription());
+      ledgerEntry = new GeneralLedger();
+      ledgerEntry.setDescription("Sale Revenue");
+      account.ifPresent(ledgerEntry::setAccount);
+      ledgerEntry.setCredit(productRequest.getGrandTotal());
+      ledgerEntry.setProductOrder(productOrder);
+      ledgerEntry.setCustomer(productOrder.getCustomer());
+      Double finalLedgerEntry2 = ledgerEntry.getCredit();
+      account.ifPresent(account1 -> account1.addBalance(BigDecimal.valueOf(finalLedgerEntry2)));
+      updateGeneralLedger(account, ledgerEntry);
+
+      if (productRequest.getAmountReceived() < productRequest.getGrandTotal()) {
+        account = accountRepository.findByName(AccountTypes.AccountsEnum.ACCOUNTS_RECEIVABLE.getDescription());
+        ledgerEntry = new GeneralLedger();
+        ledgerEntry.setDescription("Accounts Receivable");
+        account.ifPresent(ledgerEntry::setAccount);
+        ledgerEntry.setDebit(productRequest.getGrandTotal() - productRequest.getAmountReceived());
+        ledgerEntry.setProductOrder(productOrder);
+        ledgerEntry.setCustomer(productOrder.getCustomer());
+        Double finalLedgerEntry = ledgerEntry.getDebit();
+        account.ifPresent(account1 -> account1.addBalance(BigDecimal.valueOf(finalLedgerEntry)));
+        updateGeneralLedger(account, ledgerEntry);
+      }
+
+
     }
     return invoiceNumber;
   }
 
+  private void updateGeneralLedger(Optional<Account> account, GeneralLedger ledgerEntry) {
+    generalLedgerRepository.save(ledgerEntry);
+    account.ifPresent(accountRepository::save);
+  }
 
-  //  private static double[] separateFractional(double d) {
-//    BigDecimal bd = new BigDecimal(d);
-//    return new double[] { bd.intValue(),
-//      bd.remainder(BigDecimal.ONE).doubleValue() };
-//  }
+
   public ResponseEntity<?> findOrders(ProductRequest productRequest) {
     Pageable paging = checkPaging(productRequest);
     Page<ProductOrder> productOrderPage = productOrderRepository.findAllByReturnedIsFalse(paging);
@@ -190,7 +228,7 @@ public class SaleService {
 
 
   public ResponseEntity<?> findReturnOrdersByInvoiceNo(ProductRequest productRequest) {
-    Optional<ProductReturn> productReturn = returnRepository.findByInvoiceNo(productRequest.getInvoiceNo());
+    Optional<ProductReturn> productReturn = productReturnRepository.findByInvoiceNo(productRequest.getInvoiceNo());
     if (productReturn.isPresent()) {
       ProductReturnDto productReturnDto = new ProductReturnDto().factoryProductReturn(productReturn.get());
       return ResponseEntity.ok(productReturnDto);
@@ -211,15 +249,17 @@ public class SaleService {
     return null;
   }
 
+  @Transactional
   public ResponseEntity<?> returnProductSale(@Valid SaleRequestList productReturnRequest) {
     userDetailsServiceImpl.checkAdmin();
     Optional<ProductOrder> productOrder = productOrderRepository.findById(productReturnRequest.getId());
     if (productOrder.isPresent()) {
-      Optional<ProductReturn> productReturn = returnRepository.findByInvoiceNo(productOrder.get().getInvoiceNo());
+      Optional<ProductReturn> productReturn = productReturnRepository.findByInvoiceNo(productOrder.get().getInvoiceNo());
       ProductReturn productReturnFound = productReturn.orElseGet(() -> ProductReturn.builder().id(0L).invoiceNo(productOrder.get().getInvoiceNo()).customer(productOrder.get().getCustomer()).grandTotalQtReturn(productReturnRequest.getGrandTotalQtReturn()).build());
-      ProductReturn productReturnSaved = returnRepository.save(productReturnFound);
+      ProductReturn productReturnSaved = productReturnRepository.save(productReturnFound);
 
-      AtomicReference<Double> grandTotal = new AtomicReference<>(0.0);
+      AtomicReference<Double> grandTotalAmount = new AtomicReference<>(0.0);
+      AtomicReference<Double> grandTotalBundleWiseAmount = new AtomicReference<>(0.0);
       productReturnRequest.getData().forEach(returnRequest -> {
         Optional<ProductSaleList> productSold = productSaleRepository.findById(returnRequest.getId());
         if (productSold.isPresent() && Objects.nonNull(productSold.get().getProduct())) {
@@ -241,9 +281,19 @@ public class SaleService {
                   productSold.get().setTotalQuantitySale(totalQuantitySold - userTotalQuantity);
                   productSaleRepository.save(productSold.get());
                 }
-                ProductReturnList productReturnList = ProductReturnList.builder().id(0L).product(productSold.get().getProduct().getId()).productName(productSold.get().getProduct().getName()).totalQuantityReturn(returnRequest.getUserTotalQuantity()).productReturn(productReturnSaved).build();
-                productReturnRepository.save(productReturnList);
-
+                if (returnRequest.getUserTotalQuantity() > 0) {
+                  ProductReturnList productReturnList = ProductReturnList.builder().id(0L).product(productSold.get().getProduct().getId()).productName(productSold.get().getProduct().getName()).totalQuantityReturn(returnRequest.getUserTotalQuantity()).productReturn(productReturnSaved).build();
+                  productReturnListRepository.save(productReturnList);
+                }
+                if (returnRequest.getUserTotalQuantity() > 0) {
+                  if (productSold.get().getPriceSelected().equals("Retail")) {
+                    grandTotalAmount.updateAndGet(v -> v + Optional.of(Objects.requireNonNull(productSold.get().getProduct()).getRetailPrice() * returnRequest.getUserTotalQuantity()).orElse(0.0));
+                  } else if (productSold.get().getPriceSelected().equals("Whole")) {
+                    grandTotalAmount.updateAndGet(v -> v + Optional.of(Objects.requireNonNull(productSold.get().getProduct()).getWholeSalePrice() * returnRequest.getUserTotalQuantity()).orElse(0.0));
+                  } else {
+                    grandTotalAmount.updateAndGet(v -> v + Optional.of(Objects.requireNonNull(productSold.get().getProduct()).getPrice() * returnRequest.getUserTotalQuantity()).orElse(0.0));
+                  }
+                }
               } else {
                 long bundleReturn = returnRequest.getUserQuantityBundle();
                 long extraReturn = returnRequest.getUserExtraQuantity();
@@ -328,35 +378,46 @@ public class SaleService {
                 }
 
                 productSold.get().setTotalQuantitySale(zeroIfNull(productSold.get().getTotalQuantitySale()) - returnRequest.getUserTotalQuantity());
-
-                ProductReturnList productReturnList = ProductReturnList.builder().id(0L).
-                  product(productSold.get().getProduct().getId()).
-                  productName(productSold.get().getProduct().getName()).
-                  bundleReturn(bundleReturn).
-                  extraReturn(extraReturn).
-                  totalQuantityReturn(returnRequest.getUserTotalQuantity()).
-                  productReturn(productReturnSaved).build();
-                productReturnRepository.save(productReturnList);
-
+                if (returnRequest.getUserTotalQuantity() > 0) {
+                  ProductReturnList productReturnList = ProductReturnList.builder().id(0L).
+                    product(productSold.get().getProduct().getId()).
+                    productName(productSold.get().getProduct().getName()).
+                    bundleReturn(bundleReturn).
+                    extraReturn(extraReturn).
+                    totalQuantityReturn(returnRequest.getUserTotalQuantity()).
+                    productReturn(productReturnSaved).build();
+                  productReturnListRepository.save(productReturnList);
+                }
+                if (returnRequest.getUserTotalQuantity() > 0) {
+                  if (productSold.get().getPriceSelected().equals("Retail")) {
+                    grandTotalBundleWiseAmount.updateAndGet(v -> v + Optional.of(Objects.requireNonNull(productSold.get().getProduct()).getRetailPrice() * returnRequest.getUserTotalQuantity()).orElse(0.0));
+                  } else if (productSold.get().getPriceSelected().equals("Whole")) {
+                    grandTotalBundleWiseAmount.updateAndGet(v -> v + Optional.of(Objects.requireNonNull(productSold.get().getProduct()).getWholeSalePrice() * returnRequest.getUserTotalQuantity()).orElse(0.0));
+                  } else {
+                    grandTotalBundleWiseAmount.updateAndGet(v -> v + Optional.of(Objects.requireNonNull(productSold.get().getProduct()).getPrice() * returnRequest.getUserTotalQuantity()).orElse(0.0));
+                  }
+                }
               }
             }
           }
         }
 
-        if (returnRequest.getUserTotalQuantity() > 0) {
-          if (productSold.get().getPriceSelected().equals("Retail")) {
-            grandTotal.updateAndGet(v -> v + Objects.requireNonNull(productSold.get().getProduct()).getRetailPrice());
-          } else if (productSold.get().getPriceSelected().equals("Whole")) {
-            grandTotal.updateAndGet(v -> v + Objects.requireNonNull(productSold.get().getProduct()).getWholeSalePrice());
-          } else {
-            grandTotal.updateAndGet(v -> v + Objects.requireNonNull(productSold.get().getProduct()).getPrice());
-          }
-        }
 
       });
+      productReturnSaved.setGrandTotal(productOrder.get().getGrandTotal() - (grandTotalAmount.get() + grandTotalBundleWiseAmount.get()));
+      productReturnSaved.setGrandTotalQtReturn(productReturnRequest.getGrandTotalQtReturn());
+      productReturnRepository.save(productReturnSaved);
 
-      productOrder.get().setGrandTotal(productOrder.get().getGrandTotal() - grandTotal.get());
+      productOrder.get().setGrandTotal(productReturnSaved.getGrandTotal());
       productOrderRepository.save(productOrder.get());
+
+      GeneralLedger ledgerEntry = new GeneralLedger();
+      ledgerEntry.setDescription("Return");
+      ledgerEntry.setDebit(productOrder.get().getGrandTotal());
+      ledgerEntry.setProductOrder(productOrder.get());
+      ledgerEntry.setCustomer(productOrder.get().getCustomer());
+      generalLedgerRepository.save(ledgerEntry);
+
 
     }
     return ResponseEntity.ok(new MessageResponse("Ok"));

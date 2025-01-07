@@ -107,7 +107,15 @@
       <td>{{productSaleList._totalQuantity}}</td>
       <td>Grand Total</td>
       <td>{{productSaleList._grandTotal | currency:'Rs:'}}</td>
-      <td></td>
+      <td>  <mat-form-field appearance="fill">
+        <mat-label>Amount Received:#</mat-label>
+        <input id="amountReceived"   matInput #input [(ngModel)]="amountReceived" type="number" pattern="\d*" (change)="amountReceived()" maxlength="productSaleList._grandTotal" minlength="10" >
+
+        <mat-error>
+          {{custCreditAmErrorText}}
+          <mat-hint align="end">{{input.value?.length || 0}}/11</mat-hint>
+        </mat-error>
+      </mat-form-field></td>
     </tr>
 
     </tbody>

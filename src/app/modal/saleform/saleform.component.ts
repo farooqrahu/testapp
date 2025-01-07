@@ -32,8 +32,6 @@ export class SaleformComponent implements OnInit {
   sales: Sale[] = [];
   productslength = 0;
 
-  ngAfterViewInit(): void {
-  }
 
   @ViewChild(MatSort) sort: MatSort | any;
   @ViewChild(MatPaginator) paginator: MatPaginator | any;
@@ -57,7 +55,8 @@ export class SaleformComponent implements OnInit {
   customers: CustomerModel[];
   filteredOptions: Observable<CustomerModel[]>;
   myControl = new FormControl();
-
+  amountReceived: any;
+  custCreditAmErrorText: boolean;
   constructor(
     public dialogRef: MatDialogRef<SaleformComponent>,
     @Inject(MAT_DIALOG_DATA) public productSaleList: Invoice, private saleService: SaleService, private productService: ProductService, public dialog: MatDialog) {
@@ -65,6 +64,9 @@ export class SaleformComponent implements OnInit {
 
   ngOnInit() {
     this.getAllCustomers();
+  }
+  ngAfterViewInit(): void {
+    this.amountReceived=this.productSaleList._grandTotal
   }
 
   private _filter(value: string): CustomerModel[] {
@@ -136,7 +138,7 @@ export class SaleformComponent implements OnInit {
     if (this.productSaleList._sales.length > 0) {
       let isValid = this.validateForm();
       if (isValid) {
-        this.saleService.submitSaleOrder(this.productSaleList, this.customerId,this.customerName, this.mobileNumber).subscribe(
+        this.saleService.submitSaleOrder(this.productSaleList, this.customerId,this.customerName, this.mobileNumber,this.amountReceived).subscribe(
           productSaleList => {
             // this.swAlert("Sale order submitted successfully!", "Product Sale!");
             // this.exportAsExcelFile(this.productSaleList._sales,"receipt")
@@ -327,4 +329,7 @@ export class SaleformComponent implements OnInit {
   }
 
 
+  validateAmountReceived() {
+
+  }
 }

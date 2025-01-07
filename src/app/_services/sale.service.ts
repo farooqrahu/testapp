@@ -25,10 +25,10 @@ export class SaleService {
   constructor(private http: HttpClient, private token: TokenStorageService, private apiService: ApiService) {
   }
 
-  submitSaleOrder(productSaleList: Invoice,customerId?,customerName?,mobileNumber?): Observable<any> {
+  submitSaleOrder(productSaleList: Invoice,customerId?,customerName?,mobileNumber?,amountReceived?): Observable<any> {
     let data = productSaleList._sales;
     let grandTotal = productSaleList._grandTotal;
-    return this.http.post(this.apiService.getBaseUrl() + 'sale/submitSaleOrder', {data,grandTotal,customerId,customerName,mobileNumber}, httpOptions);
+    return this.http.post(this.apiService.getBaseUrl() + 'sale/submitSaleOrder', {data,grandTotal,customerId,customerName,mobileNumber,amountReceived}, httpOptions);
   }
   findProduct(productrequest: ProductRequest): Observable<any> {
 
@@ -70,11 +70,14 @@ export class SaleService {
   }
 
   returnProductSale(saleOrders:SaleOrders): Observable<any> {
+    debugger
     // var id = saleOrders.id;
     var data = saleOrders.productSales;
     var id = saleOrders.id;
+    var grandTotalQtReturn = saleOrders.totalQuantityReturn;
+    grandTotalQtReturn = saleOrders.totalQuantity;
     // let json = JSON.stringify(data);
-    return this.http.post(this.apiService.getBaseUrl() + 'sale/returnProductSale', {data,id}, httpOptions);
+    return this.http.post(this.apiService.getBaseUrl() + 'sale/returnProductSale', {data,id,grandTotalQtReturn}, httpOptions);
   }
   findCustomerByMobileNumber(mobileNumber?): Observable<any> {
     return this.http.post(this.apiService.getBaseUrl() + 'customer/findCustomerByMobileNumber', {mobileNumber}, httpOptions);
